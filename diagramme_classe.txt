@@ -1,0 +1,56 @@
+Table Carte {
+  id int [pk]
+  nom string
+  cout int
+  type string // action, objet, champion
+  faction string
+  description string
+}
+
+Table Champion {
+  id int [pk, ref: > Carte.id]
+  pv int
+  active bool
+  garde bool
+}
+
+Table Joueur {
+  id int [pk]
+  pv int
+  or int 
+  combat int
+}
+
+Table TablePartie {
+  id int [pk]
+  nb_gemmes int
+}
+
+Table ZoneDeCarte {
+  id int [pk]
+  type string // deck, main, defausse, champions, deck_marche, marche, sacrifice
+  owner_joueur int [ref: > Joueur.id] // si la zone appartient à un joueur
+  owner_table int [ref: > TablePartie.id] // si la zone appartient à la table
+}
+
+Table CarteDansZone {
+  id int [pk]
+  carte_id int [ref: > Carte.id]
+  zone_id int [ref: > ZoneDeCarte.id]
+  ordre int // position dans le deck/pioche
+}
+
+
+Table Effet {
+  id int [pk]
+  type string // "or", "dmg", "pioche", "soin", "sacrifice"
+  valeur int
+  condition_type string // "aucune", "faction", "champion"
+  condition_valeur string // ex: "Imperial", "Necros", id de champion...
+  activation string // "toujours", "sacrifice"
+}
+
+Table CarteEffet {
+  carte_id int [ref: > Carte.id]
+  effet_id int [ref: > Effet.id]
+}
