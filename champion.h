@@ -10,7 +10,7 @@ private:
     bool garde;
 
 public:
-    Champion(int id, const std::string& nom, int cout, const std::string& faction,
+    Champion(int id, const std::string& nom, int cout, FactionCarte faction,
              const std::string& description, int pv, bool garde = false);
     
     // Getters
@@ -25,6 +25,8 @@ public:
     
     // Méthodes
     void recevoirDegats(int degats);
+    void detruire();
+    
     void activer();
     void desactiver();
     void afficher() const override;

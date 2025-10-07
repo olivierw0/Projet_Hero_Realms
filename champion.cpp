@@ -2,19 +2,13 @@
 #include <iostream>
 #include <algorithm>
 
-Champion::Champion(int id, const std::string& nom, int cout, const std::string& faction,
+Champion::Champion(int id, const std::string& nom, int cout, FactionCarte faction,
                    const std::string& description, int pv, bool garde)
-    : Carte(id, nom, cout, "champion", faction, description), pv(pv), active(false), garde(garde) {
+    : Carte(id, nom, cout, TypeCarte::CHAMPION, faction, description), pv(pv), active(false), garde(garde) {
 }
 
 void Champion::recevoirDegats(int degats) {
-    pv = std::max(0, pv - degats);
-    std::cout << getNom() << " reçoit " << degats << " dégâts. PV restants: " << pv << std::endl;
-    
-    if (pv <= 0) {
-        desactiver();
-        std::cout << getNom() << " est vaincu !" << std::endl;
-    }
+
 }
 
 void Champion::activer() {
@@ -28,8 +22,9 @@ void Champion::desactiver() {
 }
 
 void Champion::afficher() const {
-    Carte::afficher();
-    std::cout << "PV: " << pv << std::endl;
-    std::cout << "Actif: " << (active ? "Oui" : "Non") << std::endl;
-    std::cout << "Garde: " << (garde ? "Oui" : "Non") << std::endl;
 }
+
+void Champion::detruire() {
+    std::cout << getNom() << " a été détruit !" << std::endl;
+}
+    // Logique de destruction (retirer des zones, libérer ressources, etc.)

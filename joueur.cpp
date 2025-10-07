@@ -40,27 +40,12 @@ void Joueur::soigner(int soin) {
 }
 
 void Joueur::ajouterZone(std::shared_ptr<ZoneDeCarte> zone) {
-    zones.push_back(zone);
+    
 }
 
 std::shared_ptr<ZoneDeCarte> Joueur::getZone(const std::string& type) {
-    for (auto& zone : zones) {
-        if (zone->getType() == type) {
-            return zone;
-        }
-    }
-    return nullptr;
+    
 }
 
 void Joueur::afficher() const {
-    std::cout << "=== Joueur " << id << " ===" << std::endl;
-    std::cout << "PV: " << pv << std::endl;
-    std::cout << "Or: " << or_value << std::endl;
-    std::cout << "Combat: " << combat << std::endl;
-    
-    std::cout << "Zones:" << std::endl;
-    for (const auto& zone : zones) {
-        std::cout << "  " << zone->getType() << ": " << zone->getNombreCartes() << " cartes" << std::endl;
-    }
-    std::cout << std::endl;
 }

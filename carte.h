@@ -7,35 +7,56 @@
 
 class Effet;
 
+// Énumérations pour les types et factions de cartes
+enum class TypeCarte {
+    ACTION,
+    OBJET,
+    CHAMPION
+};
+
+enum class FactionCarte {
+    ROUGE,      // Faction de Nécros
+    BLEU,       // Faction de la Guilde
+    VERT,       // Faction Sauvage
+    JAUNE,      // Faction Impériale
+    NEUTRE      // Cartes de Base
+};
+
 class Carte {
 private:
     int id;
     std::string nom;
     int cout;
-    std::string type; // action, objet, champion
-    std::string faction;
+    TypeCarte type;
+    FactionCarte faction;
     std::string description;
     std::vector<std::shared_ptr<Effet>> effets;
 
 public:
-    Carte(int id, const std::string& nom, int cout, const std::string& type, 
-          const std::string& faction, const std::string& description);
+    Carte(int id, const std::string& nom, int cout, TypeCarte type, 
+          FactionCarte faction, const std::string& description);
     
     // Getters
     int getId() const { return id; }
     const std::string& getNom() const { return nom; }
     int getCout() const { return cout; }
-    const std::string& getType() const { return type; }
-    const std::string& getFaction() const { return faction; }
+    TypeCarte getType() const { return type; }
+    FactionCarte getFaction() const { return faction; }
     const std::string& getDescription() const { return description; }
     const std::vector<std::shared_ptr<Effet>>& getEffets() const { return effets; }
     
     // Setters
     void setNom(const std::string& nom) { this->nom = nom; }
     void setCout(int cout) { this->cout = cout; }
-    void setType(const std::string& type) { this->type = type; }
-    void setFaction(const std::string& faction) { this->faction = faction; }
+    void setType(TypeCarte type) { this->type = type; }
+    void setFaction(FactionCarte faction) { this->faction = faction; }
     void setDescription(const std::string& description) { this->description = description; }
+    
+    // Méthodes utilitaires pour conversion string
+    static std::string typeToString(TypeCarte type);
+    static std::string factionToString(FactionCarte faction);
+    static TypeCarte stringToType(const std::string& str);
+    static FactionCarte stringToFaction(const std::string& str);
     
     // Méthodes
     void ajouterEffet(std::shared_ptr<Effet> effet);
