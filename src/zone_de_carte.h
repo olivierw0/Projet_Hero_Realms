@@ -17,6 +17,7 @@ enum class TypeZone {
     CHAMPIONS,
     DECK_MARCHE,
     MARCHE,
+    ECARTEES
 };
 
 class ZoneDeCarte {
@@ -30,80 +31,36 @@ private:
 public:
 
     // Constructeur
-    ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr)
-        : id(id), type(type), proprietaire(proprietaire), table(table) {}
+    ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TablePartie* table);
+    ~ZoneDeCarte();
 
     // Méthodes pour accéder aux attributs
-    int getId() const { return id; }
-    TypeZone getType() const { return type; }
-    Joueur* getProprietaire() const { return proprietaire; }
-    TablePartie* getTable() const { return table; }
-    const std::vector<std::pair<Carte, int>>& getCartes() const { return cartes; }
+    int getId() const;
+    TypeZone getType() const;
+    Joueur* getProprietaire() const;
+    TablePartie* getTable() const;
+    const std::vector<std::pair<Carte, int>>& getCartes() const;
 
     // Ajouter une carte à la zone avec un ordre spécifique
-    void ajouterCarte(const Carte& carte, int ordre) {
-        cartes.emplace_back(carte, ordre);
-    }
+    void ajouterCarte(const Carte& carte, int ordre);
 
     // Retirer une carte de la zone par son ID
-    bool retirerCarte(int carteId) {
-        auto it = std::remove_if(cartes.begin(), cartes.end(),
-                                 [carteId](const std::pair<Carte, int>& p) {
-                                     return p.first.getId() == carteId;
-                                 });
-        if (it != cartes.end()) {
-            cartes.erase(it, cartes.end());
-            return true;
-        }
-        return false;
-    }
+    bool retirerCarte(int carteId);
 
     // Déplacer une carte vers une autre zone
-    bool deplacerCarte(int carteId, ZoneDeCarte& destination, int nouvelOrdre = -1) {
-        // Trouver la carte dans cette zone
-        for (const auto& paire : cartes) {
-            if (paire.first.getId() == carteId) {
-                Carte carte = paire.first;
-                int ordre = (nouvelOrdre == -1) ? paire.second : nouvelOrdre;
-                
-                // Retirer de cette zone
-                if (retirerCarte(carteId)) {
-                    // Ajouter à la destination
-                    destination.ajouterCarte(carte, ordre);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    bool deplacerCarte(int carteId, ZoneDeCarte& destination, int nouvelOrdre);
 
     // Déplacer toutes les cartes vers une autre zone
-    void deplacerToutesLesCartes(ZoneDeCarte& destination) {
-        for (const auto& paire : cartes) {
-            destination.ajouterCarte(paire.first, paire.second);
-        }
-        cartes.clear();
-    }
+    void deplacerToutesLesCartes(ZoneDeCarte& destination);
 
     // Vérifier si la zone est vide
-    bool estVide() const {
-        return cartes.empty();
-    }
+    bool estVide() const;
 
     // Obtenir le nombre de cartes
-    size_t taille() const {
-        return cartes.size();
-    }
+    size_t taille() const;
 
     // Trouver une carte par ID (sans la retirer)
-    const Carte* trouverCarte(int carteId) const {
-        for (const auto& paire : cartes) {
-            if (paire.first.getId() == carteId) {
-                return &paire.first;
-            }
-        }
-        return nullptr;
-    }
+    const Carte* trouverCarte(int carteId) const;
 
 };
 

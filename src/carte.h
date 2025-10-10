@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-
-class Effet;
+#include "effet.h"
 
 // Énumérations pour les types et factions de cartes
 enum class TypeCarte {
@@ -35,6 +34,9 @@ private:
 public:
     // Constructeur par défaut
     Carte() : id(0), nom(""), cout(0), type(TypeCarte::ACTION), faction(FactionCarte::NEUTRE), description("") {}
+    
+    // Destructeur virtuel pour rendre la classe polymorphe
+    virtual ~Carte() = default;
 
     // Constructeur avec paramètres
     Carte(int id, const std::string& nom, int cout, TypeCarte type,
@@ -51,7 +53,9 @@ public:
     FactionCarte getFaction() const { return faction; }
     std::string getDescription() const { return description; }
     const std::vector<Effet>& getEffets() const { return effets; }
-    int getPV() const { return 0; } // À implémenter selon votre logique
+    
+    // Méthode virtuelle pour les PV (redéfinie dans Champion)
+    virtual int getPV() const { return 0; }
 
 
 };

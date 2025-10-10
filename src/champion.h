@@ -8,8 +8,29 @@ private:
     int pv;
     bool active;
     bool garde;
-public:
 
+public:
+    // Constructeurs
+    Champion() : Carte(), pv(1), active(true), garde(false) {}
+    
+    Champion(int id, const std::string& nom, int cout, FactionCarte faction, 
+             const std::string& description, int pv, bool garde = false,
+             const std::vector<Effet>& effets = {})
+        : Carte(id, nom, cout, TypeCarte::CHAMPION, faction, description, effets),
+          pv(pv), active(true), garde(garde) {}
+    
+    // Getters (redéfinition de la méthode virtuelle)
+    int getPV() const override { return pv; }
+    bool isActive() const { return active; }
+    bool hasGarde() const { return garde; }
+    
+    // Setters
+    void setActive(bool etat) { active = etat; }
+    void activer() { active = true; }
+    void desactiver() { active = false; }
+    void changerEtat() { active = !active; }
+    void setPV(int nouveaux_pv) { pv = nouveaux_pv; }
+    void setGarde(bool nouvelle_garde) { garde = nouvelle_garde; }
 };
 
 #endif // CHAMPION_H

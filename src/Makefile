@@ -6,7 +6,7 @@ CXXFLAGS = -Wall -Wextra -std=c++17 -g
 TARGET = hero_realms
 
 # Fichiers sources
-SOURCES = main.cpp
+SOURCES = main.cpp table_partie.cpp zone_de_carte.cpp joueur.cpp carte.cpp champion.cpp effet.cpp
 
 # Fichiers objets (générés automatiquement à partir des sources)
 OBJECTS = $(SOURCES:.cpp=.o)

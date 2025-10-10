@@ -23,11 +23,11 @@ int main() {
     do {
         // Afficher l'état initial de la partie
         partie.afficherEtatPartie();
-
+        
         std::cout << "\n=== Attendre une commande du joueur " << partie.getJoueurActuel().getId() << " ===" << std::endl;
         std::cin.get();
         // TODO: Gérer les commandes du joueur
-        
+
         // Changer de joueur
         partie.endTurn();
     } while (!finDePartie);
