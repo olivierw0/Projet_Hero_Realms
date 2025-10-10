@@ -16,7 +16,20 @@ private:
     std::vector<ZoneDeCarte> zones;
 
 public:
+    // Constructeur
+    Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0) {}
 
+    // Méthodes pour accéder aux attributs
+    int getId() const { return id; }
+    int getPv() const { return pv; }
+    int getOr() const { return or_value; }
+    int getCombat() const { return combat; }
+    const std::vector<ZoneDeCarte>& getZones() const { return zones; }
+
+    // Ajouter une zone au joueur
+    void ajouterZone(const ZoneDeCarte& zone) {
+        zones.push_back(zone);
+    }
 };
 
 #endif // JOUEUR_H

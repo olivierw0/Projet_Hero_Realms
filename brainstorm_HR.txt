@@ -10,6 +10,10 @@ PV  = x
 OR  = x
 DMG = x
 
+PV Ennemi
+=========
+PV = x
+
 Cartes en main
 ==============
 
@@ -26,9 +30,9 @@ Champions
 (activé/désactivé) Nom / PV / Faction / CONDITION : EFFET / GARDE?
 ...
 
-type Active(x) pour activer leffet d'un champion
+// type Active(x) pour activer leffet d'un champion
 
-Cartes marché 
+Cartes marche 
 =============
 (COUT) Nom / Faction / TYPE /CONDITION : EFFET 
 (COUT) Nom / Faction / TYPE /CONDITION : EFFET 
@@ -46,11 +50,15 @@ Nom / PV / Faction / CONDITION : EFFET / GARDE?
 
 Defausse
 ========
-type Defausse to see your discard pile
+//type Defausse to see your discard pile
 
 Defausse ennemie
 ================
-type DefausseEnnemi to see the ennemy discard pile
+//type DefausseEnnemi to see the ennemy discard pile
+
+Cartes ecartees
+===============
+//type to see
 
 .....................................................
 
@@ -70,7 +78,6 @@ active(x) 	pour activer un champion
 play(x)  	pour jouer la carte x
 playAll()	pour jouer toute sa main d'un coup
 endTurn()	termine son tour (lance une attaque automatiquement)
-
 
 .....................................................
 

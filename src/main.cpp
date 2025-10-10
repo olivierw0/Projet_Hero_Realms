@@ -6,9 +6,7 @@
 #include "joueur.h"
 #include "zone_de_carte.h"
 #include "table_partie.h"
-#include "carte_db.h"
-#include "deck_builder.h"
 
 int main() {
-
+    
 }

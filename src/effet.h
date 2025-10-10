@@ -10,7 +10,8 @@ enum class TypeEffet {
     DMG,
     PIOHE,
     SOIN,
-    ADV_DEFAUSSE
+    ADV_DEFAUSSE,
+    PREPARE_CHAMPION
 };
 
 enum class ConditionEffet {
@@ -25,7 +26,14 @@ private:
     TypeEffet type;
     int valeur;
     ConditionEffet condition; 
+
 public:
+    // Constructeur par défaut
+    Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE) {}
+    
+    // Constructeur avec paramètres
+    Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE)
+        : id(id), type(type), valeur(valeur), condition(condition) {}
 
 };
 
