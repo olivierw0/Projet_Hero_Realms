@@ -8,7 +8,7 @@ class Effet {
 enum class TypeEffet {
     OR,
     DMG,
-    PIOHE,
+    PIOCHE,
     SOIN,
     ADV_DEFAUSSE,
     PREPARE_CHAMPION,
@@ -18,7 +18,10 @@ enum class TypeEffet {
 enum class ConditionEffet {
     AUCUNE,
     DEFAUSSE,
-    FACTION,
+    ROUGE,
+    JAUNE,
+    VERT,
+    BLEU,
     SACRIFICE,
     NB_CHAMPIONS
 };
