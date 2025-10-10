@@ -30,8 +30,6 @@ Champions
 (activé/désactivé) Nom / PV / Faction / CONDITION : EFFET / GARDE?
 ...
 
-// type Active(x) pour activer leffet d'un champion
-
 Cartes marche 
 =============
 (COUT) Nom / Faction / TYPE /CONDITION : EFFET 

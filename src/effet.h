@@ -11,14 +11,16 @@ enum class TypeEffet {
     PIOHE,
     SOIN,
     ADV_DEFAUSSE,
-    PREPARE_CHAMPION
+    PREPARE_CHAMPION,
+    STUN
 };
 
 enum class ConditionEffet {
     AUCUNE,
     DEFAUSSE,
     FACTION,
-    SACRIFICE
+    SACRIFICE,
+    NB_CHAMPIONS
 };
 
 private:

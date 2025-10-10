@@ -51,6 +51,7 @@ public:
     FactionCarte getFaction() const { return faction; }
     std::string getDescription() const { return description; }
     const std::vector<Effet>& getEffets() const { return effets; }
+    int getPV() const { return 0; } // À implémenter selon votre logique
 
 
 };
