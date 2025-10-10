@@ -1,0 +1,98 @@
+machine à état :
+
+- après chaque état on fait : afficherEtatActuelPartie()
+
+afficherEtatActuelPartie():
+
+Joueur X
+========
+PV  = x
+OR  = x
+DMG = x
+
+Cartes en main
+==============
+
+Nom / Faction / TYPE / CONDITION : EFFET 
+Nom / Faction / TYPE / CONDITION : EFFET 
+Nom / Faction / TYPE / CONDITION : EFFET 
+Nom / Faction / TYPE / CONDITION : EFFET 
+Nom / Faction / TYPE / CONDITION : EFFET 
+...
+
+Champions
+=========
+
+(activé/désactivé) Nom / PV / Faction / CONDITION : EFFET / GARDE?
+...
+
+type Active(x) pour activer leffet d'un champion
+
+Cartes marché 
+=============
+(COUT) Nom / Faction / TYPE /CONDITION : EFFET 
+(COUT) Nom / Faction / TYPE /CONDITION : EFFET 
+(COUT) Nom / Faction / TYPE /CONDITION : EFFET 
+(COUT) Nom / Faction / TYPE /CONDITION : EFFET 
+(COUT) Nom / Faction / TYPE /CONDITION : EFFET 
+
+(COUT) Gemmes de feu / NB_RESTANT / EFFETS 
+
+Champions ennemis
+=================
+
+Nom / PV / Faction / CONDITION : EFFET / GARDE?
+...
+
+Defausse
+========
+type Defausse to see your discard pile
+
+Defausse ennemie
+================
+type DefausseEnnemi to see the ennemy discard pile
+
+.....................................................
+
+finDeTour():
+
+Si DMG != 0 && Champions adv != 0 && (for i in j2.champions, !i.GARDE || nb_garde > 1)
+	choisi cible
+else
+	DMG garde si garde Existe sinon dmg j2.pv
+
+.....................................................
+
+commandes en tant que joueur
+
+buy(x) 		achete x dans le shop, 1-5 + 6 (6 toujours la gemme de feu)
+active(x) 	pour activer un champion
+play(x)  	pour jouer la carte x
+playAll()	pour jouer toute sa main d'un coup
+endTurn()	termine son tour (lance une attaque automatiquement)
+
+
+.....................................................
+
+godMode()
+
+type godMode to enter god mode
+
+
+en god mode on a accès aux commandes suivantes:
+
+or(x) 		ajoute x or
+dmg(x) 		ajoute x dmg 
+champion(x) 	donne le champion nommé x sur son terrain
+carte(x) 	donne la carte nommé x dans sa main
+pioche()	voir la pioche
+
+
+
+
+
+
+
+
+
+
