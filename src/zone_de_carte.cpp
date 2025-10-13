@@ -5,7 +5,7 @@
 #include <algorithm>
 
 // Constructeur
-ZoneDeCarte::ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr)
+ZoneDeCarte::ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TablePartie* table)
     : id(id), type(type), proprietaire(proprietaire), table(table) {
     std::cout << "Construction de la zone de carte" << std::endl;
 }

@@ -57,7 +57,6 @@ public:
     // Méthode virtuelle pour les PV (redéfinie dans Champion)
     virtual int getPV() const { return 0; }
 
-
 };
 
 #endif // CARTE_H

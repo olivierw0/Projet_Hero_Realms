@@ -31,6 +31,20 @@ public:
     void changerEtat() { active = !active; }
     void setPV(int nouveaux_pv) { pv = nouveaux_pv; }
     void setGarde(bool nouvelle_garde) { garde = nouvelle_garde; }
+    
+    // Méthode pour "expend" (taper) le champion et déclencher ses effets
+    bool expend() {
+        if (active) {
+            desactiver(); // Le champion devient inactif (tapé)
+            return true;  // Effets peuvent être déclenchés
+        }
+        return false;     // Champion déjà tapé, pas d'effet
+    }
+    
+    // Méthode pour "untap" le champion (début de tour)
+    void untap() {
+        activer();
+    }
 };
 
 #endif // CHAMPION_H

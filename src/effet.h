@@ -18,10 +18,10 @@ enum class TypeEffet {
 enum class ConditionEffet {
     AUCUNE,
     DEFAUSSE,
-    ROUGE,
-    JAUNE,
-    VERT,
-    BLEU,
+    ROUGE,          // Allié rouge requis
+    JAUNE,          // Allié jaune requis  
+    VERT,           // Allié vert requis
+    BLEU,           // Allié bleu requis
     SACRIFICE,
     NB_CHAMPIONS
 };

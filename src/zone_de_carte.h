@@ -31,7 +31,7 @@ private:
 public:
 
     // Constructeur
-    ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TablePartie* table);
+    ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
     ~ZoneDeCarte();
 
     // Méthodes pour accéder aux attributs
