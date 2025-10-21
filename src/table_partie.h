@@ -40,7 +40,7 @@ public:
     void ajouterJoueur(const Joueur& joueur);
 
     // Ajouter une zone commune à la partie
-    void ajouterZoneCommune(const ZoneDeCarte& zone);
+    void creerZoneCommune(int id, TypeZone type);
 
     // Méthodes pour accéder aux attributs
     int getId() const;
@@ -67,6 +67,9 @@ public:
 
     // Initialiser les zones de chaque joueur
     void initZones();
+    
+    // Initialiser complètement la partie (zones, decks, mains initiales)
+    void initPartie();
 };
 
 #endif // TABLE_PARTIE_H

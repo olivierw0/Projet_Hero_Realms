@@ -20,6 +20,9 @@ enum class TypeZone {
     ECARTEES
 };
 
+// Fonction utilitaire pour convertir TypeZone en string
+std::string typeZoneToString(TypeZone type);
+
 class ZoneDeCarte {
 private:
     int id;
@@ -32,6 +35,20 @@ public:
 
     // Constructeur
     ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
+    
+    // Constructeur de copie
+    ZoneDeCarte(const ZoneDeCarte& other);
+    
+    // Constructeur de déplacement
+    ZoneDeCarte(ZoneDeCarte&& other) noexcept;
+    
+    // Opérateur d'assignation de copie
+    ZoneDeCarte& operator=(const ZoneDeCarte& other);
+    
+    // Opérateur d'assignation de déplacement
+    ZoneDeCarte& operator=(ZoneDeCarte&& other) noexcept;
+    
+    // Destructeur
     ~ZoneDeCarte();
 
     // Méthodes pour accéder aux attributs
