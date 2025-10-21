@@ -77,8 +77,11 @@ void Joueur::initZonesJoueur(){
 void Joueur::initDeck(){
     ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
     if (deck) {
-        deckInitial = creerDeckDeBase();
-
+        std::vector<const Carte*> deckInitial = creerDeckDeBase();
+        for (const auto& carte : deckInitial) {
+            // Déréférencer le pointeur pour obtenir l'objet Carte
+            deck->ajouterCarte(*carte, static_cast<int>(deck->taille()));
+        }
     }
 }
 
@@ -146,4 +149,45 @@ int Joueur::getNombreCartesEnMain() const {
     ZoneDeCarte* main = const_cast<Joueur*>(this)->getZoneByType(TypeZone::MAIN);
     if (!main) return 0;
     return static_cast<int>(main->getCartes().size());
+}
+
+// Mélanger le deck du joueur
+void Joueur::melangerDeck() {
+    ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    if (deck && !deck->estVide()) {
+        deck->melangerCartes();
+        std::cout << "Joueur " << id << " a mélangé son deck." << std::endl;
+    }
+}
+
+// Piocher des cartes du deck vers la main
+void Joueur::piocher(int nbCartes) {
+    ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
+    ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
+    
+    if (!deck || !main) {
+        std::cout << "Erreur: zones introuvables pour la pioche." << std::endl;
+        return;
+    }
+    
+    for (int i = 0; i < nbCartes; ++i) {
+        // Si le deck est vide, mélanger la défausse dans le deck
+        if (deck->estVide() && defausse && !defausse->estVide()) {
+            std::cout << "Deck vide! Mélange de la défausse dans le deck..." << std::endl;
+            defausse->deplacerToutesLesCartes(*deck);
+            deck->melangerCartes();
+        }
+        
+        // Piocher une carte si le deck n'est pas vide
+        if (!deck->estVide()) {
+            const auto& cartes = deck->getCartes();
+            int carteId = cartes[0].first.getId(); // Prendre la première carte
+            deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
+            std::cout << "Joueur " << id << " pioche une carte." << std::endl;
+        } else {
+            std::cout << "Impossible de piocher: deck et défausse vides!" << std::endl;
+            break;
+        }
+    }
 }

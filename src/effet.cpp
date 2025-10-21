@@ -3,8 +3,8 @@
 #include <iostream>
 
 // Constructeur avec paramètres
-Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition)
-    : id(id), type(type), valeur(valeur), condition(condition) {
+Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition, int param)
+    : id(id), type(type), valeur(valeur), condition(condition), param(param) {
     // Le constructeur initialise simplement les attributs
     // Les effets seront activés lors de l'appel à activerEffet()
 }
