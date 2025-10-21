@@ -219,7 +219,7 @@ Carte dark_energy(45, "Dark Energy", 4, TypeCarte::ACTION, FactionCarte::ROUGE,
 // Champions rouges
 Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, TypeCarte::CHAMPION, FactionCarte::ROUGE,
     "{Expend}: {Gain 4 combat}\nYou may sacrifice up to two cards in your hand and/or discard pile.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, Effet::TypeEffet::DMG, 5), Effet(2, Effet::TypeEffet::SACRIFICE_HAND_DISCARD, {0,1}) },
+    { Effet(1, Effet::TypeEffet::DMG, 5), Effet(2, Effet::TypeEffet::SACRIFICE_HAND_DISCARD, 1) },
     true, 6
 );  
 
@@ -271,7 +271,7 @@ Carte natures_bounty(60, "Nature's Bounty", 4, TypeCarte::ACTION, FactionCarte::
 
 Carte elven_gift(61, "Elven Gift", 2, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 2 gold}\nYou may draw a card. If you do, discard a card.<hr>\n{Vert Ally}: {Gain 4 combat}",
-    { Effet(1, Effet::TypeEffet::OR, 2), Effet(2, Effet::TypeEffet::DRAW_DISCARD, {0,1}), Effet(3, Effet::TypeEffet::DMG, 4, Effet::ConditionEffet::VERT_ALLY) }
+    { Effet(1, Effet::TypeEffet::OR, 2), Effet(2, Effet::TypeEffet::DRAW_DISCARD, 1), Effet(3, Effet::TypeEffet::DMG, 4, Effet::ConditionEffet::VERT_ALLY) }
 );
 
 Carte elven_curse(62, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
@@ -281,7 +281,7 @@ Carte elven_curse(62, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
 
 Carte rampage(63, "Rampage", 6, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 6 combat}\nYou may draw up to two cards, then discard that many cards.",
-    { Effet(1, Effet::TypeEffet::DMG, 6), Effet(2, Effet::TypeEffet::DRAW_DISCARD, {0,1,2}) }
+    { Effet(1, Effet::TypeEffet::DMG, 6), Effet(2, Effet::TypeEffet::DRAW_DISCARD, 2) }
 );
 
 Carte spark(64, "Spark", 1, TypeCarte::ACTION, FactionCarte::VERT,
@@ -303,7 +303,7 @@ Carte broelyn_loreweaver(66, "Broelyn, Loreweaver", 4, TypeCarte::CHAMPION, Fact
 
 Carte grak_storm_giant(67, "Grak, Storm Giant", 8, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 6 combat}\nYou may draw a card. If you do, discard a card.\n<hr>\n{Vert Ally}: Draw a card, then discard a card.",
-    { Effet(1, Effet::TypeEffet::DMG, 6), Effet(2, Effet::TypeEffet::DRAW_DISCARD, {0,1}), Effet(3, Effet::TypeEffet::DRAW_DISCARD, 1, Effet::ConditionEffet::VERT_ALLY) },
+    { Effet(1, Effet::TypeEffet::DMG, 6), Effet(2, Effet::TypeEffet::DRAW_DISCARD, 1), Effet(3, Effet::TypeEffet::DRAW_DISCARD, 1, Effet::ConditionEffet::VERT_ALLY) },
     true, 7
 );
 
