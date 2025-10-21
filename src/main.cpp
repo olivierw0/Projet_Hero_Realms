@@ -27,7 +27,7 @@ int main() {
         partie.afficherEtatPartie();
         
         Joueur& joueurActuel = partie.getJoueurActuel();
-        Joueur& adversaire = partie.getJoueurByIndex((joueurActuel.getId() == 1) ? 2 : 1);
+        Joueur& adversaire = partie.getAdversaire();
         
         // Afficher la main du joueur
         joueurActuel.afficherMain();

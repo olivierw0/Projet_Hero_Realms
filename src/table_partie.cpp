@@ -116,9 +116,10 @@ void TablePartie::ajouterZoneCommune(const ZoneDeCarte& zone) { zones_communes.p
 // Méthodes pour accéder aux attributs
 int TablePartie::getId() const { return id; }
 int TablePartie::getNbGemmes() const { return nb_gemmes; }
-const std::vector<Joueur>& TablePartie::getJoueurs() const { return joueurs; }
+std::vector<Joueur>& TablePartie::getJoueurs() { return joueurs; }
 const std::vector<ZoneDeCarte>& TablePartie::getZonesCommunes() const { return zones_communes; }
-Joueur& TablePartie::getJoueurActuel() const { return joueurs[joueur_actuel_index]; }
+Joueur& TablePartie::getJoueurActuel() { return joueurs[joueur_actuel_index]; }
+Joueur& TablePartie::getAdversaire() { return joueurs[1 - joueur_actuel_index]; }
 int TablePartie::getJoueurActuelIndex() const { return joueur_actuel_index; }
 
 
@@ -145,11 +146,6 @@ void TablePartie::afficherEtatPartie() const {
     std::cout << "\nPV Ennemi" << std::endl;
     std::cout << "=========" << std::endl;
     std::cout << "PV = " << ennemi.getPv() << std::endl;
-
-    // === CARTES EN MAIN ===
-    std::cout << "\nCartes en main" << std::endl;
-    std::cout << "==============" << std::endl;
-    afficherZoneJoueur(joueur_actuel, TypeZone::MAIN, false);
 
     // === CHAMPIONS ===
     std::cout << "\nChampions" << std::endl;

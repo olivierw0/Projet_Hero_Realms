@@ -5,6 +5,7 @@
 #include "champion.h"
 #include "zone_de_carte.h"
 #include "joueur.h"
+#include "carte_db.h"
 
 void Joueur::takeDamage(int amount){
     pv -= amount;
@@ -73,6 +74,14 @@ void Joueur::initZonesJoueur(){
     ajouterZone(ZoneDeCarte(4, TypeZone::CHAMPIONS, this, nullptr));
 }
 
+void Joueur::initDeck(){
+    ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    if (deck) {
+        deckInitial = creerDeckDeBase();
+
+    }
+}
+
 // Afficher la main du joueur avec des indices
 void Joueur::afficherMain() const {
     ZoneDeCarte* main = const_cast<Joueur*>(this)->getZoneByType(TypeZone::MAIN);
@@ -123,10 +132,10 @@ bool Joueur::jouerCarte(int indice, Joueur& adversaire) {
     // Déplacer la carte de la main vers la défausse
     if (carteAJouer.getType() == TypeCarte::CHAMPION) {
         // Si c'est un champion, le déplacer vers la zone des champions
-        main->deplacerCarte(carteAJouer.getId(), *champions);
+        main->deplacerCarte(carteAJouer.getId(), *champions, 1);
     } else {
         // Sinon, le déplacer vers la défausse
-        main->deplacerCarte(carteAJouer.getId(), *defausse);
+        main->deplacerCarte(carteAJouer.getId(), *defausse, 1);
     }
     
     return true;
