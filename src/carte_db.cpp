@@ -235,25 +235,25 @@ Champion death_cultist(48, "Death Cultist", 2, TypeCarte::CHAMPION, FactionCarte
     true, 3
 );
 
-Carte rayla_endweaver(49, "Rayla Endweaver", 4, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion rayla_endweaver(49, "Rayla Endweaver", 4, TypeCarte::CHAMPION, FactionCarte::ROUGE,
     "{Expend}: {Gain 3 combat}\n<hr>\n{Rouge Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 
-Carte varrick_the_necromancer(50, "Varrick, the Necromancer", 5, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion varrick_the_necromancer(50, "Varrick, the Necromancer", 5, TypeCarte::CHAMPION, FactionCarte::ROUGE,
     "{Expend}: Take a champion from your discard pile and put it on top of your deck.\n<hr>\n{Rouge Ally}: Draw a card.",
     { Effet(1, TypeEffet::TOP_DECK_FROM_DISCARD, 0), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     false, 3
 );
 
-Carte krythos_master_vampire(51, "Krythos, Master Vampire", 7, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion krythos_master_vampire(51, "Krythos, Master Vampire", 7, TypeCarte::CHAMPION, FactionCarte::ROUGE,
     "{Expend}: {Gain 3 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {3 combat}.",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) },
     true, 6
 );
 
-Carte lys_the_unseen(52, "Lys, the Unseen", 6, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion lys_the_unseen(52, "Lys, the Unseen", 6, TypeCarte::CHAMPION, FactionCarte::ROUGE,
     "{Expend}: {Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {2 combat}.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) },
     true, 5
@@ -295,43 +295,43 @@ Carte wolf_form(65, "Wolf Form", 5, TypeCarte::ACTION, FactionCarte::VERT,
 );
 
 // Champions verts
-Carte broelyn_loreweaver(66, "Broelyn, Loreweaver", 4, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion broelyn_loreweaver(66, "Broelyn, Loreweaver", 4, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 2 gold}\n<hr>\n{Vert Ally}: Target opponent discards a card.",
     { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1, ConditionEffet::VERT_ALLY) },
     false, 6
 );
 
-Carte grak_storm_giant(67, "Grak, Storm Giant", 8, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion grak_storm_giant(67, "Grak, Storm Giant", 8, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 6 combat}\nYou may draw a card. If you do, discard a card.\n<hr>\n{Vert Ally}: Draw a card, then discard a card.",
     { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {0,1}), Effet(3, TypeEffet::DRAW_DISCARD, 1, ConditionEffet::VERT_ALLY) },
     true, 7
 );
 
-Carte dire_wolf(68, "Dire Wolf", 5, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion dire_wolf(68, "Dire Wolf", 5, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 3 combat}\n<hr>\n{Vert Ally}: {Gain 4 combat}",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) },
     true, 5
 );
 
-Carte wolf_shaman(69, "Wolf Shaman", 2, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion wolf_shaman(69, "Wolf Shaman", 2, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n+{1 combat} for each other {Vert} card you have in play.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) },
     false, 4
 );
 
-Carte cron_the_berserker(70, "Cron, the Berserker", 6, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion cron_the_berserker(70, "Cron, the Berserker", 6, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 5 combat}\n<hr>\n{Vert Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) },
     true, 6
 );
 
-Carte orc_grunt(71, "Orc Grunt", 3, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion orc_grunt(71, "Orc Grunt", 3, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n<hr>\n{Vert Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) },
     true, 3
 );
 
-Carte torgern_rocksplitter(72, "Torgern Rocksplitter", 7, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion torgern_rocksplitter(72, "Torgern Rocksplitter", 7, TypeCarte::CHAMPION, FactionCarte::VERT,
     "{Expend}: {Gain 4 combat}\nTarget opponent discards a card.",
     { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1) },
     true, 7

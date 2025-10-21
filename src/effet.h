@@ -3,8 +3,6 @@
 
 #include <string>
 
-class Effet {
-
 enum class TypeEffet {
     OR,                              // Gain d'or
     DMG,                             // Dégâts de combat
@@ -36,6 +34,8 @@ enum class ConditionEffet {
     SACRIFICE_HAND_DISCARD,          // Sacrifice depuis la main ou la défausse
     NB_VERT_CARDS_IN_PLAY           // Nombre de cartes vertes en jeu
 };
+
+class Effet {
 
 private:
     int id;
