@@ -54,13 +54,16 @@ public:
     void endTurn();
 
     // Getter pour le joueur actuel
-    const Joueur& getJoueurActuel() const;
+    Joueur& getJoueurActuel() const;
 
     // Getter pour l'index du joueur actuel
     int getJoueurActuelIndex() const;
     
     // Fonction utilitaire pour clear le terminal
     static void clearTerminal();
+
+    // Initialiser les zones de chaque joueur
+    void initZones();
 };
 
 #endif // TABLE_PARTIE_H

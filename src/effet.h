@@ -17,7 +17,7 @@ enum class TypeEffet {
     TOP_DECK_NEXT_ACQUIRED_ACTION,   // Mettre la prochaine action acquise sur le dessus du deck
     TOP_DECK_FROM_DISCARD,           // Prendre une carte de la défausse et la mettre sur le dessus du deck
     TOP_DECK_NEXT_ACQUIRED,          // Mettre la prochaine carte acquise sur le dessus du deck
-    SACRIFICE,                       // Effet de sacrifice
+    SACRIFICE_HAND_DISCARD,          // Effet de sacrifice depuis la main ou la défausse
     FORCE_DISCARD_OPPONENT,          // Forcer l'adversaire à défausser
     DRAW_DISCARD                     // Piocher et défausser
 };
@@ -30,6 +30,7 @@ enum class ConditionEffet {
     VERT_ALLY,                       // Allié vert requis
     BLEU_ALLY,                       // Allié bleu requis
     SACRIFICE,                       // Condition de sacrifice
+    SACRIFICE_TO_MARCHE,            // Condition de sacrifice pour la zone de marche
     NB_CHAMPIONS,                    // Nombre de champions en jeu
     NB_GARDES,                       // Nombre de gardes en jeu
     SACRIFICE_HAND_DISCARD,          // Sacrifice depuis la main ou la défausse

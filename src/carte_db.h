@@ -12,7 +12,7 @@ struct CarteAvecQuantite {
 };
 
 // Base de données des cartes
-extern std::vector<CarteAvecQuantite> database_cartes;
+extern std::vector<CarteAvecQuantite> carte_db;
 
 // Fonctions d'accès à la base de données
 const Carte* getCarteById(int id);

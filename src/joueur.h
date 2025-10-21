@@ -45,7 +45,13 @@ public:
     void ajouterZone(ZoneDeCarte&& zone);
     ZoneDeCarte* getZoneByType(TypeZone type);
     ZoneDeCarte* getZoneById(int zoneId);
-    void initJoueur(); // Initialisation au début de la partie
+
+    void initZonesJoueur(); // Initialisation au début de la partie
+    
+    // Gestion des cartes en main
+    void afficherMain() const;
+    bool jouerCarte(int indice, Joueur& adversaire); // Jouer une carte par son indice (1-based)
+    int getNombreCartesEnMain() const;
 };
 
 #endif // JOUEUR_H

@@ -118,7 +118,7 @@ int TablePartie::getId() const { return id; }
 int TablePartie::getNbGemmes() const { return nb_gemmes; }
 const std::vector<Joueur>& TablePartie::getJoueurs() const { return joueurs; }
 const std::vector<ZoneDeCarte>& TablePartie::getZonesCommunes() const { return zones_communes; }
-const Joueur& TablePartie::getJoueurActuel() const { return joueurs[joueur_actuel_index]; }
+Joueur& TablePartie::getJoueurActuel() const { return joueurs[joueur_actuel_index]; }
 int TablePartie::getJoueurActuelIndex() const { return joueur_actuel_index; }
 
 
@@ -192,3 +192,11 @@ void TablePartie::endTurn() {
     afficherEtatPartie(); 
 }
 
+void TablePartie::initZones() {
+    for (Joueur& joueur : joueurs) {
+        joueur.initZonesJoueur();
+    }
+    this->ajouterZoneCommune(ZoneDeCarte(1, TypeZone::MARCHE, nullptr, this));
+    this->ajouterZoneCommune(ZoneDeCarte(2, TypeZone::DECK_MARCHE, nullptr, this));
+    this->ajouterZoneCommune(ZoneDeCarte(3, TypeZone::ECARTEES, nullptr, this));
+}
