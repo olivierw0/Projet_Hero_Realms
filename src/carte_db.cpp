@@ -355,7 +355,7 @@ Carte dark_reward = {
 You may sacrifice a card in your hand or discard pile.
 <hr>
 {Rouge Ally}: {Gain 6 combat}",
-    .effets = { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 // 3 cartes
@@ -382,7 +382,7 @@ Carte death_touch = {
 You may sacrifice a card in your hand or discard pile.
 <hr>
 {Rouge Ally}: {Gain 2 combat}",
-    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 Carte life_drain = {
@@ -395,7 +395,7 @@ Carte life_drain = {
 You may sacrifice a card in your hand or discard pile.
 <hr>
 {Rouge Ally}: Draw a card.",
-    .effets = { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3,ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 // 2 cartes
@@ -408,8 +408,8 @@ Carte the_rot = {
     .description = "{Gain 4 combat}
 You may sacrifice a card in your hand or discard pile.
 <hr>
-{Rouge Ally}: {Gain 3 combat}"
-    .effets = { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+{Rouge Ally}: {Gain 3 combat}",
+    .effets = { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 Carte dark_energy = {
@@ -436,7 +436,7 @@ Carte tyrannor_the_devorer = {
 You may sacrifice up to two cards in your hand and/or discard pile.
 <hr>
 {Rouge Ally}: Draw a card.",
-    .effets = { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICEConditionEffet::SACRIFICE_HAND_DISCARD, {0,1})}
 };
 
 // 2 cartes
@@ -505,7 +505,7 @@ Carte krythos_master_vampire = {
     .description = "{Expend}: {Gain 3 combat}
 You may sacrifice a card in your hand or discard pile.
 If you do, gain an additional {3 combat}.",
-    .effets = { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 // /!\ Note: Lys a une mécanique spéciale, il nécessite une syntaxe différente
@@ -521,10 +521,11 @@ Carte lys_the_unseen = {
     .description = "{Expend}: {Gain 2 combat}
 You may sacrifice a card in your hand or discard pile.
 If you do, gain an additional {2 combat}.",
-    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1})}
 };
 
 // ========== CARTES VERTES (SAUVAGES) ==========
+
 
 Carte natures_bounty = {
     .id = 60,
@@ -532,7 +533,168 @@ Carte natures_bounty = {
     .cout = 4,
     .type = TypeCarte::ACTION,
     .faction = FactionCarte::VERT,
-    .description = 
+    .description = "{Gain 4 gold}
+{Vert Ally}: Target opponent discards a card.
+{Sacrifice}: {Gain 4 combat}",
+    .effets = { Effet(1, TypeEffet::OR, 4), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1, ConditionEffet::VERT_ALLY), Effet(3, TypeEffet::DMG, 4, ConditionEffet::SACRIFICE) }
+};
+
+// 3 cartes
+Carte elven_gift = {
+    .id = 61,
+    .nom = "Elven Gift",
+    .cout = 2,
+    .type = TypeCarte::ACTION,
+    .faction = FactionCarte::VERT,
+    .description = "{Gain 2 gold}",
+    .effets = { Effet(1, TypeEffet::OR, 2) }
+};
+
+// 2 cartes
+Carte elven_curse = {
+    .id = 62,
+    .nom = "Elven Curse",
+    .cout = 3,
+    .type = TypeCarte::ACTION,
+    .faction = FactionCarte::VERT,
+    .description = "{Gain 6 combat}
+Target opponent discards a card.
+{Vert Ally}: {Gain 3 combat}",
+    .effets = { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 3, ConditionEffet::VERT_ALLY) }
+};
+
+Carte rampage = {
+    .id = 63,
+    .nom = "Rampage",
+    .cout = 6,
+    .type = TypeCarte::ACTION,
+    .faction = FactionCarte::VERT,
+    .description = "{Gain 6 combat}
+You may draw up to two cards, then discard that many cards.",
+    .effets = { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {0,1,2}) }
+};
+
+// 3 cartes
+Carte spark = {
+    .id = 64,
+    .nom = "Spark",
+    .cout = 1,
+    .type = TypeCarte::ACTION,
+    .faction = FactionCarte::VERT,
+    .description = "{Gain 3 combat}
+Target opponent discards a card.
+{Vert Ally}: {Gain 2 combat}",
+    .effets = { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 2, ConditionEffet::VERT_ALLY) }
+};
+
+Carte wolf_form = {
+    .id = 65,
+    .nom = "Wolf Form",
+    .cout = 5,
+    .type = TypeCarte::ACTION,
+    .faction = FactionCarte::VERT,
+    .description = "{Gain 8 combat}
+Target opponent discards a card.
+<hr>
+{Sacrifice}: Target opponent discards a card.",
+    .effets = { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::FORCE_DISCARD_OPPONENT, 1, ConditionEffet::SACRIFICE) }
+};
+
+Carte broelyn_loreweaver = {
+    .id = 66,
+    .nom = "Broelyn, Loreweaver",
+    .cout = 4,
+    .type = TypeCarte::CHAMPION,
+    .pv = 6,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 2 gold}
+<hr>
+{Vert Ally}: Target opponent discards a card.",
+    .effets = { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1, ConditionEffet::VERT_ALLY) }
+};
+
+Carte grak_storm_giant = {
+    .id = 67,
+    .nom = "Grak, Storm Giant",
+    .cout = 8,
+    .type = TypeCarte::CHAMPION,
+    .pv = 7,
+    .garde = true,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 6 combat}
+You may draw a card. If you do, discard a card.
+<hr>
+{Vert Ally}: Draw a card, then discard a card.",
+    .effets = { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {0,1}), Effet(3, TypeEffet::DRAW_DISCARD, 1, ConditionEffet::VERT_ALLY) }
+};
+
+Carte dire_wolf = {
+    .id = 68,
+    .nom = "Dire Wolf",
+    .cout = 5,
+    .type = TypeCarte::CHAMPION,
+    .pv = 5,
+    .garde = true,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 3 combat}
+<hr>
+{Vert Ally}: {Gain 4 combat}",
+    .effets = { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) }
+};
+
+// 2 cartes
+Carte wolf_shaman = {
+    .id = 69,
+    .nom = "Wolf Shaman",
+    .cout = 2,
+    .type = TypeCarte::CHAMPION,
+    .pv = 4,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 2 combat}
++{1 combat} for each other {Vert} card you have in play.",
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) }
+};
+
+Carte cron_the_berserker = {
+    .id = 70,
+    .nom = "Cron, the Berserker",
+    .cout = 6,
+    .type = TypeCarte::CHAMPION,
+    .pv = 6,
+    .garde = true,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 5 combat}
+<hr>
+{Vert Ally}: Draw a card.",
+    .effets = { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) }
+};
+
+Carte orc_grunt = {
+    .id = 71,
+    .nom = "Orc Grunt",
+    .cout = 3,
+    .type = TypeCarte::CHAMPION,
+    .pv = 3,
+    .garde = true,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 2 combat}
+<hr>
+{Vert Ally}: Draw a card.",
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) }
+};
+
+Carte torgern_rocksplitter = {
+    .id = 72,
+    .nom = "Torgern Rocksplitter",
+    .cout = 7,
+    .type = TypeCarte::CHAMPION,
+    .pv = 7,
+    .garde = true,
+    .faction = FactionCarte::VERT,
+    .description = "{Expend}: {Gain 4 combat}
+Target opponent discards a card.",
+    .effets = { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1) }
+};
 
 // ========== OBJETS ==========
 
