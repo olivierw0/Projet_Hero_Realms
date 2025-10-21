@@ -5,14 +5,8 @@
 #include <vector>
 #include <string>
 
-// Structure pour stocker une carte avec sa quantité
-struct CarteAvecQuantite {
-    Carte carte;
-    int quantite;
-};
-
 // Base de données des cartes
-extern std::vector<CarteAvecQuantite> carte_db;
+extern std::vector<const Carte*> carte_db;
 
 // Fonctions d'accès à la base de données
 const Carte* getCarteById(int id);

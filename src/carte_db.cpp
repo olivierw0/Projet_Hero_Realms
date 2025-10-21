@@ -512,117 +512,109 @@ Carte gold7(211, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     { Effet(1, TypeEffet::OR, 1) }
 );
 
-std::vector<CarteAvecQuantite> initCarteDB() {
-    std::vector<CarteAvecQuantite> carte_db = {
-        { close_ranks, 1 },
-        { command, 1 },
-        { domination, 1 },
-        { rally_the_troops, 1 },
-        { recruit1, 1 },           // indiqué "3 cartes" dans la base
-        { recruit2, 1 },           // indiqué "3 cartes" dans la base
-        { recruit3, 1 },           // indiqué "3 cartes" dans la base
-        { taxation1, 1 },          // indiqué "3 cartes" dans la base
-        { taxation2, 1 },          // indiqué "3 cartes" dans la base
-        { taxation3, 1 },          // indiqué "3 cartes" dans la base
-        { word_of_power, 1 },
-        { arkus_imperial_dragon, 1 },
-        { darian_war_mage, 1 },
-        { master_weyan, 1 },
-        { cristov_the_just, 1 },
-        { kraka_high_priest, 1 },
-        { tithe_priest1, 1 },      // indiqué "2 cartes" dans la base
-        { tithe_priest2, 1 },      // indiqué "2 cartes" dans la base
-        { man_at_arms1, 1 },        // indiqué "2 cartes" dans la base
-        { man_at_arms2, 1 }        // indiqué "2 cartes" dans la base
+std::vector<const Carte*> initCarteDB() {
+    std::vector<const Carte*> carte_db = {
+        // JAUNES
+        &close_ranks,
+        &command,
+        &domination,
+        &rally_the_troops,
+        &recruit1,           // indiqué "3 cartes" dans la base
+        &recruit2,           // indiqué "3 cartes" dans la base
+        &recruit3,           // indiqué "3 cartes" dans la base
+        &taxation1,          // indiqué "3 cartes" dans la base
+        &taxation2,          // indiqué "3 cartes" dans la base
+        &taxation3,          // indiqué "3 cartes" dans la base
+        &word_of_power,
+        &arkus_imperial_dragon,
+        &darian_war_mage,
+        &master_weyan,
+        &cristov_the_just,
+        &kraka_high_priest,
+        &tithe_priest1,      // indiqué "2 cartes" dans la base
+        &tithe_priest2,      // indiqué "2 cartes" dans la base
+        &man_at_arms1,       // indiqué "2 cartes" dans la base
+        &man_at_arms2,        // indiqué "2 cartes" dans la base
+
+        // BLEU
+        &fire_bomb,
+        &deception,
+        &bribe1,
+        &bribe2,
+        &bribe3,
+        &profit1,
+        &profit2,
+        &profit3,
+        &death_threat,
+        &hit_job,
+        &intimidation1,
+        &intimidation2,
+        &smash_and_grab,
+        &rake_master_assassin,
+        &myros_thin_mage,
+        &parov_the_enforcer,
+        &rasmus_the_smuggler,
+        &street_thug1,
+        &street_thug2,
+        &borg_ogre_mercenary,
+
+        // ROUGE
+        &dark_reward,
+        &influence1,
+        &influence2,
+        &influence3,
+        &death_touch1,
+        &death_touch2,
+        &death_touch3,
+        &life_drain,
+        &the_rot1,
+        &the_rot2,
+        &dark_energy,
+        &tyrannor_the_devorer,
+        &cult_priest1,
+        &cult_priest2,
+        &death_cultist1,
+        &death_cultist2,
+        &rayla_endweaver,
+        &varrick_the_necromancer,
+        &krythos_master_vampire,
+        &lys_the_unseen
+
+        // VERT
+        &natures_bounty,
+        &elven_gift1,
+        &elven_gift2,
+        &elven_gift3,
+        &elven_curse1,
+        &elven_curse2,
+        &rampage,
+        &spark1,
+        &spark2,
+        &spark3,
+        &wolf_form,
+        &broelyn_loreweaver,
+        &grak_storm_giant,
+        &dire_wolf,
+        &wolf_shaman1,
+        &wolf_shaman2,
+        &cron_the_berserker,
+        &orc_grunt1,
+        &orc_grunt2,
+        &torgern_rocksplitter
     };
-
-
-    // Ajout au deck carte_db
-    carte_db.insert(carte_db.end(), {
-        { fire_bomb, 1 },
-        { deception, 1 },
-        { bribe1, 1 },
-        { bribe2, 1 },
-        { bribe3, 1 },
-        { profit1, 1 },
-        { profit2, 1 },
-        { profit3, 1 },
-        { death_threat, 1 },
-        { hit_job, 1 },
-        { intimidation1, 1 },
-        { intimidation2, 1 },
-        { smash_and_grab, 1 },
-        { rake_master_assassin, 1 },
-        { myros_thin_mage, 1 },
-        { parov_the_enforcer, 1 },
-        { rasmus_the_smuggler, 1 },
-        { street_thug1, 1 },
-        { street_thug2, 1 },
-        { borg_ogre_mercenary, 1 }
-    });
-
-
-    // Ajout au deck carte_db
-    carte_db.insert(carte_db.end(), {
-        { dark_reward, 1 },
-        { influence1, 1 },
-        { influence2, 1 },
-        { influence3, 1 },
-        { death_touch1, 1 },
-        { death_touch2, 1 },
-        { death_touch3, 1 },
-        { life_drain, 1 },
-        { the_rot1, 1 },
-        { the_rot2, 1 },
-        { dark_energy, 1 },
-        { tyrannor_the_devorer, 1 },
-        { cult_priest1, 1 },
-        { cult_priest2, 1 },
-        { death_cultist1, 1 },
-        { death_cultist2, 1 },
-        { rayla_endweaver, 1 },
-        { varrick_the_necromancer, 1 },
-        { krythos_master_vampire, 1 },
-        { lys_the_unseen, 1 }
-    });
-
-
-    // Ajout au deck carte_db
-    carte_db.insert(carte_db.end(), {
-        { natures_bounty, 1 },
-        { elven_gift1, 1 },
-        { elven_gift2, 1 },
-        { elven_gift3, 1 },
-        { elven_curse1, 1 },
-        { elven_curse2, 1 },
-        { rampage, 1 },
-        { spark1, 1 },
-        { spark2, 1 },
-        { spark3, 1 },
-        { wolf_form, 1 },
-        { broelyn_loreweaver, 1 },
-        { grak_storm_giant, 1 },
-        { dire_wolf, 1 },
-        { wolf_shaman1, 1 },
-        { wolf_shaman2, 1 },
-        { cron_the_berserker, 1 },
-        { orc_grunt1, 1 },
-        { orc_grunt2, 1 },
-        { torgern_rocksplitter, 1 }
-    });
 
     return carte_db;
 }
 
-std::vector<CarteAvecQuantite> carte_db = initCarteDB();
+std::vector<const Carte*> carte_db = initCarteDB();
 
 // ========== FONCTIONS D'ACCES ==========
 
 // Obtenir une carte par son ID
 const Carte* getCarteById(int id) {
-    for (const auto& item : carte_db) {
-        if (item.carte.getId() == id) {
-            return &item.carte;
+    for (const auto& carte : carte_db) {
+        if (carte.getId() == id) {
+            return &carte;
         }
     }
     return nullptr;
@@ -630,22 +622,22 @@ const Carte* getCarteById(int id) {
 
 // Obtenir une carte par son nom
 const Carte* getCarteByName(const std::string& nom) {
-    for (const auto& item : carte_db) {
-        if (item.carte.getNom() == nom) {
-            return &item.carte;
+    for (const auto& carte : carte_db) {
+        if (carte.getNom() == nom) {
+            return &carte;
         }
     }
     return nullptr;
 }
 
-// Obtenir la quantité d'une carte
+// Obtenir la quantité d'une carte (toujours 1 maintenant)
 int getQuantiteById(int id) {
-    for (const auto& item : carte_db) {
-        if (item.carte.getId() == id) {
-            return item.quantite;
+    for (const auto& carte : carte_db) {
+        if (carte.getId() == id) {
+            return 1; // Chaque carte est unique dans le deck
         }
     }
-    return 0;
+    return 0; // Carte non trouvée
 }
 
 
