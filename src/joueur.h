@@ -47,11 +47,16 @@ public:
     ZoneDeCarte* getZoneById(int zoneId);
 
     void initZonesJoueur(); // Initialisation au début de la partie
+    void initDeck(); // Initialisation au début de la partie
     
     // Gestion des cartes en main
     void afficherMain() const;
     bool jouerCarte(int indice, Joueur& adversaire); // Jouer une carte par son indice (1-based)
     int getNombreCartesEnMain() const;
+    
+    // Gestion du deck
+    void melangerDeck(); // Mélanger le deck du joueur
+    void piocher(int nbCartes = 1); // Piocher des cartes du deck vers la main
 };
 
 #endif // JOUEUR_H

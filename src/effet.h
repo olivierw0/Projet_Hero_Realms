@@ -2,9 +2,6 @@
 #define EFFET_H
 
 #include <string>
-
-class Effet {
-
 enum class TypeEffet {
     OR,                              // Gain d'or
     DMG,                             // Dégâts de combat
@@ -37,18 +34,21 @@ enum class ConditionEffet {
     NB_VERT_CARDS_IN_PLAY           // Nombre de cartes vertes en jeu
 };
 
+class Effet {
+
 private:
     int id;
     TypeEffet type;
     int valeur;
     ConditionEffet condition; 
+    int param;
 
 public:
     // Constructeur par défaut
-    Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE) {}
-    
+    Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE), param(0) {}
+
     // Constructeur avec paramètres
-    Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE);
+    Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE, int param = 0);
 
     // Getters
     int getId() const { return id; }
