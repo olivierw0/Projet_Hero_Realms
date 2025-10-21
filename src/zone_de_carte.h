@@ -61,6 +61,12 @@ public:
 
     // Trouver une carte par ID (sans la retirer)
     const Carte* trouverCarte(int carteId) const;
+    
+    // Mélanger les cartes de la zone et réassigner les indices
+    void melangerCartes();
+    
+    // Trier les cartes par ordre (utile après mélange)
+    void trierParOrdre();
 
 };
 

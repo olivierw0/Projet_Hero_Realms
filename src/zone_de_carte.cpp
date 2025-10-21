@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <random>
+#include <chrono>
 
 // Constructeur
 ZoneDeCarte::ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TablePartie* table)
@@ -84,4 +86,31 @@ const Carte* ZoneDeCarte::trouverCarte(int carteId) const {
         }
     }
     return nullptr;
+}
+
+// Mélanger les cartes de la zone et réassigner les indices
+void ZoneDeCarte::melangerCartes() {
+    if (cartes.empty()) return;
+    
+    // Créer un générateur de nombres aléatoires
+    auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    std::mt19937 generator(static_cast<unsigned int>(seed));
+    
+    // Mélanger le vecteur de cartes
+    std::shuffle(cartes.begin(), cartes.end(), generator);
+    
+    // Réassigner les indices après mélange (0, 1, 2, ...)
+    for (size_t i = 0; i < cartes.size(); ++i) {
+        cartes[i].second = static_cast<int>(i);
+    }
+    
+    std::cout << "Zone " << id << " mélangée (" << cartes.size() << " cartes)" << std::endl;
+}
+
+// Trier les cartes par ordre (utile après mélange)
+void ZoneDeCarte::trierParOrdre() {
+    std::sort(cartes.begin(), cartes.end(), 
+              [](const std::pair<Carte, int>& a, const std::pair<Carte, int>& b) {
+                  return a.second < b.second;
+              });
 }

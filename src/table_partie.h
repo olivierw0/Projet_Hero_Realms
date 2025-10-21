@@ -45,7 +45,7 @@ public:
     // Méthodes pour accéder aux attributs
     int getId() const;
     int getNbGemmes() const;
-    const std::vector<Joueur>& getJoueurs() const;
+    std::vector<Joueur>& getJoueurs();
     const std::vector<ZoneDeCarte>& getZonesCommunes() const;
 
     void afficherEtatPartie() const;
@@ -54,7 +54,10 @@ public:
     void endTurn();
 
     // Getter pour le joueur actuel
-    Joueur& getJoueurActuel() const;
+    Joueur& getJoueurActuel();
+    
+    // Getter pour l'adversaire du joueur actuel
+    Joueur& getAdversaire();
 
     // Getter pour l'index du joueur actuel
     int getJoueurActuelIndex() const;

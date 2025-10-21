@@ -22,12 +22,21 @@ int main() {
 
     // Initialiser les zones de chaque joueur
     partie.initZones();
+    
+    // Mélanger les decks des joueurs et faire piocher des cartes initiales
+    std::cout << "\n=== Initialisation des decks ===" << std::endl;
+    for (auto& joueur : partie.getJoueurs()) {
+        joueur.melangerDeck();
+        joueur.piocher(5); // Chaque joueur pioche 5 cartes au début
+    }
+    std::cout << "================================\n" << std::endl;
+    
     do {
         // Afficher l'état de la partie et la main du joueur actuel
         partie.afficherEtatPartie();
         
         Joueur& joueurActuel = partie.getJoueurActuel();
-        Joueur& adversaire = partie.getJoueurByIndex((joueurActuel.getId() == 1) ? 2 : 1);
+        Joueur& adversaire = partie.getAdversaire();
         
         // Afficher la main du joueur
         joueurActuel.afficherMain();

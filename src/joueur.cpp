@@ -5,6 +5,7 @@
 #include "champion.h"
 #include "zone_de_carte.h"
 #include "joueur.h"
+#include "carte_db.h"
 
 void Joueur::takeDamage(int amount){
     pv -= amount;
@@ -73,6 +74,17 @@ void Joueur::initZonesJoueur(){
     ajouterZone(ZoneDeCarte(4, TypeZone::CHAMPIONS, this, nullptr));
 }
 
+void Joueur::initDeck(){
+    ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    if (deck) {
+        std::vector<const Carte*> deckInitial = creerDeckDeBase();
+        for (const auto& carte : deckInitial) {
+            // Déréférencer le pointeur pour obtenir l'objet Carte
+            deck->ajouterCarte(*carte, static_cast<int>(deck->taille()));
+        }
+    }
+}
+
 // Afficher la main du joueur avec des indices
 void Joueur::afficherMain() const {
     ZoneDeCarte* main = const_cast<Joueur*>(this)->getZoneByType(TypeZone::MAIN);
@@ -123,10 +135,10 @@ bool Joueur::jouerCarte(int indice, Joueur& adversaire) {
     // Déplacer la carte de la main vers la défausse
     if (carteAJouer.getType() == TypeCarte::CHAMPION) {
         // Si c'est un champion, le déplacer vers la zone des champions
-        main->deplacerCarte(carteAJouer.getId(), *champions);
+        main->deplacerCarte(carteAJouer.getId(), *champions, 1);
     } else {
         // Sinon, le déplacer vers la défausse
-        main->deplacerCarte(carteAJouer.getId(), *defausse);
+        main->deplacerCarte(carteAJouer.getId(), *defausse, 1);
     }
     
     return true;
@@ -137,4 +149,45 @@ int Joueur::getNombreCartesEnMain() const {
     ZoneDeCarte* main = const_cast<Joueur*>(this)->getZoneByType(TypeZone::MAIN);
     if (!main) return 0;
     return static_cast<int>(main->getCartes().size());
+}
+
+// Mélanger le deck du joueur
+void Joueur::melangerDeck() {
+    ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    if (deck && !deck->estVide()) {
+        deck->melangerCartes();
+        std::cout << "Joueur " << id << " a mélangé son deck." << std::endl;
+    }
+}
+
+// Piocher des cartes du deck vers la main
+void Joueur::piocher(int nbCartes) {
+    ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
+    ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
+    
+    if (!deck || !main) {
+        std::cout << "Erreur: zones introuvables pour la pioche." << std::endl;
+        return;
+    }
+    
+    for (int i = 0; i < nbCartes; ++i) {
+        // Si le deck est vide, mélanger la défausse dans le deck
+        if (deck->estVide() && defausse && !defausse->estVide()) {
+            std::cout << "Deck vide! Mélange de la défausse dans le deck..." << std::endl;
+            defausse->deplacerToutesLesCartes(*deck);
+            deck->melangerCartes();
+        }
+        
+        // Piocher une carte si le deck n'est pas vide
+        if (!deck->estVide()) {
+            const auto& cartes = deck->getCartes();
+            int carteId = cartes[0].first.getId(); // Prendre la première carte
+            deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
+            std::cout << "Joueur " << id << " pioche une carte." << std::endl;
+        } else {
+            std::cout << "Impossible de piocher: deck et défausse vides!" << std::endl;
+            break;
+        }
+    }
 }

@@ -44,42 +44,42 @@ Carte word_of_power(7, "Word of Power", 6, TypeCarte::ACTION, FactionCarte::JAUN
 );
 
 // Champions jaunes
-Champion arkus_imperial_dragon(8, "Arkus, Imperial Dragon", 8, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion arkus_imperial_dragon(8, "Arkus, Imperial Dragon", 8, FactionCarte::JAUNE,
     "{Expend}: {Gain 5 combat} Draw a card. {Jaune Ally}: {Gain 6 health}",
     { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) },
     true, 6
 );
 
-Champion darian_war_mage(9, "Darian, War Mage", 4, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion darian_war_mage(9, "Darian, War Mage", 4, FactionCarte::JAUNE,
     "{Expend}: {Gain 3 combat} <i>or</i> {Gain 4 health}",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::SOIN, 4) }
 );
 
-Champion master_weyan(10, "Master Weyan", 4, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion master_weyan(10, "Master Weyan", 4, FactionCarte::JAUNE,
     "{Expend}: {Gain 3 combat} +{1 combat} for each other champion you have in play.",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_CHAMPIONS) },
     true, 4 
 );
 
-Champion cristov_the_just(11, "Cristov, the Just", 5, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion cristov_the_just(11, "Cristov, the Just", 5, FactionCarte::JAUNE,
     "{Expend}: {Gain 2 combat} {Gain 3 health} <hr> {Jaune Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::PIOCHE, 1, ConditionEffet::JAUNE_ALLY) },
     true, 5
 );
 
-Champion kraka_high_priest(12, "Kraka, High Priest", 6, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion kraka_high_priest(12, "Kraka, High Priest", 6, FactionCarte::JAUNE,
     "{Expend}: {Gain 2 health} Draw a card. <hr> {Jaune Ally}: Gain {2 health} for each champion you have in play.",
     { Effet(1, TypeEffet::SOIN, 2), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::SOIN, 2, ConditionEffet::JAUNE_ALLY), Effet(4, TypeEffet::SOIN, 1, ConditionEffet::NB_CHAMPIONS) },
     true, 6
 );
 
-Champion tithe_priest(13, "Tithe Priest", 2, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion tithe_priest(13, "Tithe Priest", 2, FactionCarte::JAUNE,
     "{Expend}: {Gain 1 gold} <i>or</i> Gain {1 health} for each champion you have in play.",
     { Effet(1, TypeEffet::PIOCHE, 2) },
     false, 3
 );
 
-Champion man_at_arms(14, "Man-at-Arms", 3, TypeCarte::CHAMPION, FactionCarte::JAUNE,
+Champion man_at_arms(14, "Man-at-Arms", 3, FactionCarte::JAUNE,
     "{Expend}: {Gain 2 combat} +{1 combat} for each other guard you have in play.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_GARDES) },
     true, 4
@@ -140,42 +140,42 @@ Carte smash_and_grab(
 
 // Champions bleus
 Champion rake_master_assassin(
-    28, "Rake Master Assassin", 7, TypeCarte::CHAMPION, FactionCarte::BLEU,
+    28, "Rake Master Assassin", 7, FactionCarte::BLEU,
     "{Expend}: {Gain 4 combat} You may stun target champion.",
     { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::STUN, 0) },
     false, 7
 );
 
 Champion myros_thin_mage(
-    29, "Myros, Thin Mage", 5, TypeCarte::CHAMPION, FactionCarte::BLEU,
+    29, "Myros, Thin Mage", 5, FactionCarte::BLEU,
     "{Expend}: {Gain 3 gold}\n<hr>\n{Bleu Ally}: {Gain 4 combat}",
     { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 4, ConditionEffet::BLEU_ALLY) },
     true, 3
 );
 
 Champion parov_the_enforcer(
-    30, "Parov, the Enforcer", 5, TypeCarte::CHAMPION, FactionCarte::BLEU,
+    30, "Parov, the Enforcer", 5, FactionCarte::BLEU,
     "{Expend}: {Gain 3 combat}\n<hr>\n{Bleu Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::BLEU_ALLY) },
     true, 5
 );
 
 Champion rasmus_the_smuggler(
-    31, "Rasmus, the Smuggler", 4, TypeCarte::CHAMPION, FactionCarte::BLEU,
+    31, "Rasmus, the Smuggler", 4, FactionCarte::BLEU,
     "{Expend}: {Gain 2 gold}\n<hr>\n{Bleu Ally}: Put the next card you acquire this turn on top of your deck.",
     { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::TOP_DECK_NEXT_ACQUIRED, 0, ConditionEffet::BLEU_ALLY) },
     false, 5
 );
 
 Champion street_thug(
-    32, "Street Thug", 3, TypeCarte::CHAMPION, FactionCarte::BLEU,
+    32, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
     { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::DMG, 2) },
     false, 4
 );
 
 Champion borg_ogre_mercenary(
-    33, "Borg, Ogre Mercenary", 6, TypeCarte::CHAMPION, FactionCarte::BLEU,
+    33, "Borg, Ogre Mercenary", 6, FactionCarte::BLEU,
     "{Expend}: {Gain 4 combat}",
     { Effet(1, TypeEffet::DMG, 4) },
     true, 6
@@ -188,7 +188,7 @@ Champion borg_ogre_mercenary(
 // Actions rouges
 Carte dark_reward(40, "Dark Reward", 5, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 3 gold}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 6 combat}",
-    { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
+    { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
 
 Carte influence(41, "Influence", 2, TypeCarte::ACTION, FactionCarte::ROUGE,
@@ -198,17 +198,17 @@ Carte influence(41, "Influence", 2, TypeCarte::ACTION, FactionCarte::ROUGE,
 
 Carte death_touch(42, "Death Touch", 1, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 2 combat}",
-    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
 
 Carte life_drain(43, "Life Drain", 6, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 8 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
+    { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
 
 Carte the_rot(44, "The Rot", 3, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 4 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 3 combat}",
-    { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
+    { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
 
 Carte dark_energy(45, "Dark Energy", 4, TypeCarte::ACTION, FactionCarte::ROUGE,
@@ -217,45 +217,45 @@ Carte dark_energy(45, "Dark Energy", 4, TypeCarte::ACTION, FactionCarte::ROUGE,
 );
 
 // Champions rouges
-Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, FactionCarte::ROUGE,
     "{Expend}: {Gain 4 combat}\nYou may sacrifice up to two cards in your hand and/or discard pile.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICE_HAND_DISCARD, {0,1}) },
+    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICE_HAND_DISCARD, 1) },
     true, 6
 );  
 
-Champion cult_priest(47, "Cult Priest", 3, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion cult_priest(47, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
     { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::NB_CHAMPIONS) },
     false, 4
 );
 
-Champion death_cultist(48, "Death Cultist", 2, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion death_cultist(48, "Death Cultist", 2, FactionCarte::ROUGE,
     "{Expend}: {Gain 2 combat}",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::ROUGE_ALLY) },
     true, 3
 );
 
-Champion rayla_endweaver(49, "Rayla Endweaver", 4, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion rayla_endweaver(49, "Rayla Endweaver", 4, FactionCarte::ROUGE,
     "{Expend}: {Gain 3 combat}\n<hr>\n{Rouge Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 
-Champion varrick_the_necromancer(50, "Varrick, the Necromancer", 5, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion varrick_the_necromancer(50, "Varrick, the Necromancer", 5, FactionCarte::ROUGE,
     "{Expend}: Take a champion from your discard pile and put it on top of your deck.\n<hr>\n{Rouge Ally}: Draw a card.",
     { Effet(1, TypeEffet::TOP_DECK_FROM_DISCARD, 0), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     false, 3
 );
 
-Champion krythos_master_vampire(51, "Krythos, Master Vampire", 7, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion krythos_master_vampire(51, "Krythos, Master Vampire", 7, FactionCarte::ROUGE,
     "{Expend}: {Gain 3 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {3 combat}.",
-    { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) },
+    { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_HAND_DISCARD, 1) },
     true, 6
 );
 
-Champion lys_the_unseen(52, "Lys, the Unseen", 6, TypeCarte::CHAMPION, FactionCarte::ROUGE,
+Champion lys_the_unseen(52, "Lys, the Unseen", 6, FactionCarte::ROUGE,
     "{Expend}: {Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {2 combat}.",
-    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) },
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE_HAND_DISCARD, 1) },
     true, 5
 );
 
@@ -271,7 +271,7 @@ Carte natures_bounty(60, "Nature's Bounty", 4, TypeCarte::ACTION, FactionCarte::
 
 Carte elven_gift(61, "Elven Gift", 2, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 2 gold}\nYou may draw a card. If you do, discard a card.<hr>\n{Vert Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DRAW_DISCARD, {0,1}), Effet(3, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) }
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DRAW_DISCARD, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) }
 );
 
 Carte elven_curse(62, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
@@ -281,7 +281,7 @@ Carte elven_curse(62, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
 
 Carte rampage(63, "Rampage", 6, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 6 combat}\nYou may draw up to two cards, then discard that many cards.",
-    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {0,1,2}) }
+    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, 2) }
 );
 
 Carte spark(64, "Spark", 1, TypeCarte::ACTION, FactionCarte::VERT,
@@ -295,43 +295,43 @@ Carte wolf_form(65, "Wolf Form", 5, TypeCarte::ACTION, FactionCarte::VERT,
 );
 
 // Champions verts
-Champion broelyn_loreweaver(66, "Broelyn, Loreweaver", 4, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion broelyn_loreweaver(66, "Broelyn, Loreweaver", 4,  FactionCarte::VERT,
     "{Expend}: {Gain 2 gold}\n<hr>\n{Vert Ally}: Target opponent discards a card.",
     { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1, ConditionEffet::VERT_ALLY) },
     false, 6
 );
 
-Champion grak_storm_giant(67, "Grak, Storm Giant", 8, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion grak_storm_giant(67, "Grak, Storm Giant", 8,  FactionCarte::VERT,
     "{Expend}: {Gain 6 combat}\nYou may draw a card. If you do, discard a card.\n<hr>\n{Vert Ally}: Draw a card, then discard a card.",
-    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {0,1}), Effet(3, TypeEffet::DRAW_DISCARD, 1, ConditionEffet::VERT_ALLY) },
+    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, 1), Effet(3, TypeEffet::DRAW_DISCARD, 1, ConditionEffet::VERT_ALLY) },
     true, 7
 );
 
-Champion dire_wolf(68, "Dire Wolf", 5, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion dire_wolf(68, "Dire Wolf", 5,  FactionCarte::VERT,
     "{Expend}: {Gain 3 combat}\n<hr>\n{Vert Ally}: {Gain 4 combat}",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) },
     true, 5
 );
 
-Champion wolf_shaman(69, "Wolf Shaman", 2, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion wolf_shaman(69, "Wolf Shaman", 2,  FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n+{1 combat} for each other {Vert} card you have in play.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) },
     false, 4
 );
 
-Champion cron_the_berserker(70, "Cron, the Berserker", 6, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion cron_the_berserker(70, "Cron, the Berserker", 6,  FactionCarte::VERT,
     "{Expend}: {Gain 5 combat}\n<hr>\n{Vert Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) },
     true, 6
 );
 
-Champion orc_grunt(71, "Orc Grunt", 3, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion orc_grunt(71, "Orc Grunt", 3,  FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n<hr>\n{Vert Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) },
     true, 3
 );
 
-Champion torgern_rocksplitter(72, "Torgern Rocksplitter", 7, TypeCarte::CHAMPION, FactionCarte::VERT,
+Champion torgern_rocksplitter(72, "Torgern Rocksplitter", 7,  FactionCarte::VERT,
     "{Expend}: {Gain 4 combat}\nTarget opponent discards a card.",
     { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1) },
     true, 7

@@ -6,13 +6,13 @@ CXXFLAGS = -Wall -Wextra -std=c++17 -g
 TARGET = hero_realms
 
 # Fichiers sources
-SOURCES = main.cpp table_partie.cpp zone_de_carte.cpp joueur.cpp carte.cpp champion.cpp effet.cpp
+SOURCES = main.cpp table_partie.cpp zone_de_carte.cpp joueur.cpp carte.cpp champion.cpp effet.cpp carte_db.cpp
 
 # Fichiers objets (générés automatiquement à partir des sources)
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Fichiers headers
-HEADERS = carte.h champion.h effet.h joueur.h zone_de_carte.h table_partie.h
+HEADERS = carte.h champion.h effet.h joueur.h zone_de_carte.h table_partie.h carte_db.h
 
 # Règle par défaut
 all: $(TARGET)
