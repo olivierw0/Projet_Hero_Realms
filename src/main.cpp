@@ -23,7 +23,7 @@ int main() {
     do {
         // Afficher l'état initial de la partie
         partie.afficherEtatPartie();
-        
+        partie.getJoueurActuel().initJoueur();
         std::cout << "\n=== Attendre une commande du joueur " << partie.getJoueurActuel().getId() << " ===" << std::endl;
         std::cin.get();
         // TODO: Gérer les commandes du joueur

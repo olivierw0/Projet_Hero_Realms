@@ -45,7 +45,7 @@ public:
     void ajouterZone(ZoneDeCarte&& zone);
     ZoneDeCarte* getZoneByType(TypeZone type);
     ZoneDeCarte* getZoneById(int zoneId);
-
+    void initJoueur(); // Initialisation au début de la partie
 };
 
 #endif // JOUEUR_H

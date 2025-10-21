@@ -47,8 +47,20 @@ public:
     Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE) {}
     
     // Constructeur avec paramètres
-    Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE)
-        : id(id), type(type), valeur(valeur), condition(condition) {}
+    Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE);
+
+    // Getters
+    int getId() const { return id; }
+    TypeEffet getType() const { return type; }
+    int getValeur() const { return valeur; }
+    ConditionEffet getCondition() const { return condition; }
+
+    // Méthode principale pour activer l'effet quand une carte est jouée
+    void activerEffet(class Joueur& joueurActif, class Joueur& adversaire) const;
+
+private:
+    // Méthode pour vérifier si les conditions de l'effet sont remplies
+    bool verifierConditions(const class Joueur& joueurActif, const class Joueur& adversaire) const;
 };
 
 #endif // EFFET_H

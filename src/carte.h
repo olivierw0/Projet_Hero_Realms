@@ -54,6 +54,9 @@ public:
     std::string getDescription() const { return description; }
     const std::vector<Effet>& getEffets() const { return effets; }
     
+    // Méthode pour jouer la carte et activer ses effets
+    void jouerCarte(class Joueur& joueurActif, class Joueur& adversaire) const;
+    
     // Méthode virtuelle pour les PV (redéfinie dans Champion)
     virtual int getPV() const { return 0; }
 
