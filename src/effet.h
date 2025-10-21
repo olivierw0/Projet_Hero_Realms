@@ -2,50 +2,53 @@
 #define EFFET_H
 
 #include <string>
-#include <vector>
-using namespace std;
 
 class Effet {
 
 enum class TypeEffet {
-    OR,
-    DMG,
-    PIOCHE,
-    SOIN,
-    ADV_DEFAUSSE,
-    PREPARE_CHAMPION,
-    STUN
+    OR,                              // Gain d'or
+    DMG,                             // Dégâts de combat
+    PIOCHE,                          // Piocher des cartes
+    SOIN,                            // Gagner de la santé
+    ADV_DEFAUSSE,                    // Adversaire défausse
+    PREPARE_CHAMPION,                // Préparer un champion
+    STUN,                            // Étourdir un champion
+    HAND_NEXT_ACQUIRED,              // Mettre la prochaine carte acquise en main
+    TOP_DECK_NEXT_ACQUIRED_ACTION,   // Mettre la prochaine action acquise sur le dessus du deck
+    TOP_DECK_FROM_DISCARD,           // Prendre une carte de la défausse et la mettre sur le dessus du deck
+    TOP_DECK_NEXT_ACQUIRED,          // Mettre la prochaine carte acquise sur le dessus du deck
+    SACRIFICE,                       // Effet de sacrifice
+    FORCE_DISCARD_OPPONENT,          // Forcer l'adversaire à défausser
+    DRAW_DISCARD                     // Piocher et défausser
 };
 
 enum class ConditionEffet {
-    AUCUNE,
-    DEFAUSSE,
-    ROUGE,          // Allié rouge requis
-    JAUNE,          // Allié jaune requis  
-    VERT,           // Allié vert requis
-    BLEU,           // Allié bleu requis
-    SACRIFICE,
-    NB_CHAMPIONS
+    AUCUNE,                          // Aucune condition
+    DEFAUSSE,                        // Condition liée à la défausse
+    ROUGE_ALLY,                      // Allié rouge requis
+    JAUNE_ALLY,                      // Allié jaune requis  
+    VERT_ALLY,                       // Allié vert requis
+    BLEU_ALLY,                       // Allié bleu requis
+    SACRIFICE,                       // Condition de sacrifice
+    NB_CHAMPIONS,                    // Nombre de champions en jeu
+    NB_GARDES,                       // Nombre de gardes en jeu
+    SACRIFICE_HAND_DISCARD,          // Sacrifice depuis la main ou la défausse
+    NB_VERT_CARDS_IN_PLAY           // Nombre de cartes vertes en jeu
 };
 
 private:
     int id;
     TypeEffet type;
-    vector<int> valeur;
+    int valeur;
     ConditionEffet condition; 
 
 public:
     // Constructeur par défaut
-    Effet() : id(0), type(TypeEffet::OR), valeur({0}), condition(ConditionEffet::AUCUNE) {}
+    Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE) {}
     
     // Constructeur avec paramètres
-    Effet(int id, TypeEffet type, vector<int> valeur, ConditionEffet condition = ConditionEffet::AUCUNE)
+    Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE)
         : id(id), type(type), valeur(valeur), condition(condition) {}
-
-    // Surcharge du constructeur pour un seul entier comme valeur
-    Effet(int id, TypeEffet type, int val, ConditionEffet condition = ConditionEffet::AUCUNE)
-    : id(id), type(type), valeur({val}), condition(condition) {}
-
 };
 
 #endif // EFFET_H

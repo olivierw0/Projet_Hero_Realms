@@ -355,7 +355,7 @@ Carte dark_reward = {
 You may sacrifice a card in your hand or discard pile.
 <hr>
 {Rouge Ally}: {Gain 6 combat}",
-    .effets = { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 // 3 cartes
@@ -382,7 +382,7 @@ Carte death_touch = {
 You may sacrifice a card in your hand or discard pile.
 <hr>
 {Rouge Ally}: {Gain 2 combat}",
-    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 Carte life_drain = {
@@ -395,7 +395,7 @@ Carte life_drain = {
 You may sacrifice a card in your hand or discard pile.
 <hr>
 {Rouge Ally}: Draw a card.",
-    .effets = { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3,ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 // 2 cartes
@@ -408,8 +408,8 @@ Carte the_rot = {
     .description = "{Gain 4 combat}
 You may sacrifice a card in your hand or discard pile.
 <hr>
-{Rouge Ally}: {Gain 3 combat}"
-    .effets = { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE, 0) }
+{Rouge Ally}: {Gain 3 combat}",
+    .effets = { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 Carte dark_energy = {
@@ -436,7 +436,7 @@ Carte tyrannor_the_devorer = {
 You may sacrifice up to two cards in your hand and/or discard pile.
 <hr>
 {Rouge Ally}: Draw a card.",
-    .effets = { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICE, {1,2}) }
+    .effets = { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICEConditionEffet::SACRIFICE_HAND_DISCARD, {0,1})}
 };
 
 // 2 cartes
@@ -505,7 +505,7 @@ Carte krythos_master_vampire = {
     .description = "{Expend}: {Gain 3 combat}
 You may sacrifice a card in your hand or discard pile.
 If you do, gain an additional {3 combat}.",
-    .effets = { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1}) }
 };
 
 // /!\ Note: Lys a une mécanique spéciale, il nécessite une syntaxe différente
@@ -521,10 +521,11 @@ Carte lys_the_unseen = {
     .description = "{Expend}: {Gain 2 combat}
 You may sacrifice a card in your hand or discard pile.
 If you do, gain an additional {2 combat}.",
-    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE), Effet(3, TypeEffet::SACRIFICE, 0) }
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE_HAND_DISCARD, {0,1})}
 };
 
 // ========== CARTES VERTES (SAUVAGES) ==========
+
 
 Carte natures_bounty = {
     .id = 60,
@@ -570,7 +571,7 @@ Carte rampage = {
     .faction = FactionCarte::VERT,
     .description = "{Gain 6 combat}
 You may draw up to two cards, then discard that many cards.",
-    .effets = { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {1,2}) }
+    .effets = { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, {0,1,2}) }
 };
 
 // 3 cartes
@@ -651,7 +652,7 @@ Carte wolf_shaman = {
     .faction = FactionCarte::VERT,
     .description = "{Expend}: {Gain 2 combat}
 +{1 combat} for each other {Vert} card you have in play.",
-    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1) } // TODO: NB_VERT_CARDS_IN_PLAY
+    .effets = { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) }
 };
 
 Carte cron_the_berserker = {
