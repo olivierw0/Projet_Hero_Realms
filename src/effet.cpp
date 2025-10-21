@@ -35,9 +35,18 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire) const {
             break;
             
         case TypeEffet::PIOCHE:
-            // TODO: Implémenter la pioche de cartes avec les zones du joueur
-            std::cout << "Joueur " << joueurActif.getId() << " devrait piocher " << valeur << " carte(s)" << std::endl;
-            break;
+            joueurActif.piocher(valeur);
+            if(valeur > 1){
+                std::cout << "Joueur " << joueurActif.getId() << " pioche " << valeur << " cartes" << std::endl;
+                break;
+            }
+            else{
+                std::cout << "Joueur " << joueurActif.getId() << " pioche " << valeur << " carte" << std::endl;
+                break;
+            }
+
+            
+
             
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
