@@ -20,40 +20,48 @@ Carte command(2, "Command", 5, TypeCarte::ACTION, FactionCarte::JAUNE,
 );
 
 Carte domination(3, "Domination", 7, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 6 combat. Gain 6 health",
-    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::SOIN, 6) }
+    "{Gain 6 combat} {Gain 6 health} Draw a card. <hr> {Jaune Ally}: Prepare a champion.",
+    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::SOIN, 6), Effet(3, TypeEffet::PIOCHE, 1), Effet(4, TypeEffet::PREPARE_CHAMPION, 0, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte rally_the_troops(4, "Rally the Troops", 4, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 5 combat. Gain 5 health",
-    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SOIN, 5) }
+    "{Gain 5 combat} {Gain 5 health} <hr> {Jaune Ally}: Prepare a champion.",
+    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SOIN, 5), Effet(3, TypeEffet::PREPARE_CHAMPION, 0, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte recruit1(501, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold. Gain 3 health",
-    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3) }
-);Carte recruit2(502, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold. Gain 3 health",
-    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3) }
-);Carte recruit3(503, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold. Gain 3 health",
-    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3) }
+    "{Gain 2 gold} {Gain 3 health} +{1 health} for each champion you have in play. <hr> {Jaune Ally}: {Gain 1 gold}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::SOIN_per_CHAMP, 1), Effet(4, TypeEffet::OR, 1, ConditionEffet::JAUNE_ALLY) }
+);
+Carte recruit2(502, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} {Gain 3 health} +{1 health} for each champion you have in play. <hr> {Jaune Ally}: {Gain 1 gold}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::SOIN_per_CHAMP, 1), Effet(4, TypeEffet::OR, 1, ConditionEffet::JAUNE_ALLY) }
+);
+Carte recruit3(503, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} {Gain 3 health} +{1 health} for each champion you have in play. <hr> {Jaune Ally}: {Gain 1 gold}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::SOIN_per_CHAMP, 1), Effet(4, TypeEffet::OR, 1, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte taxation1(601, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold",
-    { Effet(1, TypeEffet::OR, 2) }
-);Carte taxation2(602, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold",
-    { Effet(1, TypeEffet::OR, 2) }
-);Carte taxation3(603, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold",
-    { Effet(1, TypeEffet::OR, 2) }
+    "{Gain 2 gold} <hr> {Jaune Ally}: {Gain 6 health}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
+);
+Carte taxation2(602, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} <hr> {Jaune Ally}: {Gain 6 health}",
+        { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
+);
+Carte taxation3(603, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} <hr> {Jaune Ally}: {Gain 6 health}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte word_of_power(7, "Word of Power", 6, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Draw two cards",
-    { Effet(1, TypeEffet::PIOCHE, 2) }
+    "Draw two cards.
+<hr>
+{Jaune Ally}: {Gain 5 health}
+<hr>
+{Sacrifice}: {Gain 5 combat}",
+    { Effet(1, TypeEffet::PIOCHE, 2), Effet(2, TypeEffet::SOIN, 5, ConditionEffet::JAUNE_ALLY), Effet(3, TypeEffet::DMG, 5, ConditionEffet::SACRIFICE) }
 );
 
 // Champions jaunes
@@ -65,7 +73,7 @@ Champion arkus_imperial_dragon(8, "Arkus, Imperial Dragon", 8, FactionCarte::JAU
 
 Champion darian_war_mage(9, "Darian, War Mage", 4, FactionCarte::JAUNE,
     "{Expend}: {Gain 3 combat} <i>or</i> {Gain 4 health}",
-    { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::SOIN, 4) }
+    { Effet(1, TypeEffet::DMG_ou_SOIN, 1) }
 );
 
 Champion master_weyan(10, "Master Weyan", 4, FactionCarte::JAUNE,
@@ -82,18 +90,18 @@ Champion cristov_the_just(11, "Cristov, the Just", 5, FactionCarte::JAUNE,
 
 Champion kraka_high_priest(12, "Kraka, High Priest", 6, FactionCarte::JAUNE,
     "{Expend}: {Gain 2 health} Draw a card. <hr> {Jaune Ally}: Gain {2 health} for each champion you have in play.",
-    { Effet(1, TypeEffet::SOIN, 2), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::SOIN, 2, ConditionEffet::JAUNE_ALLY), Effet(4, TypeEffet::SOIN, 1, ConditionEffet::NB_CHAMPIONS) },
+    { Effet(1, TypeEffet::SOIN, 2), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::SOIN_per_CHAMP, 2, ConditionEffet::JAUNE_ALLY)},
     true, 6
 );
 
 Champion tithe_priest1(1301, "Tithe Priest", 2, FactionCarte::JAUNE,
     "{Expend}: {Gain 1 gold} <i>or</i> Gain {1 health} for each champion you have in play.",
-    { Effet(1, TypeEffet::PIOCHE, 2) },
+    { Effet(1, TypeEffet::OR_ou_SOIN_per_CHAMP, 1) },
     false, 3
 );
 Champion tithe_priest2(1302, "Tithe Priest", 2, FactionCarte::JAUNE,
     "{Expend}: {Gain 1 gold} <i>or</i> Gain {1 health} for each champion you have in play.",
-    { Effet(1, TypeEffet::PIOCHE, 2) },
+    { Effet(1, TypeEffet::OR_ou_SOIN_per_CHAMP, 1) },
     false, 3
 );
 
@@ -218,13 +226,13 @@ Champion rasmus_the_smuggler(
 Champion street_thug1(
     3201, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::DMG, 2) },
+    { Effet(1, TypeEffet::OR_ou_DMG, 1) },
     false, 4
 );
 Champion street_thug2(
     3202, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::DMG, 2) },
+    { Effet(1, TypeEffet::OR_ou_DMG, 1) },
     false, 4
 );
 
@@ -293,18 +301,18 @@ Carte dark_energy(45, "Dark Energy", 4, TypeCarte::ACTION, FactionCarte::ROUGE,
 // Champions rouges
 Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, FactionCarte::ROUGE,
     "{Expend}: {Gain 4 combat}\nYou may sacrifice up to two cards in your hand and/or discard pile.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICE_HAND_DISCARD, 1) },
+    { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::SACRIFICE_HAND_DISCARD, 1), Effet(3, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     true, 6
 );  
 
 Champion cult_priest1(4701, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::NB_CHAMPIONS) },
+    { Effet(1, TypeEffet::OR_or_SOIN, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 Champion cult_priest2(4702, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::NB_CHAMPIONS) },
+    { Effet(1, TypeEffet::OR_or_SOIN, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 

@@ -1,56 +1,247 @@
-Table Carte {
-  id int [pk]
-  nom string
-  cout int
-  type string // action, objet, champion
-  faction string
-  description string
-}
+classDiagram
+    %% Énumérations principales
+    class TypeCarte {
+        <<enumeration>>
+        ACTION
+        OBJET
+        CHAMPION
+    }
 
-Table Champion {
-  id int [pk, ref: > Carte.id]
-  pv int
-  active bool
-  garde bool
-}
+    class FactionCarte {
+        <<enumeration>>
+        ROUGE
+        BLEU
+        VERT
+        JAUNE
+        NEUTRE
+    }
 
-Table Joueur {
-  id int [pk]
-  pv int
-  or int 
-  combat int
-}
+    class TypeEffet {
+        <<enumeration>>
+        DMG
+        DMG_ou_SOIN
+        DRAW_DISCARD
+        FORCE_DISCARD_OPPONENT
+        HAND_NEXT_ACQUIRED
+        OR
+        OR_or_SOIN
+        OR_ou_DMG
+        OR_ou_SOIN_per_CHAMP
+        PIOCHE
+        PREPARE_CHAMPION
+        SACRIFICE_HAND_DISCARD
+        SOIN
+        SOIN_per_CHAMP
+        STUN
+        TOP_DECK_FROM_DISCARD
+        TOP_DECK_NEXT_ACQUIRED
+        TOP_DECK_NEXT_ACQUIRED_ACTION
+    }
 
-Table TablePartie {
-  id int [pk]
-  nb_gemmes int
-}
+    class ConditionEffet {
+        <<enumeration>>
+        AUCUNE
+        ROUGE_ALLY
+        JAUNE_ALLY
+        VERT_ALLY
+        BLEU_ALLY
+        SACRIFICE
+        SACRIFICE_TO_MARCHE
+        NB_CHAMPIONS
+        NB_GARDES
+        SACRIFICE_HAND_DISCARD
+        NB_VERT_CARDS_IN_PLAY
+    }
 
-Table ZoneDeCarte {
-  id int [pk]
-  type string // deck, main, defausse, champions, deck_marche, marche, sacrifice
-  owner_joueur int [ref: > Joueur.id] // si la zone appartient à un joueur
-  owner_table int [ref: > TablePartie.id] // si la zone appartient à la table
-}
+    class TypeZone {
+        <<enumeration>>
+        DECK
+        MAIN
+        DEFAUSSE
+        CHAMPIONS
+        DECK_MARCHE
+        MARCHE
+        ECARTEES
+    }
 
-Table CarteDansZone {
-  id int [pk]
-  carte_id int [ref: > Carte.id]
-  zone_id int [ref: > ZoneDeCarte.id]
-  ordre int // position dans le deck/pioche
-}
+    %% Classes principales
+    class Carte {
+        -int id
+        -string nom
+        -int cout
+        -TypeCarte type
+        -FactionCarte faction
+        -string description
+        -vector~Effet~ effets
+        +Carte()
+        +Carte(id, nom, cout, type, faction, description, effets)
+        +~Carte()
+        +getId() int
+        +getNom() string
+        +getCout() int
+        +getType() TypeCarte
+        +getFaction() FactionCarte
+        +getDescription() string
+        +getEffets() vector~Effet~
+        +jouerCarte(joueurActif, adversaire) void
+        +getPV() int*
+    }
 
+    class Champion {
+        -int pv
+        -bool active
+        -bool garde
+        +Champion()
+        +Champion(id, nom, cout, faction, description, effets, garde, pv)
+        +getPV() int
+        +isActive() bool
+        +hasGarde() bool
+        +setActive(etat) void
+        +activer() void
+        +desactiver() void
+        +changerEtat() void
+        +setPV(nouveaux_pv) void
+        +setGarde(nouvelle_garde) void
+        +expend() bool
+        +untap() void
+    }
 
-Table Effet {
-  id int [pk]
-  type string // "or", "dmg", "pioche", "soin", "sacrifice"
-  valeur int
-  condition_type string // "aucune", "faction", "champion"
-  condition_valeur string // ex: "Imperial", "Necros", id de champion...
-  activation string // "toujours", "sacrifice"
-}
+    class Effet {
+        -int id
+        -TypeEffet type
+        -int valeur
+        -ConditionEffet condition
+        -int param
+        +Effet()
+        +Effet(id, type, valeur, condition, param)
+        +getId() int
+        +getType() TypeEffet
+        +getValeur() int
+        +getCondition() ConditionEffet
+        +activerEffet(joueurActif, adversaire) void
+        -verifierConditions(joueurActif, adversaire) bool
+    }
 
-Table CarteEffet {
-  carte_id int [ref: > Carte.id]
-  effet_id int [ref: > Effet.id]
-}
+    class ZoneDeCarte {
+        -int id
+        -TypeZone type
+        -Joueur* proprietaire
+        -TablePartie* table
+        -vector~pair~Carte,int~~ cartes
+        +ZoneDeCarte(id, type, proprietaire, table)
+        +ZoneDeCarte(other)
+        +ZoneDeCarte(other&&)
+        +operator=(other) ZoneDeCarte&
+        +operator=(other&&) ZoneDeCarte&
+        +~ZoneDeCarte()
+        +getId() int
+        +getType() TypeZone
+        +getProprietaire() Joueur*
+        +getTable() TablePartie*
+        +getCartes() vector~pair~Carte,int~~
+        +ajouterCarte(carte, ordre) void
+        +retirerCarte(carteId) bool
+        +deplacerCarte(carteId, destination, nouvelOrdre) bool
+        +deplacerToutesLesCartes(destination) void
+        +estVide() bool
+        +taille() size_t
+        +trouverCarte(carteId) Carte*
+        +melangerCartes() void
+        +trierParOrdre() void
+    }
+
+    class Joueur {
+        -int id
+        -int pv
+        -int or_value
+        -int combat
+        -vector~ZoneDeCarte~ zones
+        -bool isDead
+        +Joueur(id, pv)
+        +getId() int
+        +getPv() int
+        +getOr() int
+        +getCombat() int
+        +getZones() vector~ZoneDeCarte~
+        +takeDamage(amount) void
+        +heal(amount) void
+        +addOr(amount) void
+        +spendOr(amount) bool
+        +addCombat(amount) void
+        +resetCombat() void
+        +resetOr() void
+        +ajouterZone(zone) void
+        +creerZone(id, type, proprietaire, table) void
+        +getZoneByType(type) ZoneDeCarte*
+        +getZoneById(zoneId) ZoneDeCarte*
+        +initZonesJoueur() void
+        +initDeck() void
+        +afficherMain() void
+        +jouerCarte(indice, adversaire) bool
+        +getNombreCartesEnMain() int
+        +melangerDeck() void
+        +piocher(nbCartes) void
+    }
+
+    class TablePartie {
+        -int id
+        -int nb_gemmes
+        -vector~Joueur~ joueurs
+        -vector~ZoneDeCarte~ zones_communes
+        -int joueur_actuel_index
+        +TablePartie(id, nb_gemmes)
+        +~TablePartie()
+        +ajouterJoueur(joueur) void
+        +creerZoneCommune(id, type) void
+        +getId() int
+        +getNbGemmes() int
+        +getJoueurs() vector~Joueur~
+        +getZonesCommunes() vector~ZoneDeCarte~
+        +afficherEtatPartie() void
+        +endTurn() void
+        +getJoueurActuel() Joueur&
+        +getAdversaire() Joueur&
+        +getJoueurActuelIndex() int
+        +clearTerminal() void$
+        +initZones() void
+        +initPartie() void
+        -afficherZoneJoueur(joueur, type_zone, est_champion) void
+        -afficherZoneCommune(type_zone) void
+        -afficherCarte(carte, est_champion) void
+    }
+
+    %% Relations d'héritage
+    Champion --|> Carte : hérite
+
+    %% Relations de composition/agrégation
+    Carte *-- TypeCarte : utilise
+    Carte *-- FactionCarte : utilise
+    Carte o-- Effet : contient 0..*
+    
+    Champion *-- TypeCarte : CHAMPION
+    Champion *-- FactionCarte : utilise
+
+    Effet *-- TypeEffet : utilise
+    Effet *-- ConditionEffet : utilise
+
+    ZoneDeCarte *-- TypeZone : utilise
+    ZoneDeCarte o-- Carte : contient 0..*
+    ZoneDeCarte --> Joueur : propriétaire 0..1
+    ZoneDeCarte --> TablePartie : table 0..1
+
+    Joueur o-- ZoneDeCarte : possède 1..*
+    Joueur --> Carte : joue
+
+    TablePartie o-- Joueur : contient 2..*
+    TablePartie o-- ZoneDeCarte : zones_communes 0..*
+
+    %% Relations d'utilisation
+    Carte ..> Joueur : utilise dans jouerCarte()
+    Effet ..> Joueur : utilise dans activerEffet()
+    Champion ..> Joueur : utilise dans expend()
+
+    %% Notes sur les cardinalités
+    note for Carte "Classe de base polymorphe\navec destructeur virtuel"
+    note for Champion "Hérite de Carte\nGère les états actif/inactif\net la mécanique d'expend"
+    note for ZoneDeCarte "Gère les cartes avec ordre\nSupporte déplacement entre zones"
+    note for TablePartie "Contrôle le jeu et l'affichage\nGère les tours des joueurs"
