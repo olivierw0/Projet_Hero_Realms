@@ -163,6 +163,12 @@ int Joueur::getNombreCartesEnMain() const {
     return static_cast<int>(main->getCartes().size());
 }
 
+// Jouer toutes les cartes en main
+void Joueur::jouerToutesLesCartes(Joueur& adversaire) {
+    for (int i = 0; i < getNombreCartesEnMain(); ++i) {
+        jouerCarte(1, adversaire);
+    }
+}
 // Mélanger le deck du joueur
 void Joueur::melangerDeck() {
     ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);

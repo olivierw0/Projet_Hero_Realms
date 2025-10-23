@@ -53,7 +53,8 @@ public:
     void afficherMain() const;
     bool jouerCarte(int indice, Joueur& adversaire); // Jouer une carte par son indice (1-based)
     int getNombreCartesEnMain() const;
-    
+    void jouerToutesLesCartes(Joueur& adversaire); // Jouer toutes les cartes en main
+
     // Gestion du deck
     void melangerDeck(); // Mélanger le deck du joueur
     void piocher(int nbCartes = 1); // Piocher des cartes du deck vers la main
