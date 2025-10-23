@@ -35,7 +35,9 @@ void TablePartie::afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone, b
     for (const auto& zone : joueur.getZones()) {
         if (zone.getType() == type_zone) {
             for (const auto& paire_carte : zone.getCartes()) {
-                afficherCarte(paire_carte.first, est_champion);
+                if (paire_carte.first != nullptr) {
+                    afficherCarte(*paire_carte.first, est_champion);
+                }
             }
             if (zone.getCartes().empty()) {
                 std::cout << "..." << std::endl;
@@ -50,8 +52,10 @@ void TablePartie::afficherZoneCommune(TypeZone type_zone) const {
     for (const auto& zone : zones_communes) {
         if (zone.getType() == type_zone) {
             for (const auto& paire_carte : zone.getCartes()) {
-                std::cout << "(" << paire_carte.first.getCout() << ") ";
-                afficherCarte(paire_carte.first, false);
+                if (paire_carte.first != nullptr) {
+                    std::cout << "(" << paire_carte.first->getCout() << ") ";
+                    afficherCarte(*paire_carte.first, false);
+                }
             }
             if (zone.getCartes().empty()) {
                 std::cout << "..." << std::endl;
@@ -141,8 +145,8 @@ void TablePartie::afficherEtatPartie() const {
     // === JOUEUR ACTUEL ===
     std::cout << "\nJoueur " << joueur_actuel.getId() << std::endl;
     std::cout << "========" << std::endl;
-    std::cout << "PV  = " << joueur_actuel.getPv() << std::endl;
-    std::cout << "OR  = " << joueur_actuel.getOr() << std::endl;
+    std::cout << "PV  = " << joueur_actuel.getPv() << " | ";
+    std::cout << "OR  = " << joueur_actuel.getOr() << " | ";
     std::cout << "DMG = " << joueur_actuel.getCombat() << std::endl;
 
     // === PV ENNEMI ===
@@ -171,12 +175,14 @@ void TablePartie::afficherEtatPartie() const {
     // === DÉFAUSSE ===
     std::cout << "\nDefausse" << std::endl;
     std::cout << "========" << std::endl;
-    afficherZoneJoueur(joueur_actuel, TypeZone::DEFAUSSE, false);
+    std::cout << "..." << std::endl;
+    //afficherZoneJoueur(joueur_actuel, TypeZone::DEFAUSSE, false);
 
     // === DÉFAUSSE ENNEMIE ===
     std::cout << "\nDefausse ennemie" << std::endl;
     std::cout << "================" << std::endl;
-    afficherZoneJoueur(ennemi, TypeZone::DEFAUSSE, false);
+    std::cout << "..." << std::endl;
+    //afficherZoneJoueur(ennemi, TypeZone::DEFAUSSE, false);
 
     // === CARTES ÉCARTÉES ===
     std::cout << "\nCartes ecartees" << std::endl;
@@ -186,6 +192,8 @@ void TablePartie::afficherEtatPartie() const {
 
 // Méthode pour changer de joueur (fin de tour)
 void TablePartie::endTurn() {
+    joueurs[joueur_actuel_index].resetCombat();
+    joueurs[joueur_actuel_index].resetOr();
     joueur_actuel_index = (joueur_actuel_index + 1) % joueurs.size();
     std::cout << "\n=== FIN DE TOUR ===\n" << std::endl;
     afficherEtatPartie(); 

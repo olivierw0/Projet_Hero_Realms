@@ -29,7 +29,7 @@ private:
     TypeZone type; // deck, main, defausse, champions, deck_marche, marche
     Joueur* proprietaire; // nullptr si zone commune
     TablePartie* table; // nullptr si zone joueur
-    std::vector<std::pair<Carte, int>> cartes; // carte + ordre
+    std::vector<std::pair<Carte*, int>> cartes; // pointeur vers carte + ordre
 
 public:
 
@@ -56,10 +56,10 @@ public:
     TypeZone getType() const;
     Joueur* getProprietaire() const;
     TablePartie* getTable() const;
-    const std::vector<std::pair<Carte, int>>& getCartes() const;
+    const std::vector<std::pair<Carte*, int>>& getCartes() const;
 
     // Ajouter une carte à la zone avec un ordre spécifique
-    void ajouterCarte(const Carte& carte, int ordre);
+    void ajouterCarte(Carte* carte, int ordre);
 
     // Retirer une carte de la zone par son ID
     bool retirerCarte(int carteId);
@@ -77,7 +77,7 @@ public:
     size_t taille() const;
 
     // Trouver une carte par ID (sans la retirer)
-    const Carte* trouverCarte(int carteId) const;
+    Carte* trouverCarte(int carteId) const;
     
     // Mélanger les cartes de la zone et réassigner les indices
     void melangerCartes();

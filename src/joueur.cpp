@@ -82,10 +82,10 @@ void Joueur::initDeck(){
     std::cout << "Initialisation du deck du Joueur : " << id << std::endl;
     std::cout << "deck taille : " << (deck ? deck->taille() : 0) << std::endl;
     if (deck) {
-        std::vector<const Carte*> deckInitial = creerDeckDeBase();
+        std::vector<Carte*> deckInitial = creerDeckDeBase();
         for (const auto& carte : deckInitial) {
-            // Déréférencer le pointeur pour obtenir l'objet Carte
-            deck->ajouterCarte(*carte, static_cast<int>(deck->taille()));
+            // Passer le pointeur directement (en supprimant const car nos zones gèrent des cartes modifiables)
+            deck->ajouterCarte(const_cast<Carte*>(carte), static_cast<int>(deck->taille()));
         }
     }
 }
@@ -107,8 +107,10 @@ void Joueur::afficherMain() const {
     }
     
     for (size_t i = 0; i < cartes.size(); ++i) {
-        std::cout << "[" << (i + 1) << "] " << cartes[i].first.getNom() 
-                  << " (" << cartes[i].first.getDescription() << ")" << std::endl;
+        if (cartes[i].first != nullptr) {
+            std::cout << "[" << (i + 1) << "] " << cartes[i].first->getNom() 
+                      << " (" << cartes[i].first->getDescription() << ")" << std::endl;
+        }
     }
 }
 
@@ -132,18 +134,23 @@ bool Joueur::jouerCarte(int indice, Joueur& adversaire) {
     }
     
     // Récupérer la carte à jouer
-    Carte carteAJouer = cartes[indice - 1].first;
+    Carte* carteAJouer = cartes[indice - 1].first;
+    
+    if (carteAJouer == nullptr) {
+        std::cout << "Erreur: Carte invalide!" << std::endl;
+        return false;
+    }
     
     // Jouer la carte (activer ses effets)
-    carteAJouer.jouerCarte(*this, adversaire);
+    carteAJouer->jouerCarte(*this, adversaire);
     
     // Déplacer la carte de la main vers la défausse
-    if (carteAJouer.getType() == TypeCarte::CHAMPION) {
+    if (carteAJouer->getType() == TypeCarte::CHAMPION) {
         // Si c'est un champion, le déplacer vers la zone des champions
-        main->deplacerCarte(carteAJouer.getId(), *champions, 1);
+        main->deplacerCarte(carteAJouer->getId(), *champions, 1);
     } else {
         // Sinon, le déplacer vers la défausse
-        main->deplacerCarte(carteAJouer.getId(), *defausse, 1);
+        main->deplacerCarte(carteAJouer->getId(), *defausse, 1);
     }
     
     return true;
@@ -187,9 +194,11 @@ void Joueur::piocher(int nbCartes) {
         // Piocher une carte si le deck n'est pas vide
         if (!deck->estVide()) {
             const auto& cartes = deck->getCartes();
-            int carteId = cartes[0].first.getId(); // Prendre la première carte
-            deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
-            std::cout << "Joueur " << id << " pioche une carte." << std::endl;
+            if (!cartes.empty() && cartes[0].first != nullptr) {
+                int carteId = cartes[0].first->getId(); // Prendre la première carte
+                deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
+                std::cout << "Joueur " << id << " pioche une carte." << std::endl;
+            }
         } else {
             std::cout << "Impossible de piocher: deck et défausse vides!" << std::endl;
             break;

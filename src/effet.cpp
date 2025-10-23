@@ -52,10 +52,13 @@ bool Effet::verifierConditions(const Joueur& joueurActif, const Joueur& adversai
             return true; // Aucune condition, toujours activable
             
         case ConditionEffet::SACRIFICE:
+        case ConditionEffet::SACRIFICE_TO_MARCHE: // pour les gemmes de feu
             // TODO: Vérifier si un sacrifice a été effectué
-            std::cout << "Vérification condition SACRIFICE (non implémentée)" << std::endl;
+        case ConditionEffet::SACRIFICE_HAND_DISCARD:
+            // TODO: Vérifier si une carte a été défaussée de la main
+            std::cout << "Vérification condition SACRIFICE_HAND_DISCARD (non implémentée)" << std::endl;
             return false;
-            
+
         case ConditionEffet::ROUGE_ALLY:
         case ConditionEffet::JAUNE_ALLY:
         case ConditionEffet::VERT_ALLY:

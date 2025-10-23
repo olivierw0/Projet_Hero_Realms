@@ -4,20 +4,14 @@
 #include "carte.h"
 #include <vector>
 #include <string>
+#include <memory>
 
-// Structure pour stocker une carte avec sa quantité
-struct CarteAvecQuantite {
-    Carte carte;
-    int quantite;
-};
-
-// Base de données des cartes
-extern std::vector<CarteAvecQuantite> carte_db;
+// Base de données des cartes - chaque carte est unique en mémoire
+extern std::vector<Carte*> carte_db;
 
 // Fonctions d'accès à la base de données
-const Carte* getCarteById(int id);
-const Carte* getCarteByName(const std::string& nom);
-int getQuantiteById(int id);
-std::vector<const Carte*> creerDeckDeBase();
+Carte* getCarteById(int id);
+Carte* getCarteByName(const std::string& nom);
+std::vector<Carte*> creerDeckDeBase();
 
 #endif // CARTE_DB_H
