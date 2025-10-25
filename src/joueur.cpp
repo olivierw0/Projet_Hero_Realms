@@ -44,8 +44,8 @@ void Joueur::resetOr(){
     or_value = 0;
 }
 
-void Joueur::ajouterZone(ZoneDeCarte&& zone){
-    zones.push_back(zone);
+void Joueur::creerZone(int id, TypeZone type, Joueur* proprietaire, TablePartie* table){
+    zones.emplace_back(id, type, proprietaire ? proprietaire : this, table);
 }
 
 ZoneDeCarte* Joueur::getZoneByType(TypeZone type){
@@ -67,15 +67,20 @@ ZoneDeCarte* Joueur::getZoneById(int zoneId){
 }
 
 void Joueur::initZonesJoueur(){
-    // Initialisation des zones de cartes du joueur
-    ajouterZone(ZoneDeCarte(1, TypeZone::MAIN, this, nullptr));
-    ajouterZone(ZoneDeCarte(2, TypeZone::DECK, this, nullptr));
-    ajouterZone(ZoneDeCarte(3, TypeZone::DEFAUSSE, this, nullptr));
-    ajouterZone(ZoneDeCarte(4, TypeZone::CHAMPIONS, this, nullptr));
+    // Réserver la capacité pour éviter les redimensionnements
+    zones.reserve(4);
+    
+    // Initialisation des zones de cartes du joueur (construction directe dans le vector)
+    creerZone(1, TypeZone::MAIN);
+    creerZone(2, TypeZone::DECK);
+    creerZone(3, TypeZone::DEFAUSSE);
+    creerZone(4, TypeZone::CHAMPIONS);
 }
 
 void Joueur::initDeck(){
     ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
+    std::cout << "Initialisation du deck du Joueur : " << id << std::endl;
+    std::cout << "deck taille : " << (deck ? deck->taille() : 0) << std::endl;
     if (deck) {
         std::vector<const Carte*> deckInitial = creerDeckDeBase();
         for (const auto& carte : deckInitial) {

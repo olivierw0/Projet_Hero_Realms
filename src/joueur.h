@@ -42,7 +42,7 @@ public:
         zones.push_back(zone);
     }
 
-    void ajouterZone(ZoneDeCarte&& zone);
+    void creerZone(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
     ZoneDeCarte* getZoneByType(TypeZone type);
     ZoneDeCarte* getZoneById(int zoneId);
 

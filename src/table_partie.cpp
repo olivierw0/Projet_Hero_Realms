@@ -111,7 +111,10 @@ void TablePartie::afficherCarte(const Carte& carte, bool est_champion) const {
 void TablePartie::ajouterJoueur(const Joueur& joueur) { joueurs.push_back(joueur); }
 
 // Ajouter une zone commune à la partie
-void TablePartie::ajouterZoneCommune(const ZoneDeCarte& zone) { zones_communes.push_back(zone); }
+
+void TablePartie::creerZoneCommune(int id, TypeZone type) {
+    zones_communes.emplace_back(id, type, nullptr, this);
+}
 
 // Méthodes pour accéder aux attributs
 int TablePartie::getId() const { return id; }
@@ -189,10 +192,36 @@ void TablePartie::endTurn() {
 }
 
 void TablePartie::initZones() {
+    // Initialiser les zones des joueurs
     for (Joueur& joueur : joueurs) {
         joueur.initZonesJoueur();
     }
-    this->ajouterZoneCommune(ZoneDeCarte(1, TypeZone::MARCHE, nullptr, this));
-    this->ajouterZoneCommune(ZoneDeCarte(2, TypeZone::DECK_MARCHE, nullptr, this));
-    this->ajouterZoneCommune(ZoneDeCarte(3, TypeZone::ECARTEES, nullptr, this));
+    
+    // Réserver la capacité pour les zones communes
+    zones_communes.reserve(3);
+    
+    // Initialiser les zones communes (construction directe dans le vector)
+    creerZoneCommune(1, TypeZone::MARCHE);
+    creerZoneCommune(2, TypeZone::DECK_MARCHE);
+    creerZoneCommune(3, TypeZone::ECARTEES);
+}
+
+void TablePartie::initPartie() {
+    std::cout << "\n=== Initialisation de la partie ===" << std::endl;
+    
+    // 1. Initialiser toutes les zones
+    initZones();
+    
+    // 2. Initialiser les decks et distribuer les cartes initiales
+    std::cout << "Initialisation des decks et distribution des cartes..." << std::endl;
+    for (auto& joueur : joueurs) {
+        std::cout << "\nJoueur " << joueur.getId() << ":" << std::endl;
+        joueur.initDeck(); // Ajouter les cartes de base au deck
+        joueur.melangerDeck(); // Mélanger le deck
+        joueur.piocher(5); // Chaque joueur pioche 5 cartes au début
+        std::cout << "Deck: " << joueur.getZoneByType(TypeZone::DECK)->taille() << " cartes" << std::endl;
+        std::cout << "Main: " << joueur.getNombreCartesEnMain() << " cartes" << std::endl;
+    }
+    
+    std::cout << "\n=== Partie prête à commencer ===" << std::endl;
 }

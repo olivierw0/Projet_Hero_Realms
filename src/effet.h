@@ -3,25 +3,28 @@
 
 #include <string>
 enum class TypeEffet {
-    OR,                              // Gain d'or
-    DMG,                             // Dégâts de combat
-    PIOCHE,                          // Piocher des cartes
-    SOIN,                            // Gagner de la santé
-    ADV_DEFAUSSE,                    // Adversaire défausse
-    PREPARE_CHAMPION,                // Préparer un champion
-    STUN,                            // Étourdir un champion
-    HAND_NEXT_ACQUIRED,              // Mettre la prochaine carte acquise en main
-    TOP_DECK_NEXT_ACQUIRED_ACTION,   // Mettre la prochaine action acquise sur le dessus du deck
-    TOP_DECK_FROM_DISCARD,           // Prendre une carte de la défausse et la mettre sur le dessus du deck
-    TOP_DECK_NEXT_ACQUIRED,          // Mettre la prochaine carte acquise sur le dessus du deck
-    SACRIFICE_HAND_DISCARD,          // Effet de sacrifice depuis la main ou la défausse
-    FORCE_DISCARD_OPPONENT,          // Forcer l'adversaire à défausser
-    DRAW_DISCARD                     // Piocher et défausser
+    DMG,
+    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet
+    DRAW_DISCARD,
+    FORCE_DISCARD_OPPONENT,
+    HAND_NEXT_ACQUIRED,
+    OR,
+    OR_or_SOIN, // valeur fixe (différente entre OR et SOIN) à définir dans l'effet
+    OR_ou_DMG, // valeur fixe (différente entre OR et DMG) à définir dans l'effet
+    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité)
+    PIOCHE,
+    PREPARE_CHAMPION,
+    SACRIFICE_HAND_DISCARD,
+    SOIN,
+    SOIN_per_CHAMP,
+    STUN,
+    TOP_DECK_FROM_DISCARD,
+    TOP_DECK_NEXT_ACQUIRED,
+    TOP_DECK_NEXT_ACQUIRED_ACTION
 };
 
 enum class ConditionEffet {
     AUCUNE,                          // Aucune condition
-    DEFAUSSE,                        // Condition liée à la défausse
     ROUGE_ALLY,                      // Allié rouge requis
     JAUNE_ALLY,                      // Allié jaune requis  
     VERT_ALLY,                       // Allié vert requis
@@ -31,7 +34,7 @@ enum class ConditionEffet {
     NB_CHAMPIONS,                    // Nombre de champions en jeu
     NB_GARDES,                       // Nombre de gardes en jeu
     SACRIFICE_HAND_DISCARD,          // Sacrifice depuis la main ou la défausse
-    NB_VERT_CARDS_IN_PLAY           // Nombre de cartes vertes en jeu
+    NB_VERT_CARDS_IN_PLAY            // Nombre de cartes vertes en jeu
 };
 
 class Effet {
@@ -45,7 +48,7 @@ private:
 
 public:
     // Constructeur par défaut
-    Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE), param(0) {}
+    Effet() : id(0), type(OR), valeur(0), condition(ConditionEffet::AUCUNE), param(0) {}
 
     // Constructeur avec paramètres
     Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE, int param = 0);

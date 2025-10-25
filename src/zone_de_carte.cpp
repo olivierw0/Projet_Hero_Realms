@@ -6,14 +6,77 @@
 #include <random>
 #include <chrono>
 
+// Fonction utilitaire pour convertir TypeZone en string
+std::string typeZoneToString(TypeZone type) {
+    switch (type) {
+        case TypeZone::DECK: return "DECK";
+        case TypeZone::MAIN: return "MAIN";
+        case TypeZone::DEFAUSSE: return "DEFAUSSE";
+        case TypeZone::CHAMPIONS: return "CHAMPIONS";
+        case TypeZone::DECK_MARCHE: return "DECK_MARCHE";
+        case TypeZone::MARCHE: return "MARCHE";
+        case TypeZone::ECARTEES: return "ECARTEES";
+        default: return "UNKNOWN";
+    }
+}
+
 // Constructeur
 ZoneDeCarte::ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TablePartie* table)
     : id(id), type(type), proprietaire(proprietaire), table(table) {
-    std::cout << "Construction de la zone de carte" << std::endl;
+    // Debug : affichage seulement en mode debug
+    #ifdef DEBUG
+        std::cout << "Construction de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
+    #endif
 }
+
+// Constructeur de copie
+ZoneDeCarte::ZoneDeCarte(const ZoneDeCarte& other)
+    : id(other.id), type(other.type), proprietaire(other.proprietaire), 
+      table(other.table), cartes(other.cartes) {
+    #ifdef DEBUG
+        std::cout << "Copie de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
+    #endif
+}
+
+// Constructeur de déplacement  
+ZoneDeCarte::ZoneDeCarte(ZoneDeCarte&& other) noexcept
+    : id(other.id), type(other.type), proprietaire(other.proprietaire),
+      table(other.table), cartes(std::move(other.cartes)) {
+    #ifdef DEBUG
+        std::cout << "Déplacement de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
+    #endif
+}
+
+// Opérateur d'assignation de copie
+ZoneDeCarte& ZoneDeCarte::operator=(const ZoneDeCarte& other) {
+    if (this != &other) {
+        id = other.id;
+        type = other.type;
+        proprietaire = other.proprietaire;
+        table = other.table;
+        cartes = other.cartes;
+    }
+    return *this;
+}
+
+// Opérateur d'assignation de déplacement
+ZoneDeCarte& ZoneDeCarte::operator=(ZoneDeCarte&& other) noexcept {
+    if (this != &other) {
+        id = other.id;
+        type = other.type;
+        proprietaire = other.proprietaire;
+        table = other.table;
+        cartes = std::move(other.cartes);
+    }
+    return *this;
+}
+
 ZoneDeCarte::~ZoneDeCarte() {
     cartes.clear();
-    std::cout << "Destruction de la zone de carte" << std::endl;
+    // Debug : affichage seulement en mode debug  
+    #ifdef DEBUG
+        std::cout << "Destruction de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
+    #endif
 }
 
 // Méthodes pour accéder aux attributs

@@ -1,3 +1,4 @@
+#include "carte_db.h"
 #include "carte.h"
 #include "champion.h"
 #include "effet.h"
@@ -19,28 +20,48 @@ Carte command(2, "Command", 5, TypeCarte::ACTION, FactionCarte::JAUNE,
 );
 
 Carte domination(3, "Domination", 7, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 6 combat. Gain 6 health",
-    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::SOIN, 6) }
+    "{Gain 6 combat} {Gain 6 health} Draw a card. <hr> {Jaune Ally}: Prepare a champion.",
+    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::SOIN, 6), Effet(3, TypeEffet::PIOCHE, 1), Effet(4, TypeEffet::PREPARE_CHAMPION, 0, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte rally_the_troops(4, "Rally the Troops", 4, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 5 combat. Gain 5 health",
-    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SOIN, 5) }
+    "{Gain 5 combat} {Gain 5 health} <hr> {Jaune Ally}: Prepare a champion.",
+    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SOIN, 5), Effet(3, TypeEffet::PREPARE_CHAMPION, 0, ConditionEffet::JAUNE_ALLY) }
 );
 
-Carte recruit(5, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold. Gain 3 health",
-    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3) }
+Carte recruit1(501, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} {Gain 3 health} +{1 health} for each champion you have in play. <hr> {Jaune Ally}: {Gain 1 gold}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::SOIN_per_CHAMP, 1), Effet(4, TypeEffet::OR, 1, ConditionEffet::JAUNE_ALLY) }
+);
+Carte recruit2(502, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} {Gain 3 health} +{1 health} for each champion you have in play. <hr> {Jaune Ally}: {Gain 1 gold}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::SOIN_per_CHAMP, 1), Effet(4, TypeEffet::OR, 1, ConditionEffet::JAUNE_ALLY) }
+);
+Carte recruit3(503, "Recruit", 2, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} {Gain 3 health} +{1 health} for each champion you have in play. <hr> {Jaune Ally}: {Gain 1 gold}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 3), Effet(3, TypeEffet::SOIN_per_CHAMP, 1), Effet(4, TypeEffet::OR, 1, ConditionEffet::JAUNE_ALLY) }
 );
 
-Carte taxation(6, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 2 gold",
-    { Effet(1, TypeEffet::OR, 2) }
+Carte taxation1(601, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} <hr> {Jaune Ally}: {Gain 6 health}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
+);
+Carte taxation2(602, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} <hr> {Jaune Ally}: {Gain 6 health}",
+        { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
+);
+Carte taxation3(603, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
+    "{Gain 2 gold} <hr> {Jaune Ally}: {Gain 6 health}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte word_of_power(7, "Word of Power", 6, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Draw two cards",
-    { Effet(1, TypeEffet::PIOCHE, 2) }
+    "Draw two cards.
+<hr>
+{Jaune Ally}: {Gain 5 health}
+<hr>
+{Sacrifice}: {Gain 5 combat}",
+    { Effet(1, TypeEffet::PIOCHE, 2), Effet(2, TypeEffet::SOIN, 5, ConditionEffet::JAUNE_ALLY), Effet(3, TypeEffet::DMG, 5, ConditionEffet::SACRIFICE) }
 );
 
 // Champions jaunes
@@ -52,7 +73,7 @@ Champion arkus_imperial_dragon(8, "Arkus, Imperial Dragon", 8, FactionCarte::JAU
 
 Champion darian_war_mage(9, "Darian, War Mage", 4, FactionCarte::JAUNE,
     "{Expend}: {Gain 3 combat} <i>or</i> {Gain 4 health}",
-    { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::SOIN, 4) }
+    { Effet(1, TypeEffet::DMG_ou_SOIN, 1) }
 );
 
 Champion master_weyan(10, "Master Weyan", 4, FactionCarte::JAUNE,
@@ -69,17 +90,27 @@ Champion cristov_the_just(11, "Cristov, the Just", 5, FactionCarte::JAUNE,
 
 Champion kraka_high_priest(12, "Kraka, High Priest", 6, FactionCarte::JAUNE,
     "{Expend}: {Gain 2 health} Draw a card. <hr> {Jaune Ally}: Gain {2 health} for each champion you have in play.",
-    { Effet(1, TypeEffet::SOIN, 2), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::SOIN, 2, ConditionEffet::JAUNE_ALLY), Effet(4, TypeEffet::SOIN, 1, ConditionEffet::NB_CHAMPIONS) },
+    { Effet(1, TypeEffet::SOIN, 2), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::SOIN_per_CHAMP, 2, ConditionEffet::JAUNE_ALLY)},
     true, 6
 );
 
-Champion tithe_priest(13, "Tithe Priest", 2, FactionCarte::JAUNE,
+Champion tithe_priest1(1301, "Tithe Priest", 2, FactionCarte::JAUNE,
     "{Expend}: {Gain 1 gold} <i>or</i> Gain {1 health} for each champion you have in play.",
-    { Effet(1, TypeEffet::PIOCHE, 2) },
+    { Effet(1, TypeEffet::OR_ou_SOIN_per_CHAMP, 1) },
+    false, 3
+);
+Champion tithe_priest2(1302, "Tithe Priest", 2, FactionCarte::JAUNE,
+    "{Expend}: {Gain 1 gold} <i>or</i> Gain {1 health} for each champion you have in play.",
+    { Effet(1, TypeEffet::OR_ou_SOIN_per_CHAMP, 1) },
     false, 3
 );
 
-Champion man_at_arms(14, "Man-at-Arms", 3, FactionCarte::JAUNE,
+Champion man_at_arms1(1401, "Man-at-Arms", 3, FactionCarte::JAUNE,
+    "{Expend}: {Gain 2 combat} +{1 combat} for each other guard you have in play.",
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_GARDES) },
+    true, 4
+);
+Champion man_at_arms2(1402, "Man-at-Arms", 3, FactionCarte::JAUNE,
     "{Expend}: {Gain 2 combat} +{1 combat} for each other guard you have in play.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_GARDES) },
     true, 4
@@ -102,14 +133,34 @@ Carte deception(
     { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::PIOCHE, 1), Effet(3, TypeEffet::HAND_NEXT_ACQUIRED, 0, ConditionEffet::BLEU_ALLY) }
 );
 
-Carte bribe(
-    22, "Bribe", 3, TypeCarte::ACTION, FactionCarte::BLEU,
+Carte bribe1(
+    2201, "Bribe", 3, TypeCarte::ACTION, FactionCarte::BLEU,
+    "{Gain 3 gold}\n<hr>\n{Bleu Ally}: Put the next action you acquire this turn on top of your deck.",
+    { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION, 0, ConditionEffet::BLEU_ALLY) }
+);
+Carte bribe2(
+    2202, "Bribe", 3, TypeCarte::ACTION, FactionCarte::BLEU,
+    "{Gain 3 gold}\n<hr>\n{Bleu Ally}: Put the next action you acquire this turn on top of your deck.",
+    { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION, 0, ConditionEffet::BLEU_ALLY) }
+);
+Carte bribe3(
+    2203, "Bribe", 3, TypeCarte::ACTION, FactionCarte::BLEU,
     "{Gain 3 gold}\n<hr>\n{Bleu Ally}: Put the next action you acquire this turn on top of your deck.",
     { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION, 0, ConditionEffet::BLEU_ALLY) }
 );
 
-Carte profit(
-    23, "Profit", 1, TypeCarte::ACTION, FactionCarte::BLEU,
+Carte profit1(
+    2301, "Profit", 1, TypeCarte::ACTION, FactionCarte::BLEU,
+    "{Gain 2 gold}\n<hr>\n{Bleu Ally}: {Gain 4 combat}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 4, ConditionEffet::BLEU_ALLY) }
+);
+Carte profit2(
+    2302, "Profit", 1, TypeCarte::ACTION, FactionCarte::BLEU,
+    "{Gain 2 gold}\n<hr>\n{Bleu Ally}: {Gain 4 combat}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 4, ConditionEffet::BLEU_ALLY) }
+);
+Carte profit3(
+    2303, "Profit", 1, TypeCarte::ACTION, FactionCarte::BLEU,
     "{Gain 2 gold}\n<hr>\n{Bleu Ally}: {Gain 4 combat}",
     { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 4, ConditionEffet::BLEU_ALLY) }
 );
@@ -126,8 +177,13 @@ Carte hit_job(
     { Effet(1, TypeEffet::DMG, 7), Effet(2, TypeEffet::STUN, 0, ConditionEffet::BLEU_ALLY) }
 );
 
-Carte intimidation(
-    26, "Intimidation", 6, TypeCarte::ACTION, FactionCarte::BLEU,
+Carte intimidation1(
+    2601, "Intimidation", 6, TypeCarte::ACTION, FactionCarte::BLEU,
+    "{Gain 5 combat}\n<hr>\n{Bleu Ally}: {Gain 2 gold}",
+    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::OR, 2, ConditionEffet::BLEU_ALLY) }
+);
+Carte intimidation2(
+    2602, "Intimidation", 6, TypeCarte::ACTION, FactionCarte::BLEU,
     "{Gain 5 combat}\n<hr>\n{Bleu Ally}: {Gain 2 gold}",
     { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::OR, 2, ConditionEffet::BLEU_ALLY) }
 );
@@ -167,10 +223,16 @@ Champion rasmus_the_smuggler(
     false, 5
 );
 
-Champion street_thug(
-    32, "Street Thug", 3, FactionCarte::BLEU,
+Champion street_thug1(
+    3201, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::DMG, 2) },
+    { Effet(1, TypeEffet::OR_ou_DMG, 1) },
+    false, 4
+);
+Champion street_thug2(
+    3202, "Street Thug", 3, FactionCarte::BLEU,
+    "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
+    { Effet(1, TypeEffet::OR_ou_DMG, 1) },
     false, 4
 );
 
@@ -191,12 +253,28 @@ Carte dark_reward(40, "Dark Reward", 5, TypeCarte::ACTION, FactionCarte::ROUGE,
     { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 6, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
 
-Carte influence(41, "Influence", 2, TypeCarte::ACTION, FactionCarte::ROUGE,
+Carte influence1(4101, "Influence", 2, TypeCarte::ACTION, FactionCarte::ROUGE,
+    "{Gain 3 gold}\n<hr>\n{Sacrifice}: {Gain 3 combat}",
+    { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE) }
+);
+Carte influence2(4102, "Influence", 2, TypeCarte::ACTION, FactionCarte::ROUGE,
+    "{Gain 3 gold}\n<hr>\n{Sacrifice}: {Gain 3 combat}",
+    { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE) }
+);
+Carte influence3(4103, "Influence", 2, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 3 gold}\n<hr>\n{Sacrifice}: {Gain 3 combat}",
     { Effet(1, TypeEffet::OR, 3), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE) }
 );
 
-Carte death_touch(42, "Death Touch", 1, TypeCarte::ACTION, FactionCarte::ROUGE,
+Carte death_touch1(4201, "Death Touch", 1, TypeCarte::ACTION, FactionCarte::ROUGE,
+    "{Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 2 combat}",
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
+);
+Carte death_touch2(4202, "Death Touch", 1, TypeCarte::ACTION, FactionCarte::ROUGE,
+    "{Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 2 combat}",
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
+);
+Carte death_touch3(4203, "Death Touch", 1, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 2 combat}",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 2, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
@@ -206,7 +284,11 @@ Carte life_drain(43, "Life Drain", 6, TypeCarte::ACTION, FactionCarte::ROUGE,
     { Effet(1, TypeEffet::DMG, 8), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
 
-Carte the_rot(44, "The Rot", 3, TypeCarte::ACTION, FactionCarte::ROUGE,
+Carte the_rot1(4401, "The Rot", 3, TypeCarte::ACTION, FactionCarte::ROUGE,
+    "{Gain 4 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 3 combat}",
+    { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
+);
+Carte the_rot2(4402, "The Rot", 3, TypeCarte::ACTION, FactionCarte::ROUGE,
     "{Gain 4 combat}\nYou may sacrifice a card in your hand or discard pile.\n<hr>\n{Rouge Ally}: {Gain 3 combat}",
     { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::DMG, 3, ConditionEffet::ROUGE_ALLY), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1) }
 );
@@ -219,17 +301,27 @@ Carte dark_energy(45, "Dark Energy", 4, TypeCarte::ACTION, FactionCarte::ROUGE,
 // Champions rouges
 Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, FactionCarte::ROUGE,
     "{Expend}: {Gain 4 combat}\nYou may sacrifice up to two cards in your hand and/or discard pile.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::SACRIFICE_HAND_DISCARD, 1) },
+    { Effet(1, TypeEffet::DMG, 4), Effet(2, TypeEffet::SACRIFICE_HAND_DISCARD, 1), Effet(3, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     true, 6
 );  
 
-Champion cult_priest(47, "Cult Priest", 3, FactionCarte::ROUGE,
+Champion cult_priest1(4701, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::OR, 1), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::NB_CHAMPIONS) },
+    { Effet(1, TypeEffet::OR_or_SOIN, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
+    false, 4
+);
+Champion cult_priest2(4702, "Cult Priest", 3, FactionCarte::ROUGE,
+    "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
+    { Effet(1, TypeEffet::OR_or_SOIN, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 
-Champion death_cultist(48, "Death Cultist", 2, FactionCarte::ROUGE,
+Champion death_cultist1(4801, "Death Cultist", 2, FactionCarte::ROUGE,
+    "{Expend}: {Gain 2 combat}",
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::ROUGE_ALLY) },
+    true, 3
+);
+Champion death_cultist2(4802, "Death Cultist", 2, FactionCarte::ROUGE,
     "{Expend}: {Gain 2 combat}",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::SOIN, 2, ConditionEffet::ROUGE_ALLY) },
     true, 3
@@ -269,12 +361,24 @@ Carte natures_bounty(60, "Nature's Bounty", 4, TypeCarte::ACTION, FactionCarte::
     { Effet(1, TypeEffet::OR, 4), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1, ConditionEffet::VERT_ALLY), Effet(3, TypeEffet::DMG, 4, ConditionEffet::SACRIFICE) }
 );
 
-Carte elven_gift(61, "Elven Gift", 2, TypeCarte::ACTION, FactionCarte::VERT,
+Carte elven_gift1(6101, "Elven Gift", 2, TypeCarte::ACTION, FactionCarte::VERT,
+    "{Gain 2 gold}\nYou may draw a card. If you do, discard a card.<hr>\n{Vert Ally}: {Gain 4 combat}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DRAW_DISCARD, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) }
+);
+Carte elven_gift2(6102, "Elven Gift", 2, TypeCarte::ACTION, FactionCarte::VERT,
+    "{Gain 2 gold}\nYou may draw a card. If you do, discard a card.<hr>\n{Vert Ally}: {Gain 4 combat}",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DRAW_DISCARD, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) }
+);
+Carte elven_gift3(6103, "Elven Gift", 2, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 2 gold}\nYou may draw a card. If you do, discard a card.<hr>\n{Vert Ally}: {Gain 4 combat}",
     { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DRAW_DISCARD, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::VERT_ALLY) }
 );
 
-Carte elven_curse(62, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
+Carte elven_curse1(6201, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
+    "{Gain 6 combat}\nTarget opponent discards a card.\n{Vert Ally}: {Gain 3 combat}",
+    { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 3, ConditionEffet::VERT_ALLY) }
+);
+Carte elven_curse2(6202, "Elven Curse", 3, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 6 combat}\nTarget opponent discards a card.\n{Vert Ally}: {Gain 3 combat}",
     { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 3, ConditionEffet::VERT_ALLY) }
 );
@@ -284,7 +388,15 @@ Carte rampage(63, "Rampage", 6, TypeCarte::ACTION, FactionCarte::VERT,
     { Effet(1, TypeEffet::DMG, 6), Effet(2, TypeEffet::DRAW_DISCARD, 2) }
 );
 
-Carte spark(64, "Spark", 1, TypeCarte::ACTION, FactionCarte::VERT,
+Carte spark1(6401, "Spark", 1, TypeCarte::ACTION, FactionCarte::VERT,
+    "{Gain 3 combat}\nTarget opponent discards a card.\n{Vert Ally}: {Gain 2 combat}",
+    { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 2, ConditionEffet::VERT_ALLY) }
+);
+Carte spark2(6402, "Spark", 1, TypeCarte::ACTION, FactionCarte::VERT,
+    "{Gain 3 combat}\nTarget opponent discards a card.\n{Vert Ally}: {Gain 2 combat}",
+    { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 2, ConditionEffet::VERT_ALLY) }
+);
+Carte spark3(6403, "Spark", 1, TypeCarte::ACTION, FactionCarte::VERT,
     "{Gain 3 combat}\nTarget opponent discards a card.\n{Vert Ally}: {Gain 2 combat}",
     { Effet(1, TypeEffet::DMG, 3), Effet(2, TypeEffet::FORCE_DISCARD_OPPONENT, 1), Effet(3, TypeEffet::DMG, 2, ConditionEffet::VERT_ALLY) }
 );
@@ -313,7 +425,12 @@ Champion dire_wolf(68, "Dire Wolf", 5,  FactionCarte::VERT,
     true, 5
 );
 
-Champion wolf_shaman(69, "Wolf Shaman", 2,  FactionCarte::VERT,
+Champion wolf_shaman1(6901, "Wolf Shaman", 2,  FactionCarte::VERT,
+    "{Expend}: {Gain 2 combat}\n+{1 combat} for each other {Vert} card you have in play.",
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) },
+    false, 4
+);
+Champion wolf_shaman2(6902, "Wolf Shaman", 2,  FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n+{1 combat} for each other {Vert} card you have in play.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) },
     false, 4
@@ -325,7 +442,12 @@ Champion cron_the_berserker(70, "Cron, the Berserker", 6,  FactionCarte::VERT,
     true, 6
 );
 
-Champion orc_grunt(71, "Orc Grunt", 3,  FactionCarte::VERT,
+Champion orc_grunt1(7101, "Orc Grunt", 3,  FactionCarte::VERT,
+    "{Expend}: {Gain 2 combat}\n<hr>\n{Vert Ally}: Draw a card.",
+    { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) },
+    true, 3
+);
+Champion orc_grunt2(7102, "Orc Grunt", 3,  FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n<hr>\n{Vert Ally}: Draw a card.",
     { Effet(1, TypeEffet::DMG, 2), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::VERT_ALLY) },
     true, 3
@@ -362,92 +484,145 @@ Carte shortsword(204, "Shortsword", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     { Effet(1, TypeEffet::DMG, 2) }
 );
 
-Carte gold(205, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+// 7 cartes Gold distinctes pour le deck de base
+Carte gold1(205, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     "Gain 1 gold",
     { Effet(1, TypeEffet::OR, 1) }
 );
 
-// Entrées carte_db pour la faction jaune (quantités : par défaut 1,
-// explicitement mises si présentes dans la base originale)
-std::vector<CarteAvecQuantite> carte_db = {
-    { close_ranks, 1 },
-    { command, 1 },
-    { domination, 1 },
-    { rally_the_troops, 1 },
-    { recruit, 3 },           // indiqué "3 cartes" dans la base
-    { taxation, 3 },          // indiqué "3 cartes" dans la base
-    { word_of_power, 1 },
-    { arkus_imperial_dragon, 1 },
-    { darian_war_mage, 1 },
-    { master_weyan, 1 },
-    { cristov_the_just, 1 },
-    { kraka_high_priest, 1 },
-    { tithe_priest, 2 },      // indiqué "2 cartes" dans la base
-    { man_at_arms, 2 }        // indiqué "2 cartes" dans la base
-};
+Carte gold2(206, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 1 gold",
+    { Effet(1, TypeEffet::OR, 1) }
+);
 
+Carte gold3(207, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 1 gold",
+    { Effet(1, TypeEffet::OR, 1) }
+);
 
-// Ajout au deck carte_db
-carte_db.insert(carte_db.end(), {
-    { fire_bomb, 1 },
-    { deception, 1 },
-    { bribe, 3 },
-    { profit, 3 },
-    { death_threat, 1 },
-    { hit_job, 1 },
-    { intimidation, 2 },
-    { smash_and_grab, 1 },
-    { rake_master_assassin, 1 },
-    { myros_thin_mage, 1 },
-    { parov_the_enforcer, 1 },
-    { rasmus_the_smuggler, 1 },
-    { street_thug, 2 },
-    { borg_ogre_mercenary, 1 }
-});
+Carte gold4(208, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 1 gold",
+    { Effet(1, TypeEffet::OR, 1) }
+);
 
+Carte gold5(209, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 1 gold",
+    { Effet(1, TypeEffet::OR, 1) }
+);
 
-// Ajout au deck carte_db
-carte_db.insert(carte_db.end(), {
-    { dark_reward, 1 },
-    { influence, 3 },
-    { death_touch, 3 },
-    { life_drain, 1 },
-    { the_rot, 2 },
-    { dark_energy, 1 },
-    { tyrannor_the_devorer, 1 },
-    { cult_priest, 2 },
-    { death_cultist, 2 },
-    { rayla_endweaver, 1 },
-    { varrick_the_necromancer, 1 },
-    { krythos_master_vampire, 1 },
-    { lys_the_unseen, 1 }
-});
+Carte gold6(210, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 1 gold",
+    { Effet(1, TypeEffet::OR, 1) }
+);
 
+Carte gold7(211, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 1 gold",
+    { Effet(1, TypeEffet::OR, 1) }
+);
 
-// Ajout au deck carte_db
-carte_db.insert(carte_db.end(), {
-    { natures_bounty, 1 },
-    { elven_gift, 3 },
-    { elven_curse, 2 },
-    { rampage, 1 },
-    { spark, 3 },
-    { wolf_form, 1 },
-    { broelyn_loreweaver, 1 },
-    { grak_storm_giant, 1 },
-    { dire_wolf, 1 },
-    { wolf_shaman, 2 },
-    { cron_the_berserker, 1 },
-    { orc_grunt, 2 },
-    { torgern_rocksplitter, 1 }
-});
+std::vector<const Carte*> initCarteDB() {
+    std::vector<const Carte*> carte_db = {
+        // JAUNES
+        &close_ranks,
+        &command,
+        &domination,
+        &rally_the_troops,
+        &recruit1,           // indiqué "3 cartes" dans la base
+        &recruit2,           // indiqué "3 cartes" dans la base
+        &recruit3,           // indiqué "3 cartes" dans la base
+        &taxation1,          // indiqué "3 cartes" dans la base
+        &taxation2,          // indiqué "3 cartes" dans la base
+        &taxation3,          // indiqué "3 cartes" dans la base
+        &word_of_power,
+        &arkus_imperial_dragon,
+        &darian_war_mage,
+        &master_weyan,
+        &cristov_the_just,
+        &kraka_high_priest,
+        &tithe_priest1,      // indiqué "2 cartes" dans la base
+        &tithe_priest2,      // indiqué "2 cartes" dans la base
+        &man_at_arms1,       // indiqué "2 cartes" dans la base
+        &man_at_arms2,        // indiqué "2 cartes" dans la base
+
+        // BLEU
+        &fire_bomb,
+        &deception,
+        &bribe1,
+        &bribe2,
+        &bribe3,
+        &profit1,
+        &profit2,
+        &profit3,
+        &death_threat,
+        &hit_job,
+        &intimidation1,
+        &intimidation2,
+        &smash_and_grab,
+        &rake_master_assassin,
+        &myros_thin_mage,
+        &parov_the_enforcer,
+        &rasmus_the_smuggler,
+        &street_thug1,
+        &street_thug2,
+        &borg_ogre_mercenary,
+
+        // ROUGE
+        &dark_reward,
+        &influence1,
+        &influence2,
+        &influence3,
+        &death_touch1,
+        &death_touch2,
+        &death_touch3,
+        &life_drain,
+        &the_rot1,
+        &the_rot2,
+        &dark_energy,
+        &tyrannor_the_devorer,
+        &cult_priest1,
+        &cult_priest2,
+        &death_cultist1,
+        &death_cultist2,
+        &rayla_endweaver,
+        &varrick_the_necromancer,
+        &krythos_master_vampire,
+        &lys_the_unseen
+
+        // VERT
+        &natures_bounty,
+        &elven_gift1,
+        &elven_gift2,
+        &elven_gift3,
+        &elven_curse1,
+        &elven_curse2,
+        &rampage,
+        &spark1,
+        &spark2,
+        &spark3,
+        &wolf_form,
+        &broelyn_loreweaver,
+        &grak_storm_giant,
+        &dire_wolf,
+        &wolf_shaman1,
+        &wolf_shaman2,
+        &cron_the_berserker,
+        &orc_grunt1,
+        &orc_grunt2,
+        &torgern_rocksplitter
+    };
+
+    return carte_db;
+}
+
+std::vector<const Carte*> carte_db = initCarteDB();
 
 // ========== FONCTIONS D'ACCES ==========
 
 // Obtenir une carte par son ID
 const Carte* getCarteById(int id) {
-    for (const auto& item : database_cartes) {
-        if (item.carte.getId() == id) {
-            return &item.carte;
+    for (const auto& carte : carte_db) {
+        if (carte.getId() == id) {
+            return &carte;
         }
     }
     return nullptr;
@@ -455,22 +630,22 @@ const Carte* getCarteById(int id) {
 
 // Obtenir une carte par son nom
 const Carte* getCarteByName(const std::string& nom) {
-    for (const auto& item : database_cartes) {
-        if (item.carte.getNom() == nom) {
-            return &item.carte;
+    for (const auto& carte : carte_db) {
+        if (carte.getNom() == nom) {
+            return &carte;
         }
     }
     return nullptr;
 }
 
-// Obtenir la quantité d'une carte
+// Obtenir la quantité d'une carte (toujours 1 maintenant)
 int getQuantiteById(int id) {
-    for (const auto& item : database_cartes) {
-        if (item.carte.getId() == id) {
-            return item.quantite;
+    for (const auto& carte : carte_db) {
+        if (carte.getId() == id) {
+            return 1; // Chaque carte est unique dans le deck
         }
     }
-    return 0;
+    return 0; // Carte non trouvée
 }
 
 
@@ -478,16 +653,19 @@ int getQuantiteById(int id) {
 std::vector<const Carte*> creerDeckDeBase() {
     std::vector<const Carte*> deck;
     
-    // Ajouter 7 cartes Or
-    for (int i = 0; i < 7; i++) {
-        deck.push_back(&gold);
-    }
+    // Ajouter 7 cartes Or distinctes
+    deck.push_back(&gold1);
+    deck.push_back(&gold2);
+    deck.push_back(&gold3);
+    deck.push_back(&gold4);
+    deck.push_back(&gold5);
+    deck.push_back(&gold6);
+    deck.push_back(&gold7);
     
     // Ajouter 1 dague, 1 ruby et 1 shortsword
     deck.push_back(&dagger);
     deck.push_back(&ruby);
     deck.push_back(&shortsword);
-    
     
     return deck;
 }

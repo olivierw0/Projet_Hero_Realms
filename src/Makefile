@@ -1,6 +1,7 @@
 # Compilateur et flags
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17 -g
+DEBUGFLAGS = -DDEBUG
 
 # Nom de l'exécutable
 TARGET = hero_realms
@@ -36,12 +37,16 @@ clean:
 # Recompilation complète
 rebuild: clean all
 
+# Cible de debug avec messages verbeux
+debug: CXXFLAGS += $(DEBUGFLAGS)
+debug: $(TARGET)
+
 # Vérification des dépendances
 depend:
 	$(CXX) -MM $(SOURCES) > dependencies.mk
 
 # Règles qui ne correspondent pas à des fichiers
-.PHONY: all run clean rebuild depend
+.PHONY: all run clean rebuild depend debug
 
 # Inclure les dépendances si elles existent
 -include dependencies.mk 
