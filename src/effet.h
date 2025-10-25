@@ -48,7 +48,7 @@ private:
 
 public:
     // Constructeur par défaut
-    Effet() : id(0), type(OR), valeur(0), condition(ConditionEffet::AUCUNE), param(0) {}
+    Effet() : id(0), type(TypeEffet::OR), valeur(0), condition(ConditionEffet::AUCUNE), param(0) {}
 
     // Constructeur avec paramètres
     Effet(int id, TypeEffet type, int valeur, ConditionEffet condition = ConditionEffet::AUCUNE, int param = 0);

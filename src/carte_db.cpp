@@ -56,11 +56,7 @@ Carte taxation3(603, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
 );
 
 Carte word_of_power(7, "Word of Power", 6, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Draw two cards.
-<hr>
-{Jaune Ally}: {Gain 5 health}
-<hr>
-{Sacrifice}: {Gain 5 combat}",
+    "Draw two cards.<hr>{Jaune Ally}: {Gain 5 health}<hr>{Sacrifice}: {Gain 5 combat}",
     { Effet(1, TypeEffet::PIOCHE, 2), Effet(2, TypeEffet::SOIN, 5, ConditionEffet::JAUNE_ALLY), Effet(3, TypeEffet::DMG, 5, ConditionEffet::SACRIFICE) }
 );
 
@@ -586,7 +582,7 @@ std::vector<const Carte*> initCarteDB() {
         &rayla_endweaver,
         &varrick_the_necromancer,
         &krythos_master_vampire,
-        &lys_the_unseen
+        &lys_the_unseen,
 
         // VERT
         &natures_bounty,
@@ -621,8 +617,8 @@ std::vector<const Carte*> carte_db = initCarteDB();
 // Obtenir une carte par son ID
 const Carte* getCarteById(int id) {
     for (const auto& carte : carte_db) {
-        if (carte.getId() == id) {
-            return &carte;
+        if (carte->getId() == id) {
+            return carte;
         }
     }
     return nullptr;
@@ -631,8 +627,8 @@ const Carte* getCarteById(int id) {
 // Obtenir une carte par son nom
 const Carte* getCarteByName(const std::string& nom) {
     for (const auto& carte : carte_db) {
-        if (carte.getNom() == nom) {
-            return &carte;
+        if (carte->getNom() == nom) {
+            return carte;
         }
     }
     return nullptr;
@@ -641,7 +637,7 @@ const Carte* getCarteByName(const std::string& nom) {
 // Obtenir la quantité d'une carte (toujours 1 maintenant)
 int getQuantiteById(int id) {
     for (const auto& carte : carte_db) {
-        if (carte.getId() == id) {
+        if (carte->getId() == id) {
             return 1; // Chaque carte est unique dans le deck
         }
     }
