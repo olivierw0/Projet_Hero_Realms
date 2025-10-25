@@ -303,12 +303,12 @@ Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, FactionCarte::ROUG
 
 Champion cult_priest1(4701, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::OR_or_SOIN, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
+    { Effet(1, TypeEffet::OR_ou_DMG, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 Champion cult_priest2(4702, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::OR_or_SOIN, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
+    { Effet(1, TypeEffet::OR_ou_DMG, 1), Effet(2, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 
