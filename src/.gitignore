@@ -1,0 +1,35 @@
+# --- Fichiers de compilation ---
+*.o
+*.obj
+*.out
+*.exe
+*.a
+*.so
+*.dll
+
+# --- Dossiers de build / exécutables ---
+/build/
+/bin/
+/dist/
+
+# --- Fichiers temporaires ---
+*.log
+*.tmp
+*.swp
+*.cache
+
+# --- Fichiers système ---
+.DS_Store
+Thumbs.db
+
+# --- Fichiers de projet IDE ---
+.vscode/
+.idea/
+
+# --- Sauvegardes ---
+*~
+*.bak
+
+# --- Makefile généré automatiquement ---
+# Ignorer les fichiers générés par Makefile automatiquement
+Makefile.*   # exemple : Makefile.old, Makefile.bak, etc.
