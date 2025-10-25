@@ -10,15 +10,31 @@ Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition, int p
 }
 
 // Méthode principale pour activer l'effet quand une carte est jouée
-void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire) const {
+void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* source) const {
     // Vérifier si les conditions sont remplies
     if (!verifierConditions(joueurActif, adversaire)) {
         std::cout << "Conditions non remplies pour l'effet " << id << std::endl;
         return;
     }
+
+    // Si c'est un champion, on vérifie qu'il est actif avant d'appliquer l'effet
+    if (source && source->getType() == TypeCarte::CHAMPION) {
+        const Champion* champion = static_cast<const Champion*>(source);
+        if (!champion->isActive()) {
+            std::cout << "Ce champion est déjà expendu et ne peut pas utiliser ses effets." << std::endl;
+            return;
+        }
+    }
     
     // Appliquer l'effet selon son type
     switch (type) {
+        case TypeEffet::EXPEND_CHAMPION:
+            if (source && source->getType() == TypeCarte::CHAMPION) {
+                Champion* champion = const_cast<Champion*>(static_cast<const Champion*>(source));
+                champion->desactiver();
+                std::cout << "Champion " << champion->getNom() << " est maintenant expendu." << std::endl;
+            }
+            break;
         case TypeEffet::OR:
             joueurActif.addOr(valeur);
             std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " or" << std::endl;
@@ -38,6 +54,34 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire) const {
             joueurActif.piocher(valeur);
             std::cout << "Joueur " << joueurActif.getId() << " pioche " << valeur << " carte(s)" << std::endl;
             break;
+
+        case TypeEffet::DMG_ou_SOIN:{
+            
+            // 1. Demander au joueur quel effet il souhaite appliquer
+
+            int choix;
+            std::cout << "Choisissez une option (1 ou 2): " << std::endl
+            << "  1 - Gagner 3 points de combat" << std::endl
+            << "  2 - Récupérer 3 PV" << std::endl;
+            std::cin >> choix;
+
+            // Valider l'entrée
+            while (choix != 1 && choix != 2) {
+                std::cout << "Choix invalide. Veuillez choisir 1 ou 2: ";
+                std::cin >> choix;
+            }
+
+            // 2. Appliquer l'effet choisi
+
+            if (choix == 1) {
+                joueurActif.addCombat(valeur);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " points de combat" << std::endl;
+            } else if (choix == 2) {
+                joueurActif.heal(valeur);
+                std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur << " PV" << std::endl;
+            }
+            break;
+        }
 
         case TypeEffet::DRAW_DISCARD:
         {
@@ -94,27 +138,142 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire) const {
             break;
         }
 
-        case TypeEffet::DMG_ou_SOIN:{
-            
-            int choix;
-            std::cout << "Choisissez une option (1 ou 2): " << std::endl
-            << "  1 - Gagner 3 points de combat" << std::endl
-            << "  2 - Récupérer 3 PV" << std::endl;
-            std::cin >> choix;
-            
-            if (choix == 1) {
-                joueurActif.addCombat(valeur);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " points de combat" << std::endl;
-            } else if (choix == 2) {
-                joueurActif.heal(valeur);
-                std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur << " PV" << std::endl;
-            } else {
-                std::cout << "Choix invalide. Aucune action effectuée." << std::endl;
+        case TypeEffet::FORCE_DISCARD_OPPONENT:{
+            // Forcer l'adversaire à défausser "valeur" cartes
+            ZoneDeCarte* mainAdversaire = adversaire.getZoneByType(TypeZone::MAIN);
+            ZoneDeCarte* defausseAdversaire = adversaire.getZoneByType(TypeZone::DEFAUSSE);
+            if (!mainAdversaire || !defausseAdversaire) {
+                std::cout << "Erreur: Zones de l'adversaire non trouvées!" << std::endl;
+                break;
+            }
+
+            std::cout << "Joueur " << adversaire.getId() << " doit défausser " << valeur << " carte(s)." << std::endl;
+
+            for (int i = 0; i < valeur; ++i) {
+                // Afficher la main de l'adversaire
+                adversaire.afficherMain();
+                int indice_carte;
+                std::cout << "Joueur " << adversaire.getId() << ", entrez l'indice de la carte à défausser (" << (i + 1) << "/" << valeur << ") : ";
+                std::cin >> indice_carte;
+
+                // Valider l'indice
+                while (indice_carte < 1 || indice_carte > static_cast<int>(mainAdversaire->taille())) {
+                    std::cout << "Indice invalide! Choisissez entre 1 et " << mainAdversaire->taille() << " : ";
+                    std::cin >> indice_carte;
+                }
+
+                // Récupérer l'ID de la carte à défausser
+                const auto& cartes_main = mainAdversaire->getCartes();
+                int carteId = cartes_main[indice_carte - 1].first.getId();
+
+                // Déplacer la carte de la main vers la défausse
+                mainAdversaire->deplacerCarte(carteId, *defausseAdversaire, 1);
+                std::cout << "Carte défaussée." << std::endl;
             }
             break;
         }
 
+        case TypeEffet::OR_ou_2DMG:{
+            
+            // 1. Demander au joueur quel effet il souhaite appliquer
 
+            int choix;
+            std::cout << "Choisissez une option (1 ou 2): " << std::endl
+            << "  1 - Gagner 1 or" << std::endl
+            << "  2 - Gagner 2 points de combat" << std::endl;
+            std::cin >> choix;
+            
+            // Valider l'entrée
+            while (choix != 1 && choix != 2) {
+                std::cout << "Choix invalide. Veuillez choisir 1 ou 2: ";
+                std::cin >> choix;
+            }
+
+            // 2. Appliquer l'effet choisi
+
+            if (choix == 1) {
+                joueurActif.addOr(1);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne 1 or" << std::endl;
+            } else if (choix == 2) {
+                joueurActif.addCombat(2);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne 2 points de combat" << std::endl;
+            }
+            break;
+        }
+
+        case TypeEffet::OR_ou_DMG:{
+            
+            // 1. Demander au joueur quel effet il souhaite appliquer
+
+            int choix;
+            std::cout << "Choisissez une option (1 ou 2): " << std::endl
+            << "  1 - Gagner 1 or" << std::endl
+            << "  2 - Gagner " << valeur << " points de combat" << std::endl;
+            std::cin >> choix;
+
+            // Valider l'entrée
+            while (choix != 1 && choix != 2) {
+                std::cout << "Choix invalide. Veuillez choisir 1 ou 2: ";
+                std::cin >> choix;
+            }
+
+            // 2. Appliquer l'effet choisi
+
+            if (choix == 1) {
+                joueurActif.addOr(1);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne 1 or" << std::endl;
+            } else if (choix == 2) {
+                joueurActif.addCombat(valeur);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " points de combat" << std::endl;
+            }
+            
+            break;
+        }
+
+        case TypeEffet::OR_ou_SOIN_per_CHAMP:{
+
+            // 1. Demander au joueur quel effet il souhaite appliquer
+
+            int choix;
+            std::cout << "Choisissez une option (1 ou 2): " << std::endl
+            << "  1 - Gagner 1 or" << std::endl
+            << "  2 - Gagner 1 PV par champions que vous avez en jeu" << std::endl;
+            std::cin >> choix;
+
+            // Valider l'entrée
+            while (choix != 1 && choix != 2) {
+                std::cout << "Choix invalide. Veuillez choisir 1 ou 2: ";
+                std::cin >> choix;
+            }
+
+            // 2. Appliquer l'effet choisi
+
+            // Choix 1 : Gagner 1 or
+            if (choix == 1) {
+                joueurActif.addOr(valeur);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne 1 or" << std::endl;
+            } 
+            
+            // Choix 2 : +1 PV par champion en jeu
+            else if (choix == 2) {
+            
+                // Compter le nombre de champions en jeu pour le joueur actif
+                ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+                int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) : 0;
+
+                if (nbChampions > 0) {
+                    joueurActif.heal(valeur*nbChampions);
+                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur*nbChampions << " PV ("<< valeur*nbChampions << " par champion en jeu)" << std::endl;
+                } else {
+                    std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
+                }
+            }
+            
+            break;
+        }
+
+
+        
             
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;

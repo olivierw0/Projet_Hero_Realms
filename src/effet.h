@@ -3,6 +3,7 @@
 
 #include <string>
 enum class TypeEffet {
+    EXPEND_CHAMPION,  // Nouveau type pour expend des champions
     DMG,
     DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet
     DRAW_DISCARD,
@@ -59,8 +60,8 @@ public:
     int getValeur() const { return valeur; }
     ConditionEffet getCondition() const { return condition; }
 
-    // Méthode principale pour activer l'effet quand une carte est jouée
-    void activerEffet(class Joueur& joueurActif, class Joueur& adversaire) const;
+    // Activation de l'effet
+    void activerEffet(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 
 private:
     // Méthode pour vérifier si les conditions de l'effet sont remplies

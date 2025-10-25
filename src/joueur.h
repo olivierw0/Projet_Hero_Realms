@@ -50,7 +50,7 @@ public:
     void initDeck(); // Initialisation au début de la partie
     
     // Gestion des cartes en main
-    void afficherMain() const;
+    void afficherMain() const; // Afficher la main du joueur (indices, nom, description) (1-based)
     bool jouerCarte(int indice, Joueur& adversaire); // Jouer une carte par son indice (1-based)
     int getNombreCartesEnMain() const;
     
