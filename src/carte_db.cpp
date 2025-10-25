@@ -222,13 +222,13 @@ Champion rasmus_the_smuggler(
 Champion street_thug1(
     3201, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::OR_ou_DMG, 1) },
+    { Effet(1, TypeEffet::OR_ou_2DMG, 1) },
     false, 4
 );
 Champion street_thug2(
     3202, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::OR_ou_DMG, 1) },
+    { Effet(1, TypeEffet::OR_ou_2DMG, 1) },
     false, 4
 );
 
