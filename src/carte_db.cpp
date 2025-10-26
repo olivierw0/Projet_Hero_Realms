@@ -333,7 +333,7 @@ Carte dark_energy(45, "Dark Energy", 4, TypeCarte::ACTION, FactionCarte::ROUGE,
 // Champions rouges
 Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, FactionCarte::ROUGE,
     "{Expend}: {Gain 4 combat}\nYou may sacrifice up to two cards in your hand and/or discard pile.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 4), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 1), Effet(4, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 4), Effet(3, TypeEffet::SACRIFICE_HAND_DISCARD, 2), Effet(4, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     true, 6
 );  
 

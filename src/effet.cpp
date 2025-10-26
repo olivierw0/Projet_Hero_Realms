@@ -21,7 +21,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
     if (source && source->getType() == TypeCarte::CHAMPION) {
         const Champion* champion = static_cast<const Champion*>(source);
         if (!champion->isActive()) {
-            std::cout << "Ce champion est déjà expendu et ne peut pas utiliser ses effets." << std::endl;
+            std::cout << "Ce champion est epuisé et ne peut pas utiliser ses effets." << std::endl;
             return;
         }
     }
@@ -272,8 +272,42 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             break;
         }
 
+        // TODO : A vérifier nottamment pour la partie où on récupère le champion à préparer 
+        // Actuellement : utilise un dynamic_cast (via une fonction utilitaire) pour convertir une Carte en Champion
+        // Modification possible : stocker les champions dans une zone dédiée dans la classe Joueur
+        case TypeEffet::PREPARE_CHAMPION:
+            std::cout << "Choisissez un champion à préparer :" << std::endl;
+            {
+                ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+                if (!zoneChampions || zoneChampions->estVide()) {
+                    std::cout << "Aucun champion à préparer." << std::endl;
+                    break;
+                }
 
-        
+                // Afficher les champions disponibles
+                const auto& cartes = zoneChampions->getCartes();
+                for (size_t i = 0; i < cartes.size(); ++i) {
+                    const Carte& carte = cartes[i].first;
+                    std::cout << (i + 1) << "- " << carte.getNom() << (static_cast<const Champion&>(carte).isActive() ? " (Actif)" : " (Epuisé)") << std::endl;
+                }
+
+                int choix_champion;
+                std::cout << "Entrez l'indice du champion à préparer : ";
+                std::cin >> choix_champion;
+
+                // Valider l'indice
+                while (choix_champion < 1 || choix_champion > static_cast<int>(cartes.size())) {
+                    std::cout << "Indice invalide! Choisissez entre 1 et " << cartes.size() << " : ";
+                    std::cin >> choix_champion;
+                }
+
+                // Préparer le champion choisi
+                Champion* champion = getChampionFromCarte(cartes[choix_champion - 1].first);
+                champion->activer();
+                std::cout << "Champion " << champion->getNom() << " est maintenant préparé." << std::endl;
+            }
+            break;
+
             
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
@@ -310,4 +344,21 @@ bool Effet::verifierConditions(const Joueur& joueurActif, const Joueur& adversai
         default:
             return false;
     }
+}
+
+/**
+ * @brief Convertit une Carte en Champion si possible
+ * 
+ * Fonction utilitaire qui permet de convertir une référence de Carte en pointeur
+ * vers Champion.
+ * 
+ * @param carte La carte à convertir
+ * @return Champion* Pointeur vers le Champion si la conversion est possible,
+ *                   nullptr si la carte n'est pas un Champion
+ * 
+ * @note Cette fonction doit être utilisée uniquement quand on est sûr que
+ *       la carte est un Champion, sinon vérifier le retour
+ */
+Champion* getChampionFromCarte(const Carte& carte) {
+    return const_cast<Champion*>(dynamic_cast<const Champion*>(&carte));
 }
