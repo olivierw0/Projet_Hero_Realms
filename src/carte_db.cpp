@@ -671,22 +671,19 @@ const Carte* getCarteByName(const std::string& nom) {
 }
 
 // 7 or + 1 dague + 1 ruby + 1 shortsword
-std::vector<Carte*> creerDeckDeBase() {
-    std::vector<Carte*> deck;
+std::vector<const Carte*> creerDeckDeBase() {
+    std::vector<const Carte*> deck={
+        &gold1,
+        &gold2,
+        &gold3,
+        &gold4,
+        &gold5,
+        &gold6,
+        &gold7,
+        &dagger,
+        &ruby,
+        &shortsword
+    };
 
-    // Ajouter 7 cartes Or distinctes
-    deck.push_back(&gold1);
-    deck.push_back(&gold2);
-    deck.push_back(&gold3);
-    deck.push_back(&gold4);
-    deck.push_back(&gold5);
-    deck.push_back(&gold6);
-    deck.push_back(&gold7);
-    
-    // Ajouter 1 dague, 1 ruby et 1 shortsword
-    deck.push_back(&dagger);
-    deck.push_back(&ruby);
-    deck.push_back(&shortsword);
-    
     return deck;
 }
