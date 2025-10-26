@@ -129,7 +129,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 // Récupérer l'ID de la carte à défausser
                 const auto& cartes_main = main->getCartes();
-                int carteId = cartes_main[indice_carte - 1].first.getId();
+                int carteId = cartes_main[indice_carte - 1].first->getId();
 
                 // Déplacer la carte de la main vers la défausse
                 main->deplacerCarte(carteId, *defausse, 1);
@@ -164,7 +164,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 // Récupérer l'ID de la carte à défausser
                 const auto& cartes_main = mainAdversaire->getCartes();
-                int carteId = cartes_main[indice_carte - 1].first.getId();
+                int carteId = cartes_main[indice_carte - 1].first->getId();
 
                 // Déplacer la carte de la main vers la défausse
                 mainAdversaire->deplacerCarte(carteId, *defausseAdversaire, 1);
@@ -271,9 +271,6 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             
             break;
         }
-
-
-        
             
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
