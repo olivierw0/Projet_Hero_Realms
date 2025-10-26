@@ -2,6 +2,8 @@
 #include "joueur.h"
 #include <iostream>
 
+Champion* getChampionFromCarte(const Carte& carte);
+
 // Constructeur avec paramètres
 Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition, int param)
     : id(id), type(type), valeur(valeur), condition(condition), param(param) {
