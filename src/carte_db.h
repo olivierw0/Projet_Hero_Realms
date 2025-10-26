@@ -6,8 +6,8 @@
 #include <string>
 #include <memory>
 
-// Base de données des cartes - chaque carte est unique en mémoire
-extern std::vector<Carte*> carte_db;
+// Base de données des cartes
+extern std::vector<const Carte*> carte_db;
 
 // Fonctions d'accès à la base de données
 Carte* getCarteById(int id);

@@ -3,13 +3,14 @@
 
 #include <string>
 enum class TypeEffet {
+    EXPEND_CHAMPION,  // Nouveau type pour expend des champions
     DMG,
     DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet
     DRAW_DISCARD,
     FORCE_DISCARD_OPPONENT,
     HAND_NEXT_ACQUIRED,
     OR,
-    OR_or_SOIN, // valeur fixe (différente entre OR et SOIN) à définir dans l'effet
+    OR_ou_2DMG, // valeur fixe (différente entre OR et SOIN) à définir dans l'effet
     OR_ou_DMG, // valeur fixe (différente entre OR et DMG) à définir dans l'effet
     OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité)
     PIOCHE,
@@ -59,8 +60,8 @@ public:
     int getValeur() const { return valeur; }
     ConditionEffet getCondition() const { return condition; }
 
-    // Méthode principale pour activer l'effet quand une carte est jouée
-    void activerEffet(class Joueur& joueurActif, class Joueur& adversaire) const;
+    // Activation de l'effet
+    void activerEffet(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 
 private:
     // Méthode pour vérifier si les conditions de l'effet sont remplies
