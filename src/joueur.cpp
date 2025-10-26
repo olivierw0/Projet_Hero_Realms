@@ -82,7 +82,7 @@ void Joueur::initDeck(){
     std::cout << "Initialisation du deck du Joueur : " << id << std::endl;
     std::cout << "deck taille : " << (deck ? deck->taille() : 0) << std::endl;
     if (deck) {
-        std::vector<Carte*> deckInitial = creerDeckDeBase();
+        std::vector<const Carte*> deckInitial = creerDeckDeBase();
         for (const auto& carte : deckInitial) {
             // Passer le pointeur directement (en supprimant const car nos zones gèrent des cartes modifiables)
             deck->ajouterCarte(const_cast<Carte*>(carte), static_cast<int>(deck->taille()));
@@ -165,7 +165,8 @@ int Joueur::getNombreCartesEnMain() const {
 
 // Jouer toutes les cartes en main
 void Joueur::jouerToutesLesCartes(Joueur& adversaire) {
-    for (int i = 0; i < getNombreCartesEnMain(); ++i) {
+    int nbCartes = getNombreCartesEnMain();
+    for (int i = 0; i < nbCartes; ++i) {
         jouerCarte(1, adversaire);
     }
 }
