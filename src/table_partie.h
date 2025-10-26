@@ -20,6 +20,12 @@ private:
     std::vector<ZoneDeCarte> zones_communes;
     int joueur_actuel_index; // Index du joueur qui joue actuellement
 
+    ZoneDeCarte* marche;
+    ZoneDeCarte* deck_marche;
+    ZoneDeCarte* gemmes_feu;
+    ZoneDeCarte* cartes_ecartees;
+
+
     // Méthode auxiliaire pour afficher une zone d'un joueur
     void afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone, bool est_champion) const;
 
@@ -30,7 +36,6 @@ private:
     void afficherCarte(const Carte& carte, bool est_champion) const;
 
 public:
-
 
     // Constructeur / Destructeur
     TablePartie(int id, int nb_gemmes);
@@ -70,6 +75,17 @@ public:
     
     // Initialiser complètement la partie (zones, decks, mains initiales)
     void initPartie();
+
+
+    void initMarche();                          // Initialiser le marché avec les cartes
+    void remplirMarche();                       // Remplir le marché à 5 cartes
+    bool acheterCarteMarche(int indice, Joueur& acheteur); // Acheter une carte du marché
+    void afficherMarche() const;                // Afficher les cartes disponibles
+
+    ZoneDeCarte* getMarche() { return marche; }
+    ZoneDeCarte* getDeckMarche() { return deck_marche; }
+    ZoneDeCarte* getGemmesFeu() { return gemmes_feu; }
+    ZoneDeCarte* getCartesEcartees() { return cartes_ecartees; }
 };
 
 #endif // TABLE_PARTIE_H
