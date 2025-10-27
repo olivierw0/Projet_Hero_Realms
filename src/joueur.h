@@ -44,6 +44,7 @@ public:
 
     void creerZone(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
     ZoneDeCarte* getZoneByType(TypeZone type);
+    const ZoneDeCarte* getZoneByType(TypeZone type) const;
     ZoneDeCarte* getZoneById(int zoneId);
 
     void initZonesJoueur(); // Initialisation au début de la partie
@@ -51,9 +52,11 @@ public:
     
     // Gestion des cartes en main
     void afficherMain() const; // Afficher la main du joueur (indices, nom, description) (1-based)
+    void afficherChampions() const; // Afficher la zone des champions du joueur (indices, nom, description) (1-based)
     bool jouerCarte(int indice, Joueur& adversaire); // Jouer une carte par son indice (1-based)
     int getNombreCartesEnMain() const;
-    
+    void jouerToutesLesCartes(Joueur& adversaire); // Jouer toutes les cartes en main
+
     // Gestion du deck
     void melangerDeck(); // Mélanger le deck du joueur
     void piocher(int nbCartes = 1); // Piocher des cartes du deck vers la main

@@ -56,7 +56,7 @@ Carte taxation3(603, "Taxation", 1, TypeCarte::ACTION, FactionCarte::JAUNE,
 );
 
 Carte word_of_power(7, "Word of Power", 6, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Draw two cards.<hr>{Jaune Ally}: {Gain 5 health}<hr>{Sacrifice}: {Gain 5 combat}",
+    "Draw two cards. <hr> {Jaune Ally}: {Gain 5 health} <hr> {Sacrifice}: {Gain 5 combat}",
     { Effet(1, TypeEffet::PIOCHE, 2), Effet(2, TypeEffet::SOIN, 5, ConditionEffet::JAUNE_ALLY), Effet(3, TypeEffet::DMG, 5, ConditionEffet::SACRIFICE) }
 );
 
@@ -552,8 +552,8 @@ Carte gold7(211, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     { Effet(1, TypeEffet::OR, 1) }
 );
 
-std::vector<const Carte*> initCarteDB() {
-    std::vector<const Carte*> carte_db = {
+std::vector<Carte*> initCarteDB() {
+    std::vector<Carte*> carte_db = {
         // JAUNES
         &close_ranks,
         &command,
@@ -640,19 +640,33 @@ std::vector<const Carte*> initCarteDB() {
         &cron_the_berserker,
         &orc_grunt1,
         &orc_grunt2,
-        &torgern_rocksplitter
+        &torgern_rocksplitter,
+
+        &fire_gem
     };
 
     return carte_db;
 }
 
-std::vector<const Carte*> carte_db = initCarteDB();
+std::vector<Carte*> creerDeckMarche() {
+    std::vector<Carte*> deck_marche;
+    for (auto carte : carte_db) {
+        int id = carte->getId();
+        // Exclure la carte Fire Gem (id 201) du deck de la marche
+        if (id != 201 ) {
+            deck_marche.push_back(carte);
+        }
+    }
+    return deck_marche;
+}
+
+std::vector<Carte*> carte_db = initCarteDB();
 
 // ========== FONCTIONS D'ACCES ==========
 
 // Obtenir une carte par son ID
-const Carte* getCarteById(int id) {
-    for (const auto& carte : carte_db) {
+Carte* getCarteById(int id) {
+    for (auto carte : carte_db) {
         if (carte->getId() == id) {
             return carte;
         }
@@ -661,8 +675,8 @@ const Carte* getCarteById(int id) {
 }
 
 // Obtenir une carte par son nom
-const Carte* getCarteByName(const std::string& nom) {
-    for (const auto& carte : carte_db) {
+Carte* getCarteByName(const std::string& nom) {
+    for (auto carte : carte_db) {
         if (carte->getNom() == nom) {
             return carte;
         }
@@ -670,34 +684,20 @@ const Carte* getCarteByName(const std::string& nom) {
     return nullptr;
 }
 
-// Obtenir la quantité d'une carte (toujours 1 maintenant)
-int getQuantiteById(int id) {
-    for (const auto& carte : carte_db) {
-        if (carte->getId() == id) {
-            return 1; // Chaque carte est unique dans le deck
-        }
-    }
-    return 0; // Carte non trouvée
-}
-
-
 // 7 or + 1 dague + 1 ruby + 1 shortsword
-std::vector<const Carte*> creerDeckDeBase() {
-    std::vector<const Carte*> deck;
-    
-    // Ajouter 7 cartes Or distinctes
-    deck.push_back(&gold1);
-    deck.push_back(&gold2);
-    deck.push_back(&gold3);
-    deck.push_back(&gold4);
-    deck.push_back(&gold5);
-    deck.push_back(&gold6);
-    deck.push_back(&gold7);
-    
-    // Ajouter 1 dague, 1 ruby et 1 shortsword
-    deck.push_back(&dagger);
-    deck.push_back(&ruby);
-    deck.push_back(&shortsword);
-    
+std::vector<Carte*> creerDeckDeBase() {
+    std::vector<Carte*> deck={
+        &gold1,
+        &gold2,
+        &gold3,
+        &gold4,
+        &gold5,
+        &gold6,
+        &gold7,
+        &dagger,
+        &ruby,
+        &shortsword
+    };
+
     return deck;
 }

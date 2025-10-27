@@ -84,18 +84,18 @@ int ZoneDeCarte::getId() const { return id; }
 TypeZone ZoneDeCarte::getType() const { return type; }
 Joueur* ZoneDeCarte::getProprietaire() const { return proprietaire; }
 TablePartie* ZoneDeCarte::getTable() const { return table; }
-const std::vector<std::pair<Carte, int>>& ZoneDeCarte::getCartes() const { return cartes; }
+const std::vector<std::pair<Carte*, int>>& ZoneDeCarte::getCartes() const { return cartes; }
 
 // Ajouter une carte à la zone avec un ordre spécifique
-void ZoneDeCarte::ajouterCarte(const Carte& carte, int ordre) {
+void ZoneDeCarte::ajouterCarte(Carte* carte, int ordre) {
     cartes.emplace_back(carte, ordre);
 }
 
 // Retirer une carte de la zone par son ID
 bool ZoneDeCarte::retirerCarte(int carteId) {
     auto it = std::remove_if(cartes.begin(), cartes.end(),
-                                [carteId](const std::pair<Carte, int>& p) {
-                                    return p.first.getId() == carteId;
+                                [carteId](const std::pair<Carte*, int>& p) {
+                                    return p.first->getId() == carteId;
                                 });
     if (it != cartes.end()) {
         cartes.erase(it, cartes.end());
@@ -108,8 +108,8 @@ bool ZoneDeCarte::retirerCarte(int carteId) {
 bool ZoneDeCarte::deplacerCarte(int carteId, ZoneDeCarte& destination, int nouvelOrdre = -1) {
     // Trouver la carte dans cette zone
     for (const auto& paire : cartes) {
-        if (paire.first.getId() == carteId) {
-            Carte carte = paire.first;
+        if (paire.first->getId() == carteId) {
+            Carte* carte = paire.first;
             int ordre = (nouvelOrdre == -1) ? paire.second : nouvelOrdre;
             
             // Retirer de cette zone
@@ -142,10 +142,10 @@ size_t ZoneDeCarte::taille() const {
 }
 
 // Trouver une carte par ID (sans la retirer)
-const Carte* ZoneDeCarte::trouverCarte(int carteId) const {
+Carte* ZoneDeCarte::trouverCarte(int carteId) const {
     for (const auto& paire : cartes) {
-        if (paire.first.getId() == carteId) {
-            return &paire.first;
+        if (paire.first->getId() == carteId) {
+            return paire.first;
         }
     }
     return nullptr;
@@ -173,7 +173,7 @@ void ZoneDeCarte::melangerCartes() {
 // Trier les cartes par ordre (utile après mélange)
 void ZoneDeCarte::trierParOrdre() {
     std::sort(cartes.begin(), cartes.end(), 
-              [](const std::pair<Carte, int>& a, const std::pair<Carte, int>& b) {
+              [](const std::pair<Carte*, int>& a, const std::pair<Carte*, int>& b) {
                   return a.second < b.second;
               });
 }

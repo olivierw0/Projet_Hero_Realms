@@ -131,7 +131,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 // Récupérer l'ID de la carte à défausser
                 const auto& cartes_main = main->getCartes();
-                int carteId = cartes_main[indice_carte - 1].first.getId();
+                int carteId = cartes_main[indice_carte - 1].first->getId();
 
                 // Déplacer la carte de la main vers la défausse
                 main->deplacerCarte(carteId, *defausse, 1);
@@ -139,7 +139,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             }
             break;
         }
-
+        
         case TypeEffet::FORCE_DISCARD_OPPONENT:{
             // Forcer l'adversaire à défausser "valeur" cartes
             ZoneDeCarte* mainAdversaire = adversaire.getZoneByType(TypeZone::MAIN);
@@ -166,7 +166,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 // Récupérer l'ID de la carte à défausser
                 const auto& cartes_main = mainAdversaire->getCartes();
-                int carteId = cartes_main[indice_carte - 1].first.getId();
+                int carteId = cartes_main[indice_carte - 1].first->getId();
 
                 // Déplacer la carte de la main vers la défausse
                 mainAdversaire->deplacerCarte(carteId, *defausseAdversaire, 1);
@@ -265,7 +265,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 if (nbChampions > 0) {
                     joueurActif.heal(valeur*nbChampions);
-                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur*nbChampions << " PV ("<< valeur*nbChampions << " par champion en jeu)" << std::endl;
+                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur*nbChampions << " PV ("<< valeur << " par champion en jeu)" << std::endl;
                 } else {
                     std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
                 }
@@ -324,10 +324,13 @@ bool Effet::verifierConditions(const Joueur& joueurActif, const Joueur& adversai
             return true; // Aucune condition, toujours activable
             
         case ConditionEffet::SACRIFICE:
+        case ConditionEffet::SACRIFICE_TO_MARCHE: // pour les gemmes de feu
             // TODO: Vérifier si un sacrifice a été effectué
-            std::cout << "Vérification condition SACRIFICE (non implémentée)" << std::endl;
+        case ConditionEffet::SACRIFICE_HAND_DISCARD:
+            // TODO: Vérifier si une carte a été défaussée de la main
+            std::cout << "Vérification condition SACRIFICE_HAND_DISCARD (non implémentée)" << std::endl;
             return false;
-            
+
         case ConditionEffet::ROUGE_ALLY:
         case ConditionEffet::JAUNE_ALLY:
         case ConditionEffet::VERT_ALLY:

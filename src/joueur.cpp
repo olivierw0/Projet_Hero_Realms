@@ -4,6 +4,7 @@
 #include "carte.h"
 #include "champion.h"
 #include "zone_de_carte.h"
+#include "table_partie.h"
 #include "joueur.h"
 #include "carte_db.h"
 
@@ -48,6 +49,15 @@ void Joueur::creerZone(int id, TypeZone type, Joueur* proprietaire, TablePartie*
     zones.emplace_back(id, type, proprietaire ? proprietaire : this, table);
 }
 
+const ZoneDeCarte* Joueur::getZoneByType(TypeZone type) const {
+    for(const ZoneDeCarte& zone : zones){
+        if(zone.getType() == type){
+            return &zone;
+        }
+    }
+    return nullptr;
+}
+
 ZoneDeCarte* Joueur::getZoneByType(TypeZone type){
     for(ZoneDeCarte& zone : zones){
         if(zone.getType() == type){
@@ -82,33 +92,10 @@ void Joueur::initDeck(){
     std::cout << "Initialisation du deck du Joueur : " << id << std::endl;
     std::cout << "deck taille : " << (deck ? deck->taille() : 0) << std::endl;
     if (deck) {
-        std::vector<const Carte*> deckInitial = creerDeckDeBase();
-        for (const auto& carte : deckInitial) {
-            // Déréférencer le pointeur pour obtenir l'objet Carte
-            deck->ajouterCarte(*carte, static_cast<int>(deck->taille()));
+        std::vector<Carte*> deckInitial = creerDeckDeBase();
+        for (auto carte : deckInitial) {
+            deck->ajouterCarte(carte, static_cast<int>(deck->taille()));
         }
-    }
-}
-
-// Afficher la main du joueur avec des indices
-void Joueur::afficherMain() const {
-    ZoneDeCarte* main = const_cast<Joueur*>(this)->getZoneByType(TypeZone::MAIN);
-    if (!main) {
-        std::cout << "Erreur: Main non trouvée!" << std::endl;
-        return;
-    }
-    
-    std::cout << "\n=== Main du Joueur " << id << " ===" << std::endl;
-    const auto& cartes = main->getCartes();
-    
-    if (cartes.empty()) {
-        std::cout << "Aucune carte en main." << std::endl;
-        return;
-    }
-    
-    for (size_t i = 0; i < cartes.size(); ++i) {
-        std::cout << "[" << (i + 1) << "] " << cartes[i].first.getNom() 
-                  << " (" << cartes[i].first.getDescription() << ")" << std::endl;
     }
 }
 
@@ -132,21 +119,86 @@ bool Joueur::jouerCarte(int indice, Joueur& adversaire) {
     }
     
     // Récupérer la carte à jouer
-    Carte carteAJouer = cartes[indice - 1].first;
+    Carte* carteAJouer = cartes[indice - 1].first;
+    
+    if (carteAJouer == nullptr) {
+        std::cout << "Erreur: Carte invalide!" << std::endl;
+        return false;
+    }
     
     // Jouer la carte (activer ses effets)
-    carteAJouer.jouerCarte(*this, adversaire);
+    carteAJouer->jouerCarte(*this, adversaire);
     
     // Déplacer la carte de la main vers la défausse
-    if (carteAJouer.getType() == TypeCarte::CHAMPION) {
+    if (carteAJouer->getType() == TypeCarte::CHAMPION) {
         // Si c'est un champion, le déplacer vers la zone des champions
-        main->deplacerCarte(carteAJouer.getId(), *champions, 1);
+        main->deplacerCarte(carteAJouer->getId(), *champions, 1);
     } else {
         // Sinon, le déplacer vers la défausse
-        main->deplacerCarte(carteAJouer.getId(), *defausse, 1);
+        main->deplacerCarte(carteAJouer->getId(), *defausse, 1);
     }
     
     return true;
+}
+
+// Codes couleurs ANSI
+#define RESET_COLOR   "\033[0m"
+#define BOLD_TEXT     "\033[1m"
+#define DIM_TEXT      "\033[2m"
+
+void Joueur::afficherMain() const {
+    const ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
+    if (!main) {
+        std::cout << "Main introuvable!" << std::endl;
+        return;
+    }
+    
+    const auto& cartes = main->getCartes();
+    if (cartes.empty()) {
+        std::cout << DIM_TEXT << "  (main vide)" << RESET_COLOR << std::endl;
+        return;
+    }
+    
+    int indice = 1;
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first != nullptr) {
+            std::cout << BOLD_TEXT << "[" << indice << "] " << RESET_COLOR 
+                      << paire_carte.first->getNom() << std::endl;
+            indice++;
+        }
+    }
+}
+
+//afficher champions pour les choix d'effet
+void Joueur::afficherChampions() const {
+    const ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+    if (!champions) {
+        std::cout << "Zone champions introuvable!" << std::endl;
+        return;
+    }
+    
+    const auto& cartes = champions->getCartes();
+    if (cartes.empty()) {
+        std::cout << DIM_TEXT << "  (aucun champion)" << RESET_COLOR << std::endl;
+        return;
+    }
+    
+    int indice = 1;
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first != nullptr) {
+            const Champion* champion = dynamic_cast<const Champion*>(paire_carte.first);
+            std::cout << BOLD_TEXT << "[" << indice << "] " << RESET_COLOR 
+                      << paire_carte.first->getNom();
+            if (champion) {
+                std::cout << " [" << champion->getPV() << " PV]";
+                if (champion->hasGarde()) {
+                    std::cout << " 🛡️";
+                }
+            }
+            std::cout << std::endl;
+            indice++;
+        }
+    }
 }
 
 // Obtenir le nombre de cartes en main
@@ -156,6 +208,13 @@ int Joueur::getNombreCartesEnMain() const {
     return static_cast<int>(main->getCartes().size());
 }
 
+// Jouer toutes les cartes en main
+void Joueur::jouerToutesLesCartes(Joueur& adversaire) {
+    int nbCartes = getNombreCartesEnMain();
+    for (int i = 0; i < nbCartes; ++i) {
+        jouerCarte(1, adversaire);
+    }
+}
 // Mélanger le deck du joueur
 void Joueur::melangerDeck() {
     ZoneDeCarte* deck = getZoneByType(TypeZone::DECK);
@@ -187,9 +246,11 @@ void Joueur::piocher(int nbCartes) {
         // Piocher une carte si le deck n'est pas vide
         if (!deck->estVide()) {
             const auto& cartes = deck->getCartes();
-            int carteId = cartes[0].first.getId(); // Prendre la première carte
-            deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
-            std::cout << "Joueur " << id << " pioche une carte." << std::endl;
+            if (!cartes.empty() && cartes[0].first != nullptr) {
+                int carteId = cartes[0].first->getId(); // Prendre la première carte
+                deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
+                std::cout << "Joueur " << id << " pioche une carte." << std::endl;
+            }
         } else {
             std::cout << "Impossible de piocher: deck et défausse vides!" << std::endl;
             break;
