@@ -6,6 +6,7 @@
 #include "zone_de_carte.h"
 #include "table_partie.h"
 #include "joueur.h"
+#include "effet.h"
 #include "carte_db.h"
 
 void Joueur::takeDamage(int amount){
@@ -99,48 +100,6 @@ void Joueur::initDeck(){
     }
 }
 
-// Jouer une carte par son indice (1-based)
-bool Joueur::jouerCarte(int indice, Joueur& adversaire) {
-    ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
-    ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
-    ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
-
-    if (!main || !defausse || !champions) {
-        std::cout << "Erreur: Zones non trouvées!" << std::endl;
-        return false;
-    }
-    
-    const auto& cartes = main->getCartes();
-    
-    // Vérifier que l'indice est valide (conversion 1-based vers 0-based)
-    if (indice < 1 || indice > static_cast<int>(cartes.size())) {
-        std::cout << "Indice invalide! Choisissez entre 1 et " << cartes.size() << std::endl;
-        return false;
-    }
-    
-    // Récupérer la carte à jouer
-    Carte* carteAJouer = cartes[indice - 1].first;
-    
-    if (carteAJouer == nullptr) {
-        std::cout << "Erreur: Carte invalide!" << std::endl;
-        return false;
-    }
-    
-    // Jouer la carte (activer ses effets)
-    carteAJouer->jouerCarte(*this, adversaire);
-    
-    // Déplacer la carte de la main vers la défausse
-    if (carteAJouer->getType() == TypeCarte::CHAMPION) {
-        // Si c'est un champion, le déplacer vers la zone des champions
-        main->deplacerCarte(carteAJouer->getId(), *champions, 1);
-    } else {
-        // Sinon, le déplacer vers la défausse
-        main->deplacerCarte(carteAJouer->getId(), *defausse, 1);
-    }
-    
-    return true;
-}
-
 // Codes couleurs ANSI
 #define RESET_COLOR   "\033[0m"
 #define BOLD_TEXT     "\033[1m"
@@ -209,10 +168,10 @@ int Joueur::getNombreCartesEnMain() const {
 }
 
 // Jouer toutes les cartes en main
-void Joueur::jouerToutesLesCartes(Joueur& adversaire) {
+void Joueur::jouerToutesLesCartes() {
     int nbCartes = getNombreCartesEnMain();
     for (int i = 0; i < nbCartes; ++i) {
-        jouerCarte(1, adversaire);
+        jouerCarte(1);
     }
 }
 // Mélanger le deck du joueur
@@ -256,4 +215,127 @@ void Joueur::piocher(int nbCartes) {
             break;
         }
     }
+}
+
+// Jouer une carte par son indice (1-based)
+bool Joueur::jouerCarte(int indice) {
+    ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
+    if (!main) {
+        std::cout << "Main introuvable!" << std::endl;
+        return false;
+    }
+
+    const auto& cartes = main->getCartes();
+    if (indice < 1 || indice > static_cast<int>(cartes.size())) {
+        std::cout << "Indice invalide!" << std::endl;
+        return false;
+    }
+
+    Carte* carte = cartes[indice - 1].first;
+    if (!carte) {
+        std::cout << "Carte invalide!" << std::endl;
+        return false;
+    }
+
+    std::cout << "Joue la carte: " << carte->getNom() << std::endl;
+
+    // Déterminer si c'est un champion
+    Champion* champion = dynamic_cast<Champion*>(carte);
+    bool estChampion = (champion != nullptr);
+
+    // Si c'est un CHAMPION : le poser en jeu SANS activer ses effets
+    if (estChampion) {
+        ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+        if (!champions) {
+            std::cout << "Zone champions introuvable!" << std::endl;
+            return false;
+        }
+        
+        main->deplacerCarte(carte->getId(), *champions, champions->taille());
+        std::cout << "→ Champion posé en jeu (pas d'effet à l'entrée)" << std::endl;
+        champion->setActive(true);
+    } 
+    // Si c'est une ACTION ou un OBJET
+    else {
+        // Vérifier si la carte a un effet de sacrifice
+        bool aEffetSacrifice = false;
+        for (const auto& effet : carte->getEffets()) {
+            if (effet.getCondition() == ConditionEffet::SACRIFICE ||
+                effet.getCondition() == ConditionEffet::SACRIFICE_TO_MARCHE) {
+                aEffetSacrifice = true;
+                break;
+            }
+        }
+
+        bool sacrifier = false;
+        
+        // Si la carte a un effet de sacrifice, demander au joueur
+        if (aEffetSacrifice) {
+            std::cout << carte->getNom() << " a un effet de SACRIFICE." << std::endl;
+            std::cout << "Voulez-vous SACRIFIER cette carte ? (o/n): ";
+            char reponse;
+            std::cin >> reponse;
+            sacrifier = (reponse == 'o' || reponse == 'O');
+        }
+
+        // Activer les effets appropriés
+        std::cout << "→ Activation des effets..." << std::endl;
+        
+        for (const auto& effet : carte->getEffets()) {
+            // Si on a choisi de sacrifier, n'activer QUE les effets de sacrifice
+            if (sacrifier) {
+                if (effet.getCondition() == ConditionEffet::SACRIFICE ||
+                    effet.getCondition() == ConditionEffet::SACRIFICE_TO_MARCHE) {
+                    effet.activerEffet(*this, table->getAdversaire(), carte);
+                }
+            }
+            // Sinon, activer les effets normaux (sauf sacrifice)
+            else {
+                if (effet.getCondition() != ConditionEffet::SACRIFICE &&
+                    effet.getCondition() != ConditionEffet::SACRIFICE_TO_MARCHE) {
+                    // Vérifier autres conditions (allié, etc.)
+                    if (table && effet.verifierConditions(*this, table->getAdversaire())) {
+                        effet.activerEffet(*this, table->getAdversaire(), carte);
+                    }
+                }
+            }
+        }
+
+        // Déplacer la carte vers la destination appropriée
+        if (sacrifier) {
+            // Vérifier si c'est une Fire Gem (SACRIFICE_TO_MARCHE)
+            bool estFireGem = false;
+            for (const auto& effet : carte->getEffets()) {
+                if (effet.getCondition() == ConditionEffet::SACRIFICE_TO_MARCHE) {
+                    estFireGem = true;
+                    break;
+                }
+            }
+
+            if (estFireGem) {
+                // Retourner dans la pile de gemmes de feu
+                ZoneDeCarte* gemmesFeu = table->getGemmesFeu();
+                if (gemmesFeu) {
+                    main->deplacerCarte(carte->getId(), *gemmesFeu, gemmesFeu->taille());
+                    std::cout << "→ Fire Gem retourne dans la pile" << std::endl;
+                }
+            } else {
+                // Écarter la carte du jeu
+                ZoneDeCarte* ecartees = table->getCartesEcartees();
+                if (ecartees) {
+                    main->deplacerCarte(carte->getId(), *ecartees, ecartees->taille());
+                    std::cout << "→ Carte ÉCARTÉE du jeu définitivement" << std::endl;
+                }
+            }
+        } else {
+            // Défausser normalement
+            ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
+            if (defausse) {
+                main->deplacerCarte(carte->getId(), *defausse, defausse->taille());
+                std::cout << "→ Carte défaussée" << std::endl;
+            }
+        }
+    }
+
+    return true;
 }

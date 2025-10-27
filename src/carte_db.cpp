@@ -496,11 +496,6 @@ Champion torgern_rocksplitter(72, "Torgern Rocksplitter", 7,  FactionCarte::VERT
 // OBJETS (NEUTRES)
 // =========================
 
-Carte fire_gem(201, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
-    "Gain 2 gold. Sacrifice: Gain 3 combat",
-    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
-);
-
 Carte ruby(202, "Ruby", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     "Gain 2 gold",
     { Effet(1, TypeEffet::OR, 2) }
@@ -550,6 +545,71 @@ Carte gold6(210, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
 Carte gold7(211, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     "Gain 1 gold",
     { Effet(1, TypeEffet::OR, 1) }
+);
+
+Carte fire_gem1(2001, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem2(2002, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem3(2003, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem4(2004, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem5(2005, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem6(2006, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem7(2007, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem8(2008, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem9(2009, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem10(2010, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem11(2011, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem12(2012, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem13(2013, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem14(2014, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem15(2015, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
+);
+Carte fire_gem16(2016, "Fire Gem", 2, TypeCarte::OBJET, FactionCarte::NEUTRE,
+    "Gain 2 gold. Sacrifice: Gain 3 combat",
+    { Effet(1, TypeEffet::OR, 2), Effet(2, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_TO_MARCHE) }
 );
 
 std::vector<Carte*> initCarteDB() {
@@ -641,9 +701,26 @@ std::vector<Carte*> initCarteDB() {
         &orc_grunt1,
         &orc_grunt2,
         &torgern_rocksplitter,
-
-        &fire_gem
+        
+        // OBJETS NEUTRES
+        &fire_gem1,
+        &fire_gem2,
+        &fire_gem3,
+        &fire_gem4,
+        &fire_gem5,
+        &fire_gem6,
+        &fire_gem7,
+        &fire_gem8,
+        &fire_gem9,
+        &fire_gem10,
+        &fire_gem11,
+        &fire_gem12,
+        &fire_gem13,
+        &fire_gem14,
+        &fire_gem15,
+        &fire_gem16
     };
+
 
     return carte_db;
 }
@@ -653,7 +730,7 @@ std::vector<Carte*> creerDeckMarche() {
     for (auto carte : carte_db) {
         int id = carte->getId();
         // Exclure la carte Fire Gem (id 201) du deck de la marche
-        if (id != 201 ) {
+        if (id < 2001 || id > 2016) {
             deck_marche.push_back(carte);
         }
     }

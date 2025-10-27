@@ -12,6 +12,7 @@ extern std::vector<Carte*> carte_db;
 // Fonctions d'accès à la base de données
 Carte* getCarteById(int id);
 Carte* getCarteByName(const std::string& nom);
+std::vector<Carte*> initCarteDB();
 std::vector<Carte*> creerDeckDeBase();
 std::vector<Carte*> creerDeckMarche();
 
