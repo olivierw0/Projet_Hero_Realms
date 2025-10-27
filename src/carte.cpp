@@ -8,6 +8,9 @@ void Carte::jouerCarte(Joueur& joueurActif, Joueur& adversaire) const {
     
     // Activer tous les effets de la carte
     for (const auto& effet : effets) {
+        if (type == TypeCarte::CHAMPION) {
+            break;
+        }
         effet.activerEffet(joueurActif, adversaire);
     }
     

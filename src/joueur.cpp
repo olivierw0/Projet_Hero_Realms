@@ -4,6 +4,7 @@
 #include "carte.h"
 #include "champion.h"
 #include "zone_de_carte.h"
+#include "table_partie.h"
 #include "joueur.h"
 #include "carte_db.h"
 
@@ -48,6 +49,15 @@ void Joueur::creerZone(int id, TypeZone type, Joueur* proprietaire, TablePartie*
     zones.emplace_back(id, type, proprietaire ? proprietaire : this, table);
 }
 
+const ZoneDeCarte* Joueur::getZoneByType(TypeZone type) const {
+    for(const ZoneDeCarte& zone : zones){
+        if(zone.getType() == type){
+            return &zone;
+        }
+    }
+    return nullptr;
+}
+
 ZoneDeCarte* Joueur::getZoneByType(TypeZone type){
     for(ZoneDeCarte& zone : zones){
         if(zone.getType() == type){
@@ -82,34 +92,9 @@ void Joueur::initDeck(){
     std::cout << "Initialisation du deck du Joueur : " << id << std::endl;
     std::cout << "deck taille : " << (deck ? deck->taille() : 0) << std::endl;
     if (deck) {
-        std::vector<const Carte*> deckInitial = creerDeckDeBase();
-        for (const auto& carte : deckInitial) {
-            // Passer le pointeur directement (en supprimant const car nos zones gèrent des cartes modifiables)
-            deck->ajouterCarte(const_cast<Carte*>(carte), static_cast<int>(deck->taille()));
-        }
-    }
-}
-
-// Afficher la main du joueur avec des indices
-void Joueur::afficherMain() const {
-    ZoneDeCarte* main = const_cast<Joueur*>(this)->getZoneByType(TypeZone::MAIN);
-    if (!main) {
-        std::cout << "Erreur: Main non trouvée!" << std::endl;
-        return;
-    }
-    
-    std::cout << "\n=== Main du Joueur " << id << " ===" << std::endl;
-    const auto& cartes = main->getCartes();
-    
-    if (cartes.empty()) {
-        std::cout << "Aucune carte en main." << std::endl;
-        return;
-    }
-    
-    for (size_t i = 0; i < cartes.size(); ++i) {
-        if (cartes[i].first != nullptr) {
-            std::cout << "[" << (i + 1) << "] " << cartes[i].first->getNom() 
-                      << " (" << cartes[i].first->getDescription() << ")" << std::endl;
+        std::vector<Carte*> deckInitial = creerDeckDeBase();
+        for (auto carte : deckInitial) {
+            deck->ajouterCarte(carte, static_cast<int>(deck->taille()));
         }
     }
 }
@@ -154,6 +139,66 @@ bool Joueur::jouerCarte(int indice, Joueur& adversaire) {
     }
     
     return true;
+}
+
+// Codes couleurs ANSI
+#define RESET_COLOR   "\033[0m"
+#define BOLD_TEXT     "\033[1m"
+#define DIM_TEXT      "\033[2m"
+
+void Joueur::afficherMain() const {
+    const ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
+    if (!main) {
+        std::cout << "Main introuvable!" << std::endl;
+        return;
+    }
+    
+    const auto& cartes = main->getCartes();
+    if (cartes.empty()) {
+        std::cout << DIM_TEXT << "  (main vide)" << RESET_COLOR << std::endl;
+        return;
+    }
+    
+    int indice = 1;
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first != nullptr) {
+            std::cout << BOLD_TEXT << "[" << indice << "] " << RESET_COLOR 
+                      << paire_carte.first->getNom() << std::endl;
+            indice++;
+        }
+    }
+}
+
+//afficher champions pour les choix d'effet
+void Joueur::afficherChampions() const {
+    const ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+    if (!champions) {
+        std::cout << "Zone champions introuvable!" << std::endl;
+        return;
+    }
+    
+    const auto& cartes = champions->getCartes();
+    if (cartes.empty()) {
+        std::cout << DIM_TEXT << "  (aucun champion)" << RESET_COLOR << std::endl;
+        return;
+    }
+    
+    int indice = 1;
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first != nullptr) {
+            const Champion* champion = dynamic_cast<const Champion*>(paire_carte.first);
+            std::cout << BOLD_TEXT << "[" << indice << "] " << RESET_COLOR 
+                      << paire_carte.first->getNom();
+            if (champion) {
+                std::cout << " [" << champion->getPV() << " PV]";
+                if (champion->hasGarde()) {
+                    std::cout << " 🛡️";
+                }
+            }
+            std::cout << std::endl;
+            indice++;
+        }
+    }
 }
 
 // Obtenir le nombre de cartes en main

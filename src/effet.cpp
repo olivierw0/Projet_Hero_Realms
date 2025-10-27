@@ -137,7 +137,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             }
             break;
         }
-
+        
         case TypeEffet::FORCE_DISCARD_OPPONENT:{
             // Forcer l'adversaire à défausser "valeur" cartes
             ZoneDeCarte* mainAdversaire = adversaire.getZoneByType(TypeZone::MAIN);
@@ -263,7 +263,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 if (nbChampions > 0) {
                     joueurActif.heal(valeur*nbChampions);
-                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur*nbChampions << " PV ("<< valeur*nbChampions << " par champion en jeu)" << std::endl;
+                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur*nbChampions << " PV ("<< valeur << " par champion en jeu)" << std::endl;
                 } else {
                     std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
                 }

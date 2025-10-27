@@ -552,8 +552,8 @@ Carte gold7(211, "Gold", 0, TypeCarte::OBJET, FactionCarte::NEUTRE,
     { Effet(1, TypeEffet::OR, 1) }
 );
 
-std::vector<const Carte*> initCarteDB() {
-    std::vector<const Carte*> carte_db = {
+std::vector<Carte*> initCarteDB() {
+    std::vector<Carte*> carte_db = {
         // JAUNES
         &close_ranks,
         &command,
@@ -640,19 +640,33 @@ std::vector<const Carte*> initCarteDB() {
         &cron_the_berserker,
         &orc_grunt1,
         &orc_grunt2,
-        &torgern_rocksplitter
+        &torgern_rocksplitter,
+
+        &fire_gem
     };
 
     return carte_db;
 }
 
-std::vector<const Carte*> carte_db = initCarteDB();
+std::vector<Carte*> creerDeckMarche() {
+    std::vector<Carte*> deck_marche;
+    for (auto carte : carte_db) {
+        int id = carte->getId();
+        // Exclure la carte Fire Gem (id 201) du deck de la marche
+        if (id != 201 ) {
+            deck_marche.push_back(carte);
+        }
+    }
+    return deck_marche;
+}
+
+std::vector<Carte*> carte_db = initCarteDB();
 
 // ========== FONCTIONS D'ACCES ==========
 
 // Obtenir une carte par son ID
-const Carte* getCarteById(int id) {
-    for (const auto& carte : carte_db) {
+Carte* getCarteById(int id) {
+    for (auto carte : carte_db) {
         if (carte->getId() == id) {
             return carte;
         }
@@ -661,8 +675,8 @@ const Carte* getCarteById(int id) {
 }
 
 // Obtenir une carte par son nom
-const Carte* getCarteByName(const std::string& nom) {
-    for (const auto& carte : carte_db) {
+Carte* getCarteByName(const std::string& nom) {
+    for (auto carte : carte_db) {
         if (carte->getNom() == nom) {
             return carte;
         }
@@ -671,8 +685,8 @@ const Carte* getCarteByName(const std::string& nom) {
 }
 
 // 7 or + 1 dague + 1 ruby + 1 shortsword
-std::vector<const Carte*> creerDeckDeBase() {
-    std::vector<const Carte*> deck={
+std::vector<Carte*> creerDeckDeBase() {
+    std::vector<Carte*> deck={
         &gold1,
         &gold2,
         &gold3,

@@ -7,11 +7,12 @@
 #include <memory>
 
 // Base de données des cartes
-extern std::vector<const Carte*> carte_db;
+extern std::vector<Carte*> carte_db;
 
 // Fonctions d'accès à la base de données
 Carte* getCarteById(int id);
 Carte* getCarteByName(const std::string& nom);
 std::vector<Carte*> creerDeckDeBase();
+std::vector<Carte*> creerDeckMarche();
 
 #endif // CARTE_DB_H

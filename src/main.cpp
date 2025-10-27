@@ -32,9 +32,6 @@ int main() {
         Joueur& joueurActuel = partie.getJoueurActuel();
         Joueur& adversaire = partie.getAdversaire();
         
-        // Afficher la main du joueur
-        joueurActuel.afficherMain();
-        
         // Menu des commandes
         std::cout << "\n=== Tour du Joueur " << joueurActuel.getId() << " ===" << std::endl;
         std::cout << "Choisissez une action:" << std::endl;
@@ -73,7 +70,13 @@ int main() {
                 joueurActuel.jouerToutesLesCartes(adversaire);
                 std::cout << "Toutes les cartes de la main ont été jouées!" << std::endl;
                 break;
-            case 3: // acheter une carte du marché 
+            case 3: // acheter une carte du marché
+                std::cout << "Entrez l'indice de la carte à acheter: ";
+                std::cin >> choix;
+                // Logique d'achat de carte
+                if (partie.acheterCarteMarche(choix, joueurActuel)) {
+                    std::cout << "Carte achetée avec succès!" << std::endl;
+                }
                 break;
             case 4: // Activer un Champion
                 break;
