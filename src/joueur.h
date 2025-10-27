@@ -15,10 +15,13 @@ private:
     int combat;
     std::vector<ZoneDeCarte> zones;
     bool isDead;
+    TablePartie* table; // Référence à la table de jeu
 
 public:
     // Constructeur
-    Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0) {}
+    Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr) {
+        initZonesJoueur();
+    }
 
     // Méthodes pour accéder aux attributs
     int getId() const { return id; }
@@ -26,6 +29,8 @@ public:
     int getOr() const { return or_value; }
     int getCombat() const { return combat; }
     const std::vector<ZoneDeCarte>& getZones() const { return zones; }
+    TablePartie* getTable() const { return table; }
+    void setTable(TablePartie* t) { table = t; }
 
     void takeDamage(int amount);
     void heal(int amount);
@@ -53,9 +58,9 @@ public:
     // Gestion des cartes en main
     void afficherMain() const; // Afficher la main du joueur (indices, nom, description) (1-based)
     void afficherChampions() const; // Afficher la zone des champions du joueur (indices, nom, description) (1-based)
-    bool jouerCarte(int indice, Joueur& adversaire); // Jouer une carte par son indice (1-based)
+    bool jouerCarte(int indice); // Jouer une carte par son indice (1-based)
     int getNombreCartesEnMain() const;
-    void jouerToutesLesCartes(Joueur& adversaire); // Jouer toutes les cartes en main
+    void jouerToutesLesCartes(); // Jouer toutes les cartes en main
 
     // Gestion du deck
     void melangerDeck(); // Mélanger le deck du joueur

@@ -438,7 +438,7 @@ void TablePartie::afficherMarche() const {
     
     // Afficher les gemmes de feu
     std::cout << "\n";
-    Carte* gemme = getCarteById(201);
+    Carte* gemme = getCarteById(2001);
     if (gemme) {
         afficherCarteFormatee(gemme, 6, true);
     }
@@ -452,7 +452,10 @@ void TablePartie::afficherMarche() const {
 }
 
 // Ajouter un joueur à la partie
-void TablePartie::ajouterJoueur(const Joueur& joueur) { joueurs.push_back(joueur); }
+void TablePartie::ajouterJoueur(const Joueur& joueur) { 
+    joueurs.push_back(joueur); 
+    joueurs.back().setTable(this); // Associer la table au joueur
+}
 
 // Ajouter une zone commune à la partie
 
@@ -485,14 +488,11 @@ void TablePartie::initMarche() {
     std::cout << "Marché visible rempli: " << zones_communes[idx_marche].taille() << " cartes" << std::endl;
     
     // Ajouter les gemmes de feu (objets toujours disponibles)
-    Carte* fire_gem = getCarteById(201);  // Fire Gem a l'ID 201
-    if (fire_gem && idx_gemmes_feu >= 0 && idx_gemmes_feu < zones_communes.size()) {
-        for (int i = 0; i < 16; ++i) {
-            zones_communes[idx_gemmes_feu].ajouterCarte(fire_gem, i);
+    if (idx_gemmes_feu >= 0 && idx_gemmes_feu < zones_communes.size()) {
+        for (int i = 0; i < 16; i++) {
+            zones_communes[idx_gemmes_feu].ajouterCarte(getCarteById(i+2001), i);
         }
         std::cout << "Gemmes de feu ajoutées: " << zones_communes[idx_gemmes_feu].taille() << " gemmes" << std::endl;
-    } else if (!fire_gem) {
-        std::cout << "ERREUR: Fire Gem (ID 201) introuvable dans la base de données!" << std::endl;
     }
 }
 
@@ -534,22 +534,28 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
         
         // Récupérer une gemme de feu
         const auto& cartes = zones_communes[idx_gemmes_feu].getCartes();
-        if (cartes.empty() || cartes[0].first == nullptr) {
-            std::cout << "Erreur: gemme invalide!" << std::endl;
+        if (cartes.empty()) {
+            std::cout << "Erreur: gemme invalide! cartes empty" << std::endl;
+            return false;
+        }
+        if (cartes[0].first == nullptr) {
+            std::cout << "Erreur: gemme invalide! carte[0] empty" << std::endl;
             return false;
         }
         
         Carte* gemme = cartes[0].first;
+        int id_gemme = gemme->getId();
         
         // Déplacer la gemme vers la défausse du joueur
         ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
         if (!defausse) {
             std::cout << "Erreur: défausse introuvable!" << std::endl;
+            acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
             return false;
         }
         
         // Déplacer la gemme achetée
-        zones_communes[idx_gemmes_feu].deplacerCarte(gemme->getId(), *defausse, defausse->taille());
+        zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *defausse, defausse->taille());
         
         std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
                   << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
@@ -614,7 +620,7 @@ int TablePartie::getJoueurActuelIndex() const { return joueur_actuel_index; }
 
 void TablePartie::afficherEtatPartie() const {
     // Clear le terminal avant d'afficher
-    clearTerminal();
+    // clearTerminal();
     
     if (joueurs.empty()) {
         std::cout << "Aucun joueur dans la partie." << std::endl;
@@ -694,12 +700,7 @@ void TablePartie::endTurn() {
     afficherEtatPartie(); 
 }
 
-void TablePartie::initZones() {
-    // Initialiser les zones des joueurs
-    for (Joueur& joueur : joueurs) {
-        joueur.initZonesJoueur();
-    }
-    
+void TablePartie::initZones() {    
     // Réserver la capacité pour les zones communes
     zones_communes.reserve(4);  // 4 zones : MARCHE, DECK_MARCHE, GEMMES_FEU, ECARTEES
     

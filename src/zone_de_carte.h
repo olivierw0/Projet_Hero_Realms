@@ -32,7 +32,6 @@ private:
     std::vector<std::pair<Carte*, int>> cartes; // pointeur vers carte + ordre
 
 public:
-
     // Constructeur
     ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
     

@@ -63,7 +63,6 @@ public:
     // Activation de l'effet
     void activerEffet(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 
-private:
     // Méthode pour vérifier si les conditions de l'effet sont remplies
     bool verifierConditions(const class Joueur& joueurActif, const class Joueur& adversaire) const;
 };

@@ -62,12 +62,12 @@ int main() {
             case 1: // choisir de jouer une carte
                 std::cout << "Entrez l'indice de la carte à jouer: ";
                 std::cin >> choix;
-                if (joueurActuel.jouerCarte(choix, adversaire)) {
+                if (joueurActuel.jouerCarte(choix)) {
                     std::cout << "Carte jouée avec succès!" << std::endl;
                 }
                 break;
             case 2: // jouer toutes les cartes de la main
-                joueurActuel.jouerToutesLesCartes(adversaire);
+                joueurActuel.jouerToutesLesCartes();
                 std::cout << "Toutes les cartes de la main ont été jouées!" << std::endl;
                 break;
             case 3: // acheter une carte du marché

@@ -108,7 +108,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // 2. Piocher les cartes
             
             joueurActif.piocher(choix_valeur);
-            std::cout << "Joueur " << joueurActif.getId() << " pioche " << valeur << " carte(s)" << std::endl;
+            std::cout << "Joueur " << joueurActif.getId() << " pioche " << choix_valeur << " carte(s)" << std::endl;
             
             // 3. Défausser les cartes choisies par le joueur
 
