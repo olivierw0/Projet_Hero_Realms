@@ -339,3 +339,32 @@ bool Joueur::jouerCarte(int indice) {
 
     return true;
 }
+
+void Joueur::resetChampions(){
+    ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+    if (!champions) {
+        std::cout << "Zone champions introuvable!" << std::endl;
+        return;
+    }
+
+    const auto& cartes = champions->getCartes();
+    for (const auto& paire_carte : cartes) {
+        Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
+        if (champion && champion->isAlive()) {
+            // Vérifier si le champion n'était pas stunned
+            if (!champion->isStunned()){ // Pas stunned
+                champion->setActive(true);
+            }
+            
+            // Vérifier si le champion est stunned pour le tour prochain
+            else if (!champion->ResetStun()){
+                champion->setActive(true);
+                std::cout << "Champion " << champion->getNom() << " n'est plus étourdi et est untappé." << std::endl;
+            }
+            else {
+                std::cout << "Champion " << champion->getNom() << " reste étourdi et inactif." << std::endl;
+            }
+            break;
+        }
+    }
+}

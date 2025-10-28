@@ -3,21 +3,20 @@
 
 #include <string>
 enum class TypeEffet {
-    EXPEND_CHAMPION,  // Nouveau type pour expend des champions
-    DMG,
-    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet
-    DRAW_DISCARD,
-    FORCE_DISCARD_OPPONENT,
-    HAND_NEXT_ACQUIRED,
-    OR,
-    OR_ou_2DMG, // valeur fixe (différente entre OR et SOIN) à définir dans l'effet
-    OR_ou_DMG, // valeur fixe (différente entre OR et DMG) à définir dans l'effet
-    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité)
-    PIOCHE,
-    PREPARE_CHAMPION,
-    SACRIFICE_HAND_DISCARD,
-    SOIN,
-    SOIN_per_CHAMP,
+    EXPEND_CHAMPION,  // Taper les champions (à tester)
+    DMG, //OK
+    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet (à tester)
+    DRAW_DISCARD, // (à tester)
+    FORCE_DISCARD_OPPONENT, // (à tester)
+    HAND_NEXT_ACQUIRED, 
+    OR, // OK
+    OR_ou_nDMG, // Choisir entre 1 or et n Points de combat (à tester)
+    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité) (à tester)
+    PIOCHE, // OK
+    PREPARE_CHAMPION, // (à tester)
+    SACRIFICE_HAND_DISCARD,  // (à tester)
+    SOIN, // OK
+    SOIN_per_CHAMP, // (à tester)
     STUN,
     TOP_DECK_FROM_DISCARD,
     TOP_DECK_NEXT_ACQUIRED,

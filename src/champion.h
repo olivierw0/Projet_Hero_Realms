@@ -8,10 +8,11 @@ private:
     int pv;
     bool active;
     bool garde;
+    int stunned_rounds_count;
 
 public:
     // Constructeurs
-    Champion() : Carte(), pv(1), active(true), garde(false) {}
+    Champion() : Carte(), pv(1), active(true), garde(false), stunned_rounds_count(0) {}
     
     Champion(int id, const std::string& nom, int cout, FactionCarte faction, 
              const std::string& description, const std::vector<Effet>& effets = {}, bool garde = false, int pv = 1)
@@ -22,6 +23,7 @@ public:
     int getPV() const override { return pv; }
     bool isActive() const { return active; }
     bool hasGarde() const { return garde; }
+    int getStunnedRoundsCount() const { return stunned_rounds_count; }
     
     // Setters
     void setActive(bool etat) { active = etat; }
@@ -43,6 +45,37 @@ public:
     // Méthode pour "untap" le champion (début de tour)
     void untap() {
         activer();
+    }
+
+    // Méthode pour vérifier si le champion est vivant
+    bool isAlive() const {
+        return pv > 0;
+    }
+
+    void stun() {
+        stunned_rounds_count++;
+        desactiver();
+    }
+
+    bool isStunned() const {
+        return stunned_rounds_count > 0;
+    }
+
+    /*
+    * Méthode pour gérer le décompte des rounds d'étourdissement
+    * @Note : Sert à vérifier et mettre à jour l'état actif ou non du champion à la fin du tour pour le prochain tour
+    * @Return : true si le champion reste toujours étourdi au prochain tour, false sinon
+    */
+    bool ResetStun() {
+        if (stunned_rounds_count == 2) {
+            stunned_rounds_count = 0;
+            return false; // Plus stunned
+        }
+        else if(stunned_rounds_count == 1) {
+            stunned_rounds_count++;
+            return true; // Toujours stunned
+        }
+        return false; // Pas stunned
     }
 };
 

@@ -41,6 +41,7 @@ public:
     // A chaque fin de tour : or & combat sont reset
     void resetCombat();
     void resetOr();
+    void resetChampions(); // Untap tous les champions non eliminés
 
     // Ajouter une zone au joueur
     void ajouterZone(const ZoneDeCarte& zone) {

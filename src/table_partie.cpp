@@ -171,16 +171,10 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
                     std::string(COLOR_HEALTH) + "❤ +4 Santé" + RESET_COLOR;
             break;
             
-        case TypeEffet::OR_ou_DMG:
+        case TypeEffet::OR_ou_nDMG:
             result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR + 
                     " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
                     std::string(COLOR_DMG) + "⚔ +" + std::to_string(valeur) + " Combat" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::OR_ou_2DMG:
-            result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR + 
-                    " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_DMG) + "⚔ +2 Combat" + RESET_COLOR;
             break;
             
         case TypeEffet::OR_ou_SOIN_per_CHAMP:
@@ -674,7 +668,7 @@ void TablePartie::afficherEtatPartie() const {
 void TablePartie::endTurn() {
     Joueur& joueur_actuel = getJoueurActuel();
     Joueur& adversaire = getAdversaire();
-    // adversaire.resetChampions();
+    adversaire.resetChampions();
     adversaire.takeDamage(joueur_actuel.getCombat());
     
     // 3. Défausser toute la main du joueur actuel
