@@ -14,7 +14,6 @@ private:
     int or_value;
     int combat;
     std::vector<ZoneDeCarte> zones;
-    bool isDead;
     TablePartie* table; // Référence à la table de jeu
 
 public:
@@ -22,6 +21,7 @@ public:
     Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr) {
         initZonesJoueur();
     }
+    ~Joueur();
 
     // Méthodes pour accéder aux attributs
     int getId() const { return id; }
@@ -66,6 +66,8 @@ public:
     // Gestion du deck
     void melangerDeck(); // Mélanger le deck du joueur
     void piocher(int nbCartes = 1); // Piocher des cartes du deck vers la main
+
+    void degatsFinTour(int totalCombat); // Infliger les dégâts aux champions avec Garde en priorité
 };
 
 #endif // JOUEUR_H

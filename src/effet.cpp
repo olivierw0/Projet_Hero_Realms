@@ -22,8 +22,8 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
     // Si c'est un champion, on vérifie qu'il est actif avant d'appliquer l'effet
     if (source && source->getType() == TypeCarte::CHAMPION) {
         const Champion* champion = static_cast<const Champion*>(source);
-        if (!champion->isActive()) {
-            std::cout << "Ce champion est epuisé et ne peut pas utiliser ses effets." << std::endl;
+        if (!champion->getActive()) {
+            std::cout << "Ce champion est déjà expendu et ne peut pas utiliser ses effets." << std::endl;
             return;
         }
     }
