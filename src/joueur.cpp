@@ -339,3 +339,28 @@ bool Joueur::jouerCarte(int indice) {
 
     return true;
 }
+<<<<<<< Updated upstream
+=======
+
+void Joueur::resetChampions(){
+    ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+    ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
+    if (!champions) {
+        std::cout << "Zone champions introuvable!" << std::endl;
+        return;
+    }
+    const auto& cartes = champions->getCartes();
+    
+    for (const auto& paire_carte : cartes) {
+        Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
+        if (champion && champion->getPv() > 0) {
+            std::cout << "Réactivation du champion " << champion->getNom() << std::endl;
+            champion->setActive(true);
+        }
+        if (champion && champion->getPv() <= 0) {
+            std::cout << "Champion " << champion->getNom() << " est mort, va à la défausse" << std::endl;
+            deplacerCarte(champion->getId(), *defausse, defausse->taille());
+        }
+    }
+}
+>>>>>>> Stashed changes

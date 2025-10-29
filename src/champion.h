@@ -8,7 +8,10 @@ private:
     int pv;
     bool active;
     bool garde;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 public:
     // Constructeurs
     Champion() : Carte(), pv(1), active(true), garde(false) {}
@@ -25,11 +28,9 @@ public:
     
     // Setters
     void setActive(bool etat) { active = etat; }
-    void activer() { active = true; }
-    void desactiver() { active = false; }
-    void changerEtat() { active = !active; }
     void setPV(int nouveaux_pv) { pv = nouveaux_pv; }
     void setGarde(bool nouvelle_garde) { garde = nouvelle_garde; }
+<<<<<<< Updated upstream
     
     // Méthode pour "expend" (taper) le champion et déclencher ses effets
     bool expend() {
@@ -44,6 +45,11 @@ public:
     void untap() {
         activer();
     }
+=======
+
+    void stun();
+    bool expend();
+>>>>>>> Stashed changes
 };
 
 #endif // CHAMPION_H
