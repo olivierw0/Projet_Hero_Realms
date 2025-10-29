@@ -20,7 +20,10 @@ enum class TypeEffet {
     STUN, // (à tester)
     TOP_DECK_FROM_DISCARD,  // (à tester)
     TOP_DECK_NEXT_ACQUIRED, // (à tester)
-    TOP_DECK_NEXT_ACQUIRED_ACTION // (à tester)
+    TOP_DECK_NEXT_ACQUIRED_ACTION, // (à tester)
+    DMG_per_CHAMPION, // (à tester)
+    DMG_per_GUARD, // (à tester)
+    DMG_per_VERT_CARDS 
 };
 
 enum class ConditionEffet {
@@ -31,10 +34,7 @@ enum class ConditionEffet {
     BLEU_ALLY,                       // Allié bleu requis
     SACRIFICE,                       // Condition de sacrifice
     SACRIFICE_TO_MARCHE,            // Condition de sacrifice pour la zone de marche
-    NB_CHAMPIONS,                    // Nombre de champions en jeu
-    NB_GARDES,                       // Nombre de gardes en jeu
     SACRIFICE_HAND_DISCARD,          // Sacrifice depuis la main ou la défausse
-    NB_VERT_CARDS_IN_PLAY            // Nombre de cartes vertes en jeu
 };
 
 class Effet {
@@ -63,7 +63,7 @@ public:
     void activerEffet(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 
     // Méthode pour vérifier si les conditions de l'effet sont remplies
-    bool verifierConditions(const class Joueur& joueurActif, const class Joueur& adversaire) const;
+    bool verifierConditions(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 };
 
 #endif // EFFET_H
