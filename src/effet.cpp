@@ -3,8 +3,8 @@
 #include <iostream>
 
 // Constructeur avec paramètres
-Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition, int param)
-    : id(id), type(type), valeur(valeur), condition(condition), param(param) {
+Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition)
+    : id(id), type(type), valeur(valeur), condition(condition) {
     // Le constructeur initialise simplement les attributs
     // Les effets seront activés lors de l'appel à activerEffet()
 }
@@ -31,8 +31,8 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         case TypeEffet::EXPEND_CHAMPION:
             if (source && source->getType() == TypeCarte::CHAMPION) {
                 Champion* champion = const_cast<Champion*>(static_cast<const Champion*>(source));
-                champion->desactiver();
-                std::cout << "Champion " << champion->getNom() << " est maintenant expendu." << std::endl;
+                champion->setActive(false);
+                std::cout << "Champion " << champion->getNom() << " est maintenant tap." << std::endl;
             }
             break;
         case TypeEffet::OR:
@@ -272,6 +272,62 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             break;
         }
             
+<<<<<<< Updated upstream
+=======
+        case TypeEffet::SOIN_per_CHAMP:{
+            // Soigner le joueur actif de (valeur * nombre de champions en jeu)
+            ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) : 0;
+
+            if (nbChampions > 0) {
+                joueurActif.heal(valeur * nbChampions);
+                std::cout << "Joueur " << joueurActif.getId() << " récupère " << (valeur * nbChampions) << " PV (" << valeur << " par champion en jeu)" << std::endl;
+            } else {
+                std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
+            }
+            break;
+        }
+
+        case TypeEffet::STUN: {
+            // Étourdir un champion adverse
+            std::cout << "Choisissez un champion adverse à étourdir :" << std::endl;
+
+            ZoneDeCarte* zoneChampionsAdversaire = adversaire.getZoneByType(TypeZone::CHAMPIONS);
+            if (!zoneChampionsAdversaire || zoneChampionsAdversaire->estVide()) {
+                std::cout << "Aucun champion adverse à étourdir." << std::endl;
+                break;
+            }
+
+            // Afficher les champions adverses disponibles (lecture seule)
+            const auto& cartes = zoneChampionsAdversaire->getCartes();
+            for (size_t i = 0; i < cartes.size(); ++i) {
+                const Carte* carte = cartes[i].first;
+                const Champion* champion = dynamic_cast<const Champion*>(carte);
+                if (champion) {
+                    std::cout << (i + 1) << "- " << champion->getNom() << std::endl;
+                }
+            }
+
+            // Demander au joueur de choisir un champion
+            int choix_champion;
+            std::cout << "Entrez l'indice du champion à étourdir : ";
+            std::cin >> choix_champion;
+
+            // Valider l'indice
+            while (choix_champion < 1 || choix_champion > static_cast<int>(cartes.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << cartes.size() << " : ";
+                std::cin >> choix_champion;
+            }
+
+            // Étourdir le champion choisi (modification de l'état)
+            Carte* carteChoisie = cartes[choix_champion - 1].first;
+            Champion* champion = dynamic_cast<Champion*>(carteChoisie);
+            if (champion) {
+                champion->stun();
+            }
+            break;
+        }
+>>>>>>> Stashed changes
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
             break;
@@ -287,7 +343,7 @@ bool Effet::verifierConditions(const Joueur& joueurActif, const Joueur& adversai
         case ConditionEffet::SACRIFICE:
         case ConditionEffet::SACRIFICE_TO_MARCHE: // pour les gemmes de feu
             // TODO: Vérifier si un sacrifice a été effectué
-        case ConditionEffet::SACRIFICE_HAND_DISCARD:
+        case ConditionEffet::COND_SACRIFICE_HAND_DISCARD:
             // TODO: Vérifier si une carte a été défaussée de la main
             std::cout << "Vérification condition SACRIFICE_HAND_DISCARD (non implémentée)" << std::endl;
             return false;

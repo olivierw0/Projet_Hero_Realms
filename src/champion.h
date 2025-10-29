@@ -8,6 +8,7 @@ private:
     int pv;
     bool active;
     bool garde;
+<<<<<<< Updated upstream
 public:
     // Constructeurs
     Champion() : Carte(), pv(1), active(true), garde(false) {}
@@ -26,9 +27,27 @@ public:
     void setActive(bool etat) { active = etat; }
     void setPV(int nouveaux_pv) { pv = nouveaux_pv; }
     void setGarde(bool nouvelle_garde) { garde = nouvelle_garde; }
+=======
+>>>>>>> Stashed changes
 
-    void stun();
+public:
+    // Constructeurs & Destructeur
+    Champion();
+    Champion(int id, const std::string& nom, int cout, FactionCarte faction, 
+             const std::string& description, const std::vector<Effet>& effets, bool garde, int pv);
+    virtual ~Champion();
+
+    // Getters & Setters
+    int getPV() const override;
+    bool getActive() const;
+    bool hasGarde() const;
+
+    void setActive(bool etat);
+    void setPV(int nouveaux_pv);
+    void setGarde(bool nouvelle_garde);
+
     bool expend();
+    void stun();
 };
 
 #endif // CHAMPION_H

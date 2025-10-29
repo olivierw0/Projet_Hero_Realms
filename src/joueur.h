@@ -21,7 +21,6 @@ public:
     Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr) {
         initZonesJoueur();
     }
-    ~Joueur();
 
     // Méthodes pour accéder aux attributs
     int getId() const { return id; }
