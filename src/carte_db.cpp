@@ -259,13 +259,13 @@ Champion rasmus_the_smuggler(
 Champion street_thug1(
     3201, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_2DMG, 1) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_nDMG, 2) },
     false, 4
 );
 Champion street_thug2(
     3202, "Street Thug", 3, FactionCarte::BLEU,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 2 combat}",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_2DMG, 1) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_nDMG, 2) },
     false, 4
 );
 
@@ -340,12 +340,12 @@ Champion tyrannor_the_devorer(46, "Tyrannor, the Devorer", 8, FactionCarte::ROUG
 
 Champion cult_priest1(4701, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_DMG, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_nDMG, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 Champion cult_priest2(4702, "Cult Priest", 3, FactionCarte::ROUGE,
     "{Expend}: {Gain 1 gold} <i>or</i> {Gain 1 combat}\n<hr>\n{Rouge Ally}: {Gain 4 combat}",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_DMG, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::OR_ou_nDMG, 1), Effet(3, TypeEffet::DMG, 4, ConditionEffet::ROUGE_ALLY) },
     false, 4
 );
 

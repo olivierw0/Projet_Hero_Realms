@@ -173,35 +173,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             break;
         }
 
-        case TypeEffet::OR_ou_2DMG:{
-            
-            // 1. Demander au joueur quel effet il souhaite appliquer
-
-            int choix;
-            std::cout << "Choisissez une option (1 ou 2): " << std::endl
-            << "  1 - Gagner 1 or" << std::endl
-            << "  2 - Gagner 2 points de combat" << std::endl;
-            std::cin >> choix;
-            
-            // Valider l'entrée
-            while (choix != 1 && choix != 2) {
-                std::cout << "Choix invalide. Veuillez choisir 1 ou 2: ";
-                std::cin >> choix;
-            }
-
-            // 2. Appliquer l'effet choisi
-
-            if (choix == 1) {
-                joueurActif.addOr(1);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne 1 or" << std::endl;
-            } else if (choix == 2) {
-                joueurActif.addCombat(2);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne 2 points de combat" << std::endl;
-            }
-            break;
-        }
-
-        case TypeEffet::OR_ou_DMG:{
+        case TypeEffet::OR_ou_nDMG:{
             
             // 1. Demander au joueur quel effet il souhaite appliquer
 
@@ -272,8 +244,6 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             break;
         }
             
-<<<<<<< Updated upstream
-=======
         case TypeEffet::SOIN_per_CHAMP:{
             // Soigner le joueur actif de (valeur * nombre de champions en jeu)
             ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
@@ -327,7 +297,6 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             }
             break;
         }
->>>>>>> Stashed changes
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
             break;

@@ -40,6 +40,7 @@ public:
     // A chaque fin de tour : or & combat sont reset
     void resetCombat();
     void resetOr();
+    void resetChampions();
 
     // Ajouter une zone au joueur
     void ajouterZone(const ZoneDeCarte& zone) {

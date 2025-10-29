@@ -42,105 +42,9 @@ void TablePartie::initPartie() {
     // 1. Initialiser toutes les zones
     initZones();
     
-<<<<<<< Updated upstream
-    switch(type) {
-        case TypeEffet::OR:
-            result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::DMG:
-            result = std::string(COLOR_DMG) + "⚔ +" + std::to_string(valeur) + " Combat" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::SOIN:
-            result = std::string(COLOR_HEALTH) + "❤ +" + std::to_string(valeur) + " Santé" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::PIOCHE:
-            result = std::string(COLOR_CARD) + "📖 Piocher " + std::to_string(valeur) + 
-                    (valeur > 1 ? " cartes" : " carte") + RESET_COLOR;
-            break;
-            
-        case TypeEffet::STUN:
-            result = "😵 Étourdir un champion";
-            break;
-            
-        case TypeEffet::FORCE_DISCARD_OPPONENT:
-            result = "🎯 Adversaire défausse " + std::to_string(valeur) + 
-                    (valeur > 1 ? " cartes" : " carte");
-            break;
-            
-        case TypeEffet::EXPEND_CHAMPION:
-            result = std::string(DIM_TEXT) + "⟳ Taper:" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::PREPARE_CHAMPION:
-            result = "🔄 Préparer un champion";
-            break;
-            
-        case TypeEffet::SACRIFICE_HAND_DISCARD:
-            result = std::string(COLOR_SACRIFICE) + "✝ Sacrifier jusqu'à " + std::to_string(valeur) + 
-                    " carte(s) (main/défausse)" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::DRAW_DISCARD:
-            result = std::string(COLOR_CARD) + "📖 Piocher jusqu'à " + std::to_string(valeur) + 
-                    " carte(s), puis défausser autant" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::TOP_DECK_FROM_DISCARD:
-            result = "♻️ Carte de défausse → dessus du deck";
-            break;
-            
-        case TypeEffet::TOP_DECK_NEXT_ACQUIRED:
-            result = "⬆️ Prochaine carte acquise → dessus du deck";
-            break;
-            
-        case TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION:
-            result = "⬆️ Prochaine ACTION acquise → dessus du deck";
-            break;
-            
-        case TypeEffet::HAND_NEXT_ACQUIRED:
-            result = "👋 Prochaine carte acquise → main";
-            break;
-            
-        case TypeEffet::DMG_ou_SOIN:
-            result = std::string(COLOR_DMG) + "⚔ +3 Combat" + RESET_COLOR + 
-                    " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_HEALTH) + "❤ +4 Santé" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::OR_ou_DMG:
-            result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR + 
-                    " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_DMG) + "⚔ +" + std::to_string(valeur) + " Combat" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::OR_ou_2DMG:
-            result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR + 
-                    " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_DMG) + "⚔ +2 Combat" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::OR_ou_SOIN_per_CHAMP:
-            result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR + 
-                    " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_HEALTH) + "❤ +" + std::to_string(valeur) + " Santé/Champion" + RESET_COLOR;
-            break;
-            
-        case TypeEffet::SOIN_per_CHAMP:
-            result = std::string(COLOR_HEALTH) + "❤ +" + std::to_string(valeur) + " Santé par champion" + RESET_COLOR;
-            break;
-            
-        default:
-            result = "❓ Effet inconnu";
-            break;
-    }
-=======
     // 2. Initialiser le marché avec les cartes
     std::cout << "Initialisation du marché..." << std::endl;
     initMarche();
->>>>>>> Stashed changes
     
     // 3. Initialiser les decks et distribuer les cartes initiales
     std::cout << "Initialisation des decks et distribution des cartes..." << std::endl;
@@ -347,12 +251,7 @@ void TablePartie::endTurn() {
     adversaire.resetChampions();
 
     // 1. Infliger les dégâts aux champions adverses avec Garde
-<<<<<<< Updated upstream
-    std::cout << "\nInfliger les dégâts aux champions adverses avec Garde..."
-                << std::endl;
-=======
     std::cout << "\nInfliger les dégâts" << std::endl;
->>>>>>> Stashed changes
     adversaire.degatsFinTour(joueur_actuel.getCombat());
     
     // 3. Défausser toute la main du joueur actuel

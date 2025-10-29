@@ -10,12 +10,7 @@ enum class TypeEffet {
     FORCE_DISCARD_OPPONENT,
     HAND_NEXT_ACQUIRED,
     OR,
-<<<<<<< Updated upstream
-    OR_ou_2DMG, // valeur fixe (différente entre OR et SOIN) à définir dans l'effet
-    OR_ou_DMG, // valeur fixe (différente entre OR et DMG) à définir dans l'effet
-=======
     OR_ou_nDMG, // valeur fixe à définir dans l'effet
->>>>>>> Stashed changes
     OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité)
     PIOCHE,
     PREPARE_CHAMPION,
