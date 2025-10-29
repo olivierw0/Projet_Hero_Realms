@@ -33,32 +33,27 @@ private:
 
 public:
     // Constructeur par défaut
-    Carte() : id(0), nom(""), cout(0), type(TypeCarte::ACTION), faction(FactionCarte::NEUTRE), description("") {}
+    Carte();
     
     // Destructeur virtuel pour rendre la classe polymorphe
-    virtual ~Carte() = default;
+    virtual ~Carte();
 
     // Constructeur avec paramètres
     Carte(int id, const std::string& nom, int cout, TypeCarte type,
           FactionCarte faction, const std::string& description,
-          const std::vector<Effet>& effets = {})
-        : id(id), nom(nom), cout(cout), type(type), faction(faction),
-          description(description), effets(effets) {}
+          const std::vector<Effet>& effets);
 
     // Méthodes pour accéder aux attributs
-    int getId() const { return id; }
-    std::string getNom() const { return nom; }
-    int getCout() const { return cout; }
-    TypeCarte getType() const { return type; }
-    FactionCarte getFaction() const { return faction; }
-    std::string getDescription() const { return description; }
-    const std::vector<Effet>& getEffets() const { return effets; }
-    
-    // Méthode pour jouer la carte et activer ses effets
-    void jouerCarte(class Joueur& joueurActif, class Joueur& adversaire) const;
-    
+    int getId() const;
+    std::string getNom() const;
+    int getCout() const;
+    TypeCarte getType() const;
+    FactionCarte getFaction() const;
+    std::string getDescription() const;
+    const std::vector<Effet>& getEffets() const;
+
     // Méthode virtuelle pour les PV (redéfinie dans Champion)
-    virtual int getPV() const { return 0; }
+    virtual int getPV() const;
 
 };
 

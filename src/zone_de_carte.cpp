@@ -20,7 +20,9 @@ std::string typeZoneToString(TypeZone type) {
     }
 }
 
-// Constructeur
+// ===========================
+// Constructeurs & Destructeur
+// ===========================
 ZoneDeCarte::ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TablePartie* table)
     : id(id), type(type), proprietaire(proprietaire), table(table) {
     // Debug : affichage seulement en mode debug
@@ -28,7 +30,6 @@ ZoneDeCarte::ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire, TableParti
         std::cout << "Construction de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
     #endif
 }
-
 // Constructeur de copie
 ZoneDeCarte::ZoneDeCarte(const ZoneDeCarte& other)
     : id(other.id), type(other.type), proprietaire(other.proprietaire), 
@@ -37,13 +38,19 @@ ZoneDeCarte::ZoneDeCarte(const ZoneDeCarte& other)
         std::cout << "Copie de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
     #endif
 }
-
 // Constructeur de déplacement  
 ZoneDeCarte::ZoneDeCarte(ZoneDeCarte&& other) noexcept
     : id(other.id), type(other.type), proprietaire(other.proprietaire),
       table(other.table), cartes(std::move(other.cartes)) {
     #ifdef DEBUG
         std::cout << "Déplacement de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
+    #endif
+}
+
+ZoneDeCarte::~ZoneDeCarte() {
+    cartes.clear();
+    #ifdef DEBUG
+        std::cout << "Destruction de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
     #endif
 }
 
@@ -71,13 +78,7 @@ ZoneDeCarte& ZoneDeCarte::operator=(ZoneDeCarte&& other) noexcept {
     return *this;
 }
 
-ZoneDeCarte::~ZoneDeCarte() {
-    cartes.clear();
-    // Debug : affichage seulement en mode debug  
-    #ifdef DEBUG
-        std::cout << "Destruction de la zone " << typeZoneToString(type) << " (ID: " << id << ")" << std::endl;
-    #endif
-}
+
 
 // Méthodes pour accéder aux attributs
 int ZoneDeCarte::getId() const { return id; }
@@ -122,7 +123,6 @@ bool ZoneDeCarte::deplacerCarte(int carteId, ZoneDeCarte& destination, int nouve
     }
     return false;
 }
-
 // Déplacer toutes les cartes vers une autre zone
 void ZoneDeCarte::deplacerToutesLesCartes(ZoneDeCarte& destination) {
     for (const auto& paire : cartes) {
@@ -135,20 +135,9 @@ void ZoneDeCarte::deplacerToutesLesCartes(ZoneDeCarte& destination) {
 bool ZoneDeCarte::estVide() const {
     return cartes.empty();
 }
-
 // Obtenir le nombre de cartes
 size_t ZoneDeCarte::taille() const {
     return cartes.size();
-}
-
-// Trouver une carte par ID (sans la retirer)
-Carte* ZoneDeCarte::trouverCarte(int carteId) const {
-    for (const auto& paire : cartes) {
-        if (paire.first->getId() == carteId) {
-            return paire.first;
-        }
-    }
-    return nullptr;
 }
 
 // Mélanger les cartes de la zone et réassigner les indices
@@ -166,8 +155,9 @@ void ZoneDeCarte::melangerCartes() {
     for (size_t i = 0; i < cartes.size(); ++i) {
         cartes[i].second = static_cast<int>(i);
     }
-    
-    std::cout << "Zone " << id << " mélangée (" << cartes.size() << " cartes)" << std::endl;
+    #ifdef DEBUG
+        std::cout << "Zone " << id << " mélangée (" << cartes.size() << " cartes)" << std::endl;
+    #endif
 }
 
 // Trier les cartes par ordre (utile après mélange)

@@ -77,7 +77,8 @@ Champion darian_war_mage(9, "Darian, War Mage", 4, FactionCarte::JAUNE,
     { 
         Effet(1, TypeEffet::EXPEND_CHAMPION, 0),
         Effet(2, TypeEffet::DMG_ou_SOIN, 1)
-    }
+    },
+    false, 5
 );
 
 Champion master_weyan(10, "Master Weyan", 4, FactionCarte::JAUNE,
@@ -373,13 +374,13 @@ Champion varrick_the_necromancer(50, "Varrick, the Necromancer", 5, FactionCarte
 
 Champion krythos_master_vampire(51, "Krythos, Master Vampire", 7, FactionCarte::ROUGE,
     "{Expend}: {Gain 3 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {3 combat}.",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 3), Effet(3, TypeEffet::DMG, 3, ConditionEffet::SACRIFICE_HAND_DISCARD, 1) },
-    true, 6
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 3), Effet(3, TypeEffet::DMG, 3, ConditionEffet::COND_SACRIFICE_HAND_DISCARD) },
+    false, 6
 );
 
 Champion lys_the_unseen(52, "Lys, the Unseen", 6, FactionCarte::ROUGE,
     "{Expend}: {Gain 2 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {2 combat}.",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 2), Effet(3, TypeEffet::DMG, 2, ConditionEffet::SACRIFICE_HAND_DISCARD, 1) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 2), Effet(3, TypeEffet::DMG, 2, ConditionEffet::COND_SACRIFICE_HAND_DISCARD) },
     true, 5
 );
 
