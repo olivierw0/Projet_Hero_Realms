@@ -86,7 +86,7 @@ Champion master_weyan(10, "Master Weyan", 4, FactionCarte::JAUNE,
     { 
         Effet(1, TypeEffet::EXPEND_CHAMPION, 0),
         Effet(2, TypeEffet::DMG, 3),
-        Effet(3, TypeEffet::DMG, 1, ConditionEffet::NB_CHAMPIONS)
+        Effet(3, TypeEffet::DMG_per_CHAMPION, 1)
     },
     true, 4 
 );
@@ -135,7 +135,7 @@ Champion man_at_arms1(1401, "Man-at-Arms", 3, FactionCarte::JAUNE,
     {
         Effet(1, TypeEffet::EXPEND_CHAMPION, 0),
         Effet(2, TypeEffet::DMG, 2),
-        Effet(3, TypeEffet::DMG, 1, ConditionEffet::NB_GARDES)
+        Effet(3, TypeEffet::DMG_per_GUARD, 1)
     },
     true, 4
 );
@@ -144,7 +144,7 @@ Champion man_at_arms2(1402, "Man-at-Arms", 3, FactionCarte::JAUNE,
     {
         Effet(1, TypeEffet::EXPEND_CHAMPION, 0),
         Effet(2, TypeEffet::DMG, 2),
-        Effet(3, TypeEffet::DMG, 1, ConditionEffet::NB_GARDES)
+        Effet(3, TypeEffet::DMG_per_GUARD, 1)
     },
     true, 4
 );
@@ -460,12 +460,12 @@ Champion dire_wolf(68, "Dire Wolf", 5,  FactionCarte::VERT,
 
 Champion wolf_shaman1(6901, "Wolf Shaman", 2,  FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n+{1 combat} for each other {Vert} card you have in play.",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 2), Effet(3, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 2), Effet(3, TypeEffet::DMG_per_VERT_CARDS, 1) },
     false, 4
 );
 Champion wolf_shaman2(6902, "Wolf Shaman", 2,  FactionCarte::VERT,
     "{Expend}: {Gain 2 combat}\n+{1 combat} for each other {Vert} card you have in play.",
-    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 2), Effet(3, TypeEffet::DMG, 1, ConditionEffet::NB_VERT_CARDS_IN_PLAY) },
+    { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 2), Effet(3, TypeEffet::DMG_per_VERT_CARDS, 1) },
     false, 4
 );
 

@@ -591,4 +591,30 @@ void Joueur::resetJoueur(){
     resetOr();
     resetCombat();
     resetChampions();
+
+void Joueur::setNextAcquiredTopDeck(bool value, int nbCarte) {
+    if (nbCarte == 0) {     // Plus de cartes à top-decker
+        nextAcquiredTopDeck = {false, 0};
+    }
+    else {
+        nextAcquiredTopDeck = {value,nbCarte}; 
+    }
+}
+
+void Joueur::setNextAcquiredTopDeckAction(bool value, int nbCarte) {
+    if (nbCarte == 0) {     // Plus de cartes ACTION à top-decker
+        nextAcquiredTopDeckAction = {false, 0};
+    }
+    else {
+        nextAcquiredTopDeckAction = {value,nbCarte}; 
+    }
+}
+
+void Joueur::setNextAcquiredHand(bool value, int nbCarte) {
+    if (nbCarte == 0) {     // Plus de cartes à placer en main
+        nextAcquiredHand = {false, 0};
+    }
+    else {
+        nextAcquiredHand = {value,nbCarte}; 
+    }
 }

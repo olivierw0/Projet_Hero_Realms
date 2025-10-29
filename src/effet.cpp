@@ -2,8 +2,6 @@
 #include "joueur.h"
 #include <iostream>
 
-Champion* getChampionFromCarte(const Carte& carte);
-
 // Constructeur avec paramètres
 Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition)
     : id(id), type(type), valeur(valeur), condition(condition) {
@@ -14,7 +12,7 @@ Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition)
 // Méthode principale pour activer l'effet quand une carte est jouée
 void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* source) const {
     // Vérifier si les conditions sont remplies
-    if (!verifierConditions(joueurActif, adversaire)) {
+    if (!verifierConditions(joueurActif, adversaire, source)) {
         std::cout << "Conditions non remplies pour l'effet " << id << std::endl;
         return;
     }
@@ -245,7 +243,304 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             
             break;
         }
+
+        case TypeEffet::PREPARE_CHAMPION:{
+            // Préparer un champion (le rendre actif)
+            std::cout << "Choisissez un de vos champions à préparer :" << std::endl;
+
+            ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            if (!zoneChampions || zoneChampions->estVide()) {
+                std::cout << "Aucun champion à préparer." << std::endl;
+                break;
+            }
+
+            // Afficher les champions disponibles
+            const auto& cartes = zoneChampions->getCartes();
+            std::vector<Champion*> championsEpuises;
+            for (const auto& paire : cartes) {
+                Champion* champion = dynamic_cast<Champion*>(paire.first);
+                if (champion && champion->getActive()) {
+                    std::cout << "Champion " << champion->getNom() << " est déjà actif." << std::endl;
+                }else if (champion) {
+                    championsEpuises.push_back(champion);
+                }
+            }
+
+            // Afficher les champions épuisés
+            if (!championsEpuises.empty()) {
+                std::cout << "Champions épuisés :" << std::endl;
+                int i = 1;
+                for (const auto& champion : championsEpuises) {
+                    std::cout << (i + 1) << " - " << champion->getNom() << std::endl;
+                    i++;
+                }
+            }
+
+            int choix;
+            std::cout << "Entrez l'indice du champion à préparer : ";
+            std::cin >> choix;
+
+            // Valider l'indice
+            while (choix < 1 || choix > static_cast<int>(championsEpuises.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << championsEpuises.size() << " : ";
+                std::cin >> choix;
+            }
+
+            Champion* championChoisi = dynamic_cast<Champion*>(championsEpuises[choix - 1]);
+            if (championChoisi) {
+                championChoisi->setActive(true);
+                std::cout << "Champion " << championChoisi->getNom() << " est maintenant préparé (actif)." << std::endl;
+            }
+            break;
+        }
+        
+        case TypeEffet::SACRIFICE_HAND_DISCARD: {
+            // Sacrifier jusqu'à [valeur] carte(s) de la main et/ou de la défausse pour activer l'effet associé
+            int reponse;
+            for (int i = 0; i < valeur; ++i) {
+
+                std::cout << "Voulez vous sacrifier une carte de votre main ou défausse ? (1 = Oui, 0 = Non) : ";
+                std::cin >> reponse;
+
+                //TODO
+                while (reponse != 0 && reponse != 1) {
+                    std::cout << "Réponse invalide! Entrez 1 pour Oui ou 0 pour Non : ";
+                    std::cin >> reponse;
+                }
+
+                if (reponse == 0) {
+                    std::cout << "Fin du sacrifice de cartes." << std::endl;
+                    break;
+                }
+
+                std::cout << "Choisissez une carte à sacrifier de votre main ou défausse :" << std::endl;
+                
+                // Afficher les cartes de la main et de la défausse
+                ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+                ZoneDeCarte* defausse = joueurActif.getZoneByType(TypeZone::DEFAUSSE);
+                
+                std::vector<std::pair<Carte*, TypeZone>> cartesDisponibles;
+                
+                if (main) {
+                    const auto& cartesMain = main->getCartes();
+                    for (const auto& paire : cartesMain) {
+                        cartesDisponibles.emplace_back(paire.first, TypeZone::MAIN);
+                    }
+                }
+                
+                if (defausse) {
+                    const auto& cartesDefausse = defausse->getCartes();
+                    for (const auto& paire : cartesDefausse) {
+                        cartesDisponibles.emplace_back(paire.first, TypeZone::DEFAUSSE);
+                    }
+                }
+                
+                // Afficher les options
+                for (size_t j = 0; j < cartesDisponibles.size(); ++j) {
+                    std::cout << (j + 1) << "- " << cartesDisponibles[j].first->getNom()
+                              << " (de la " << (cartesDisponibles[j].second == TypeZone::MAIN ? "main" : "défausse") << ")" << std::endl;
+                }
+                
+                int choix_carte;
+                std::cout << "Entrez l'indice de la carte à sacrifier : ";
+                std::cin >> choix_carte;
+                
+                // Valider l'indice
+                while (choix_carte < 1 || choix_carte > static_cast<int>(cartesDisponibles.size())) {
+                    std::cout << "Indice invalide! Choisissez entre 1 et " << cartesDisponibles.size() << " : ";
+                    std::cin >> choix_carte;
+                }
+                
+                // Sacrifier la carte choisie
+                Carte* carteASacrifier = cartesDisponibles[choix_carte - 1].first;
+                TypeZone zoneOrigine = cartesDisponibles[choix_carte - 1].second;
+                ZoneDeCarte* zoneDestination = table.getZoneByType(TypeZone::ECARTEES);
+
+                if (zoneOrigine == TypeZone::MAIN && main){
+                    main->deplacerCarte(carteASacrifier->getId(), *zoneDestination, 1);
+                } else if (zoneOrigine == TypeZone::DEFAUSSE && defausse) {
+                    defausse->deplacerCarte(carteASacrifier->getId(), *zoneDestination, 1);
+                }
+            }
+            break;
+        }
             
+        case TypeEffet::SOIN_per_CHAMP:{
+            // Soigner le joueur actif de (valeur * nombre de champions en jeu)
+            ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) : 0;
+
+            if (nbChampions > 0) {
+                joueurActif.heal(valeur * nbChampions);
+                std::cout << "Joueur " << joueurActif.getId() << " récupère " << (valeur * nbChampions) << " PV (" << valeur << " par champion en jeu)" << std::endl;
+            } else {
+                std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
+            }
+            break;
+        }
+
+        case TypeEffet::STUN: {
+            // Assommer un champion adverse
+
+            std::cout << "Choisissez un champion adverse à assommer :" << std::endl;
+
+            ZoneDeCarte* zoneChampionsAdversaire = adversaire.getZoneByType(TypeZone::CHAMPIONS);
+            if (!zoneChampionsAdversaire || zoneChampionsAdversaire->estVide()) {
+                std::cout << "Aucun champion adverse à assommer." << std::endl;
+                break;
+            }
+
+            // Afficher les champions adverses disponibles
+            const auto& cartes = zoneChampionsAdversaire->getCartes();
+            for (size_t i = 0; i < cartes.size(); ++i) {
+                std::cout << (i + 1) << "- " << cartes[i].first->getNom() << std::endl;
+            }
+
+            // Demander au joueur de choisir un champion parmi ceux proposés
+            int choix_champion;
+            std::cout << "Entrez l'indice du champion à assommer : ";
+            std::cin >> choix_champion;
+
+            // Valider l'indice
+            while (choix_champion < 1 || choix_champion > static_cast<int>(cartes.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << cartes.size() << " : ";
+                std::cin >> choix_champion;
+            }
+
+            // Assommer le champion choisi
+            Carte* carteChoisie = cartes[choix_champion - 1].first;
+            ZoneDeCarte* defausseAdversaire = adversaire.getZoneByType(TypeZone::DEFAUSSE);
+
+            zoneChampionsAdversaire->deplacerCarte(carteChoisie->getId(), *defausseAdversaire, 1);
+            std::cout << "Champion " << carteChoisie->getNom() << " est assommé et déplacé dans la défausse." << std::endl;
+
+            break;
+        }
+
+        case TypeEffet::TOP_DECK_FROM_DISCARD: {
+            // Remettre une carte de la défausse en haut du deck
+
+            ZoneDeCarte* defausse = joueurActif.getZoneByType(TypeZone::DEFAUSSE);
+            ZoneDeCarte* deck = joueurActif.getZoneByType(TypeZone::DECK);
+
+            if (!defausse || defausse->estVide()) {
+                std::cout << "La défausse est vide. Aucun carte à remettre en haut du deck." << std::endl;
+                break;
+            }
+
+            // Afficher les cartes dans la défausse
+            const auto& cartesDefausse = defausse->getCartes();
+            for (size_t i = 0; i < cartesDefausse.size(); ++i) {
+                std::cout << (i + 1) << "- " << cartesDefausse[i].first->getNom() << std::endl;
+            }
+
+            int choix_carte;
+            std::cout << "Entrez l'indice de la carte à remettre en haut du deck : ";
+            std::cin >> choix_carte;
+
+            // Valider l'indice
+            while (choix_carte < 1 || choix_carte > static_cast<int>(cartesDefausse.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << cartesDefausse.size() << " : ";
+                std::cin >> choix_carte;
+            }
+
+            // Déplacer la carte choisie de la défausse vers le dessus du deck
+            Carte* carteChoisie = cartesDefausse[choix_carte - 1].first;
+            defausse->deplacerCarte(carteChoisie->getId(), *deck, 0); // 0 pour le dessus du deck
+            std::cout << "Carte " << carteChoisie->getNom() << " remise en haut du deck." << std::endl;
+
+            break;
+        }
+
+        case TypeEffet::TOP_DECK_NEXT_ACQUIRED: {
+            // La prochaine carte acquise pdt ce tour va en haut du deck
+            joueurActif.setNextAcquiredTopDeck(true, joueurActif.getNextAcquiredTopDeck().second + 1);
+            std::cout << "La prochaine carte acquise pendant ce tour ira en haut du deck." << std::endl;
+            break;
+        }
+
+        case TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION: {
+            // La prochaine action acquise pdt ce tour va en haut du deck
+            joueurActif.setNextAcquiredTopDeckAction(true, joueurActif.getNextAcquiredTopDeckAction().second + 1);
+            std::cout << "La prochaine carte de type ACTION acquise pendant ce tour ira en haut du deck." << std::endl;
+            break;
+        }
+
+        case TypeEffet::HAND_NEXT_ACQUIRED: {
+            // La prochaine carte acquise pdt ce tour va dans la main
+            joueurActif.setNextAcquiredHand(true, joueurActif.getNextAcquiredHand().second + 1);
+            std::cout << "La prochaine carte acquise pendant ce tour ira dans la main." << std::endl;
+            break;
+        }
+
+        case TypeEffet::DMG_per_CHAMPION:{
+            // Infliger des dégâts à l'adversaire en fonction du nombre de champions en jeu
+            ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) : 0;
+
+            if (nbChampions > 0) {
+                int totalDmg = valeur * nbChampions;
+                joueurActif.addCombat(totalDmg);
+                std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par champion en jeu)" << std::endl;
+            } else {
+                std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun point de dégât ajouté." << std::endl;
+            }
+            break;
+        }
+
+        case TypeEffet::DMG_per_GUARD:{
+            // Infliger des dégâts à l'adversaire en fonction du nombre de gardes en jeu
+            ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            int nbGardes = -1; // -1 pour exclure le champion source car il a garde
+            for (const auto& paire : zoneChampions->getCartes()) {
+                Carte* carte = paire.first;
+                if (carte->getType() == TypeCarte::CHAMPION) {
+                    Champion* champion = static_cast<Champion*>(carte);
+                    if (champion->hasGarde()) {
+                        nbGardes++;
+                    }
+                }
+            }
+
+            if (nbGardes > 0) {
+                int totalDmg = valeur * nbGardes;
+                joueurActif.addCombat(totalDmg);
+                std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par garde en jeu chez l'adversaire)" << std::endl;
+            } else {
+                std::cout << "Aucune garde en jeu pour l'adversaire. Aucun point de dégât ajouté." << std::endl;
+            }
+            break;
+        }
+
+        case TypeEffet::DMG_per_VERT_CARDS: {
+            // Infliger des dégâts à l'adversaire en fonction du nombre de cartes vertes en jeu
+            ZoneDeCarte* champs = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            int nbCartesVertes = 0;
+            for (const auto& paire : champs->getCartes()) {
+                Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::VERT) {
+                    nbCartesVertes++;
+                }
+            }
+            for (const auto& paire : main->getCartes()) {
+                Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::VERT) {
+                    nbCartesVertes++;
+                }
+            }
+
+            if (nbCartesVertes > 0) {
+                int totalDmg = valeur * nbCartesVertes;
+                joueurActif.addCombat(totalDmg);
+                std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par carte verte en jeu)" << std::endl;
+            } else {
+                std::cout << "Aucune carte verte en jeu pour le joueur " << joueurActif.getId() << ". Aucun point de dégât ajouté." << std::endl;
+            }
+            break;
+        }
+
+
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
             break;
@@ -253,52 +548,191 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 }
 
 // Méthode pour vérifier si les conditions de l'effet sont remplies
-bool Effet::verifierConditions(const Joueur& joueurActif, const Joueur& adversaire) const {
+bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Carte* source) const {
     switch (condition) {
         case ConditionEffet::AUCUNE:
             return true; // Aucune condition, toujours activable
-            
-        case ConditionEffet::SACRIFICE:
-        case ConditionEffet::SACRIFICE_TO_MARCHE: // pour les gemmes de feu
-            // TODO: Vérifier si un sacrifice a été effectué
-        case ConditionEffet::COND_SACRIFICE_HAND_DISCARD:
-            // TODO: Vérifier si une carte a été défaussée de la main
-            std::cout << "Vérification condition SACRIFICE_HAND_DISCARD (non implémentée)" << std::endl;
-            return false;
+            break;
+        case ConditionEffet::SACRIFICE:{
+            // Mettre la carte dans la zone d'écart
+            if (source) {
+                ZoneDeCarte* zoneEcartees = joueurActif.getZoneByType(TypeZone::ECARTEES);
+                ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
 
-        case ConditionEffet::ROUGE_ALLY:
-        case ConditionEffet::JAUNE_ALLY:
-        case ConditionEffet::VERT_ALLY:
-        case ConditionEffet::BLEU_ALLY:
-            // TODO: Vérifier la présence d'alliés de la bonne faction
-            std::cout << "Vérification condition ALLY (non implémentée)" << std::endl;
-            return false;
-            
-        case ConditionEffet::NB_CHAMPIONS:
-        case ConditionEffet::NB_GARDES:
-        case ConditionEffet::NB_VERT_CARDS_IN_PLAY:
-            // TODO: Compter les cartes appropriées en jeu
-            std::cout << "Vérification condition comptage (non implémentée)" << std::endl;
-            return false;
+                if (main && zoneEcartees) {
+                    main->deplacerCarte(source->getId(), *zoneEcartees, 1);
+                    std::cout << "Carte " << source->getNom() << " sacrifiée et déplacée dans la zone d'écart." << std::endl;
+                    return true;
+                } else {
+                    std::cout << "Erreur: Impossible de trouver la carte à sacrifier ou la zone d'écart!" << std::endl;
+                    return false;
+                }
+            } else {
+                std::cout << "Erreur: Carte à sacrifier non fournie !" << std::endl;
+                return false;
+            }
+        }
+
+        case ConditionEffet::SACRIFICE_TO_MARCHE:{ // pour les gemmes de feu
+            // Mettre la carte dans la zone d'écart
+            if (source) {
+                ZoneDeCarte* marche = joueurActif.getZoneByType(TypeZone::MARCHE);
+                ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+
+                if (main && marche) {
+                    main->deplacerCarte(source->getId(), *marche, 1);
+                    std::cout << "Carte " << source->getNom() << " sacrifiée et déplacée dans la zone d'écart." << std::endl;
+                    return true;
+                } else {
+                    std::cout << "Erreur: Impossible de trouver la carte à sacrifier ou la zone d'écart!" << std::endl;
+                    return false;
+                }
+            } else {
+                std::cout << "Erreur: Carte à sacrifier non fournie !" << std::endl;
+                return false;
+            }
+        }
+        
+        case ConditionEffet::COND_SACRIFICE_HAND_DISCARD:{
+            // Sacrifier jusqu'à [valeur] carte(s) de la main et/ou de la défausse pour activer l'effet associé
+            int reponse;
+            for (int i = 0; i < valeur; ++i) {
+
+                std::cout << "Voulez vous sacrifier une carte de votre main ou défausse ? (1 = Oui, 0 = Non) : ";
+                std::cin >> reponse;
+
+                while (reponse != 0 && reponse != 1) {
+                    std::cout << "Réponse invalide! Entrez 1 pour Oui ou 0 pour Non : ";
+                    std::cin >> reponse;
+                }
+
+                if (reponse == 0) {
+                    std::cout << "Fin du sacrifice de cartes." << std::endl;
+                    break;
+                }
+
+                std::cout << "Choisissez une carte à sacrifier de votre main ou défausse :" << std::endl;
+                
+                // Afficher les cartes de la main et de la défausse
+                ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+                ZoneDeCarte* defausse = joueurActif.getZoneByType(TypeZone::DEFAUSSE);
+                
+                std::vector<std::pair<Carte*, TypeZone>> cartesDisponibles;
+                
+                if (main) {
+                    const auto& cartesMain = main->getCartes();
+                    for (const auto& paire : cartesMain) {
+                        cartesDisponibles.emplace_back(paire.first, TypeZone::MAIN);
+                    }
+                }
+                else {
+                    return false; // Pas de main, ne peut pas sacrifier
+                }
+                
+                if (defausse) {
+                    const auto& cartesDefausse = defausse->getCartes();
+                    for (const auto& paire : cartesDefausse) {
+                        cartesDisponibles.emplace_back(paire.first, TypeZone::DEFAUSSE);
+                    }
+                }
+                else {
+                    return false; // Pas de défausse, ne peut pas sacrifier
+                }
+                
+                // Afficher les options
+                for (size_t j = 0; j < cartesDisponibles.size(); ++j) {
+                    std::cout << (j + 1) << "- " << cartesDisponibles[j].first->getNom()
+                              << " (de la " << (cartesDisponibles[j].second == TypeZone::MAIN ? "main" : "défausse") << ")" << std::endl;
+                }
+                
+                int choix_carte;
+                std::cout << "Entrez l'indice de la carte à sacrifier : ";
+                std::cin >> choix_carte;
+                
+                // Valider l'indice
+                while (choix_carte < 1 || choix_carte > static_cast<int>(cartesDisponibles.size())) {
+                    std::cout << "Indice invalide! Choisissez entre 1 et " << cartesDisponibles.size() << " : ";
+                    std::cin >> choix_carte;
+                }
+                
+                // Sacrifier la carte choisie
+                Carte* carteASacrifier = cartesDisponibles[choix_carte - 1].first;
+                TypeZone zoneOrigine = cartesDisponibles[choix_carte - 1].second;
+                ZoneDeCarte* zoneDestination = joueurActif.getZoneByType(TypeZone::ECARTEES);
+
+                if (zoneOrigine == TypeZone::MAIN && main){
+                    main->deplacerCarte(carteASacrifier->getId(), *zoneDestination, 1);
+                    return true; // Condition remplie après un sacrifice
+                } else if (zoneOrigine == TypeZone::DEFAUSSE && defausse) {
+                    defausse->deplacerCarte(carteASacrifier->getId(), *zoneDestination, 1);
+                    return true; // Condition remplie après un sacrifice
+                }
+            }
+        }
+
+        case ConditionEffet::ROUGE_ALLY:{
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            if (!main) {
+                std::cout << "Erreur: main introuvable!" << std::endl;
+                return false;
+            }
+
+            for (const auto& paire : main->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::ROUGE) {
+                    return true; // Condition remplie
+                }
+            }
+            return false; // Aucun allié rouge trouvé
+        }
+
+        case ConditionEffet::JAUNE_ALLY:{
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            if (!main) {
+                std::cout << "Erreur: main introuvable!" << std::endl;
+                return false;
+            }
+
+            for (const auto& paire : main->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::JAUNE) {
+                    return true; // Condition remplie
+                }
+            }
+            return false; // Aucun allié jaune trouvé
+        }
+        case ConditionEffet::VERT_ALLY:{
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            if (!main) {
+                std::cout << "Erreur: main introuvable!" << std::endl;
+                return false;
+            }
+
+            for (const auto& paire : main->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::VERT) {
+                    return true; // Condition remplie
+                }
+            }
+            return false; // Aucun allié vert trouvé
+        }
+        case ConditionEffet::BLEU_ALLY:{
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            if (!main) {
+                std::cout << "Erreur: main introuvable!" << std::endl;
+                return false;
+            }
+
+            for (const auto& paire : main->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::BLEU) {
+                    return true; // Condition remplie
+                }
+            }
+            return false; // Aucun allié bleu trouvé
+        }
             
         default:
             return false;
     }
-}
-
-/**
- * @brief Convertit une Carte en Champion si possible
- * 
- * Fonction utilitaire qui permet de convertir une référence de Carte en pointeur
- * vers Champion.
- * 
- * @param carte La carte à convertir
- * @return Champion* Pointeur vers le Champion si la conversion est possible,
- *                   nullptr si la carte n'est pas un Champion
- * 
- * @note Cette fonction doit être utilisée uniquement quand on est sûr que
- *       la carte est un Champion, sinon vérifier le retour
- */
-Champion* getChampionFromCarte(const Carte& carte) {
-    return const_cast<Champion*>(dynamic_cast<const Champion*>(&carte));
 }

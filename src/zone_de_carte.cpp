@@ -89,8 +89,17 @@ const std::vector<std::pair<Carte*, int>>& ZoneDeCarte::getCartes() const { retu
 
 // Ajouter une carte à la zone avec un ordre spécifique
 void ZoneDeCarte::ajouterCarte(Carte* carte, int ordre) {
-    cartes.emplace_back(carte, ordre);
+    if (ordre < 0 || ordre >= cartes.size()) {
+        cartes.emplace_back(carte, cartes.size());
+    } else {
+        // Décaler les cartes existantes
+        for (auto& p : cartes) {
+            if (p.second >= ordre) p.second++;
+        }
+        cartes.emplace_back(carte, ordre);
+    }
 }
+
 
 // Retirer une carte de la zone par son ID
 bool ZoneDeCarte::retirerCarte(int carteId) {
