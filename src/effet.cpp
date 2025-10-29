@@ -56,7 +56,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             int choix;
             std::cout << "Choisissez une option (1 ou 2): " << std::endl
             << "  1 - Gagner 3 points de combat" << std::endl
-            << "  2 - Récupérer 3 PV" << std::endl;
+            << "  2 - Récupérer 4 PV" << std::endl;
             std::cin >> choix;
 
             // Valider l'entrée
@@ -68,11 +68,11 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // 2. Appliquer l'effet choisi
 
             if (choix == 1) {
-                joueurActif.addCombat(valeur);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " points de combat" << std::endl;
+                joueurActif.addCombat(3);
+                std::cout << "Joueur " << joueurActif.getId() << " gagne " << 3 << " points de combat" << std::endl;
             } else if (choix == 2) {
-                joueurActif.heal(valeur);
-                std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur << " PV" << std::endl;
+                joueurActif.heal(4);
+                std::cout << "Joueur " << joueurActif.getId() << " récupère " << 4 << " PV" << std::endl;
             }
             break;
         }
@@ -677,12 +677,23 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
 
         case ConditionEffet::ROUGE_ALLY:{
             const ZoneDeCarte* champions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
             if (!champions) {
                 std::cout << "Erreur: zone des champions introuvable!" << std::endl;
                 return false;
             }
+            if (!main) {
+                std::cout << "Erreur: zone de la main introuvable!" << std::endl;
+                return false;
+            }
 
             for (const auto& paire : champions->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::ROUGE) {
+                    return true; // Condition remplie
+                }
+            }
+            for (const auto& paire : main->getCartes()) {
                 const Carte* carte = paire.first;
                 if (carte->getFaction() == FactionCarte::ROUGE) {
                     return true; // Condition remplie
@@ -693,8 +704,13 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
 
         case ConditionEffet::JAUNE_ALLY:{
             const ZoneDeCarte* champions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
             if (!champions) {
                 std::cout << "Erreur: zone des champions introuvable!" << std::endl;
+                return false;
+            }
+            if (!main) {
+                std::cout << "Erreur: zone de la main introuvable!" << std::endl;
                 return false;
             }
 
@@ -704,12 +720,23 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
                     return true; // Condition remplie
                 }
             }
+            for (const auto& paire : main->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::JAUNE) {
+                    return true; // Condition remplie
+                }
+            }
             return false; // Aucun allié jaune trouvé
         }
         case ConditionEffet::VERT_ALLY:{
             const ZoneDeCarte* champions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
             if (!champions) {
                 std::cout << "Erreur: zone des champions introuvable!" << std::endl;
+                return false;
+            }
+            if (!main) {
+                std::cout << "Erreur: zone de la main introuvable!" << std::endl;
                 return false;
             }
 
@@ -719,16 +746,33 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
                     return true; // Condition remplie
                 }
             }
+            for (const auto& paire : main->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::VERT) {
+                    return true; // Condition remplie
+                }
+            }
             return false; // Aucun allié vert trouvé
         }
         case ConditionEffet::BLEU_ALLY:{
             const ZoneDeCarte* champions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            const ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
             if (!champions) {
                 std::cout << "Erreur: zone des champions introuvable!" << std::endl;
                 return false;
             }
+            if (!main) {
+                std::cout << "Erreur: zone de la main introuvable!" << std::endl;
+                return false;
+            }
 
             for (const auto& paire : champions->getCartes()) {
+                const Carte* carte = paire.first;
+                if (carte->getFaction() == FactionCarte::BLEU) {
+                    return true; // Condition remplie
+                }
+            }
+            for (const auto& paire : main->getCartes()) {
                 const Carte* carte = paire.first;
                 if (carte->getFaction() == FactionCarte::BLEU) {
                     return true; // Condition remplie

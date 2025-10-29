@@ -331,7 +331,7 @@ bool Joueur::jouerCarte(int indice) {
             if (effet.getCondition() == ConditionEffet::SACRIFICE ||
                 effet.getCondition() == ConditionEffet::SACRIFICE_TO_MARCHE) {
                 aEffetSacrifice = true;
-                break;
+                break; 
             }
         }
 
@@ -347,17 +347,14 @@ bool Joueur::jouerCarte(int indice) {
         }
 
         // Activer les effets appropriés
-        std::cout << "-> Activation des effets..." << std::endl;
+        std::cout << "→  Activation des effets..." << std::endl;
         
         for (const auto& effet : carte->getEffets()) {
             // Si on a choisi de sacrifier, n'activer QUE les effets de sacrifice
             if (sacrifier) {
-                if (effet.getCondition() == ConditionEffet::SACRIFICE ||
-                    effet.getCondition() == ConditionEffet::SACRIFICE_TO_MARCHE) {
-                    effet.activerEffet(*this, table->getAdversaire(), carte);
-                }
+                effet.activerEffet(*this, table->getAdversaire(), carte);
             }
-            // Sinon, activer les effets normaux (sauf sacrifice)
+            // Sinon (tout sauf sacrifice)
             else {
                 if (effet.getCondition() != ConditionEffet::SACRIFICE &&
                     effet.getCondition() != ConditionEffet::SACRIFICE_TO_MARCHE) {
@@ -386,7 +383,7 @@ bool Joueur::jouerCarte(int indice) {
                 if (gemmesFeu) {
                     main->deplacerCarte(carte->getId(), *gemmesFeu, gemmesFeu->taille());
                     #ifdef DEBUG
-                        std::cout << "-> Fire Gem retourne dans la pile" << std::endl;
+                        std::cout << "→ Fire Gem retourne dans la pile" << std::endl;
                     #endif
                 }
             } else {
@@ -395,7 +392,7 @@ bool Joueur::jouerCarte(int indice) {
                 if (ecartees) {
                     main->deplacerCarte(carte->getId(), *ecartees, ecartees->taille());
                     #ifdef DEBUG
-                        std::cout << "-> Carte ÉCARTÉE du jeu définitivement" << std::endl;
+                        std::cout << "→ Carte ÉCARTÉE du jeu définitivement" << std::endl;
                     #endif
                 }
             }
@@ -405,7 +402,7 @@ bool Joueur::jouerCarte(int indice) {
             if (defausse) {
                 main->deplacerCarte(carte->getId(), *defausse, defausse->taille());
                 #ifdef DEBUG
-                    std::cout << "-> Carte " << carte->getNom() << " défaussée" << std::endl;
+                    std::cout << "→ Carte " << carte->getNom() << " défaussée" << std::endl;
                 #endif
             }
         }
@@ -519,9 +516,10 @@ void Joueur::degatsFinTour(int totalCombat){
             if (totalCombat >= pvAvant) {
                 garde->setPV(0);
                 std::cout << "→ " << pvAvant << " dégât(s) infligé(s) à " << garde->getNom();
+            }else {
+                std::cout << "→ Pas assez de dégâts pour mettre K.O. " << garde->getNom();
             }
             totalCombat -= pvAvant;
-            std::cout << "→ Pas assez de dégâts pour mettre K.O. " << garde->getNom();
             
             if (garde->getPV() <= 0) {
                 std::cout << " (DÉTRUIT! )" << std::endl;
