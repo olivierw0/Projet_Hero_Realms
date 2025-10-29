@@ -338,7 +338,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     }
     
     // Statut (Actif/Inactif)
-    if (champion->isActive()) {
+    if (champion->getActive()) {
         std::cout << "✅ ";
     } else {
         std::cout << DIM_TEXT << "💤 " << RESET_COLOR;
@@ -361,7 +361,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     std::cout << std::endl;
     
     // Effets (uniquement si actif ou pour information)
-    if (champion->isActive()) {
+    if (champion->getActive()) {
         std::string effetsFormated = formaterListeEffets(champion->getEffets());
         std::cout << "  " << effetsFormated << std::endl;
     } else {
@@ -674,8 +674,12 @@ void TablePartie::afficherEtatPartie() const {
 void TablePartie::endTurn() {
     Joueur& joueur_actuel = getJoueurActuel();
     Joueur& adversaire = getAdversaire();
-    // adversaire.resetChampions();
-    adversaire.takeDamage(joueur_actuel.getCombat());
+    adversaire.resetChampions();
+
+    // 1. Infliger les dégâts aux champions adverses avec Garde
+    std::cout << "\nInfliger les dégâts aux champions adverses avec Garde..."
+                << std::endl;
+    adversaire.degatsFinTour(joueur_actuel.getCombat());
     
     // 3. Défausser toute la main du joueur actuel
     ZoneDeCarte* main = joueur_actuel.getZoneByType(TypeZone::MAIN);

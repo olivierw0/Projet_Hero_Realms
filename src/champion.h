@@ -8,10 +8,6 @@ private:
     int pv;
     bool active;
     bool garde;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 public:
     // Constructeurs
     Champion() : Carte(), pv(1), active(true), garde(false) {}
@@ -23,33 +19,16 @@ public:
     
     // Getters (redéfinition de la méthode virtuelle)
     int getPV() const override { return pv; }
-    bool isActive() const { return active; }
+    bool getActive() const { return active; }
     bool hasGarde() const { return garde; }
     
     // Setters
     void setActive(bool etat) { active = etat; }
     void setPV(int nouveaux_pv) { pv = nouveaux_pv; }
     void setGarde(bool nouvelle_garde) { garde = nouvelle_garde; }
-<<<<<<< Updated upstream
-    
-    // Méthode pour "expend" (taper) le champion et déclencher ses effets
-    bool expend() {
-        if (active) {
-            desactiver(); // Le champion devient inactif (tapé)
-            return true;  // Effets peuvent être déclenchés
-        }
-        return false;     // Champion déjà tapé, pas d'effet
-    }
-    
-    // Méthode pour "untap" le champion (début de tour)
-    void untap() {
-        activer();
-    }
-=======
 
     void stun();
     bool expend();
->>>>>>> Stashed changes
 };
 
 #endif // CHAMPION_H

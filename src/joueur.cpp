@@ -13,7 +13,6 @@ void Joueur::takeDamage(int amount){
     pv -= amount;
     if(pv<0){ 
         pv = 0; 
-        isDead = true;    
     }
 }
 
@@ -339,8 +338,6 @@ bool Joueur::jouerCarte(int indice) {
 
     return true;
 }
-<<<<<<< Updated upstream
-=======
 
 void Joueur::resetChampions(){
     ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
@@ -363,4 +360,128 @@ void Joueur::resetChampions(){
         }
     }
 }
->>>>>>> Stashed changes
+
+void degatsFinTour(int totalCombat){
+    ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+    if (!champions) {
+        std::cout << "Zone champions introuvable!" << std::endl;
+        return;
+    }
+    // CAS 1 : Aucun champion en jeu
+    auto& cartes = champions->getCartes();
+    if (cartes.empty()) {
+        std::cout << "Aucun champion en jeu." << std::endl;
+        std::cout << "Tous les dégâts sont infligés au joueur." << std::endl;
+        takeDamage(totalCombat);
+        return;
+    }
+    
+    // CAS 2 : Il y a des champions en jeu
+    // Infliger les dégâts aux champions avec Garde en priorité
+    // Filtrer les champions avec Garde
+    std::vector<Champion*> gardes;
+    for (const auto& paire_carte : cartes) {
+        Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
+        if (champion && champion->hasGarde() && champion->getPv() > 0) {
+            gardes.push_back(champion);
+        }
+    }
+
+    if (!gardes.empty()) {
+        std::cout << "\n Il y a " << gardes.size() << " champion(s) avec GARDE!" << std::endl;
+        std::cout << "Les dégâts doivent être infligés aux gardes en priorité." << std::endl;
+        
+        while (totalCombat > 0 && !gardes.empty()) {
+            // Afficher les gardes disponibles
+            std::cout << "\nGardes disponibles:" << std::endl;
+            for (size_t i = 0; i < gardes.size(); ++i) {
+                if (gardes[i]->getPv() > 0) {
+                    std::cout << "[" << (i + 1) << "] " << gardes[i]->getNom() 
+                              << " (" << gardes[i]->getPv() << " PV) 🛡️" << std::endl;
+                }
+            }
+            
+            int choix;
+            std::cout << "Infligez " << totalCombat << " dégât(s) au garde n°: ";
+            std::cin >> choix;
+            
+            if (choix < 1 || choix > static_cast<int>(gardes.size())) {
+                std::cout << "Choix invalide!" << std::endl;
+                continue;
+            }
+            
+            Champion* garde = gardes[choix - 1];
+            int pvAvant = garde->getPv();
+            int degatsInfliges = std::min(totalCombat, pvAvant);
+            
+            garde->takeDamage(totalCombat);
+            totalCombat -= degatsInfliges;
+            
+            std::cout << "→ " << degatsInfliges << " dégât(s) infligé(s) à " << garde->getNom();
+            
+            if (garde->getPv() <= 0) {
+                std::cout << " (DÉTRUIT! )" << std::endl;
+                // Retirer le garde de la liste
+                gardes.erase(gardes.begin() + (choix - 1));
+            } else {
+                std::cout << " (reste " << garde->getPv() << " PV)" << std::endl;
+            }
+            
+            if (totalCombat > 0) {
+                std::cout << "\nIl reste " << totalCombat << " dégât(s) à placer..." << std::endl;
+            }
+        }
+        // Si tous les gardes sont morts et qu'il reste des dégâts
+        if (totalCombat > 0 && gardes.empty()) {
+            std::cout << "\nTous les gardes sont détruits!" << std::endl;
+            std::cout << "Il reste " << totalCombat << " dégât(s) à placer." << std::endl;
+            // Continuer vers le cas sans garde
+        } else {
+            return; // Tous les dégâts ont été placés
+        }
+    }
+    while (totalCombat > 0){
+        std::vector<Champion*> championsEnVie;
+        for (const auto& paire_carte : cartes) {
+            Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
+            if (champion && champion->getPv() > 0) {
+                championsEnVie.push_back(champion);
+            }
+        }
+        if (championsEnVie.empty()) {
+            std::cout << "Aucun champion en vie. Tous les dégâts restants (" << totalCombat << ") sont infligés au joueur." << std::endl;
+            takeDamage(totalCombat);
+            break;
+        }
+
+        std::cout << "\nChampions disponibles:" << std::endl;
+        for (size_t i = 0; i < championsEnVie.size(); ++i) {
+            std::cout << "[" << (i + 1) << "] " << championsEnVie[i]->getNom() 
+                      << " (" << championsEnVie[i]->getPv() << " PV)" << std::endl;
+        }
+
+        int choix;
+        std::cout << "Infligez " << totalCombat << " dégât(s) au champion n°: ";
+        std::cin >> choix;
+        if (choix == 0){ 
+            std::cout << "Tous les dégâts restants (" << totalCombat << ") sont infligés au joueur." << std::endl;
+            takeDamage(totalCombat);
+            break;
+        }else if (choix >= 1 && choix < static_cast<int>(championsEnVie.size())) {
+            Champion* cible = championsEnVie[choix - 1];
+            int pvChamp = cible->getPv();
+            if (totalCombat > pvChamp) {
+                cible->setPV(0);
+            }
+            // Les champions n'ont pas de méthode takeDamage, donc on utilise setPV directement
+            // De toutes manières ils se soignent à chaque début de tour
+            totalCombat -= pvChamp;
+            std::cout << "→ " << pvChamp << " dégât(s) infligé(s) à " << cible->getNom();
+            if (cible->getPv() <= 0) {
+                std::cout << " (DÉTRUIT!)" << std::endl;
+            }
+        }else{
+            std::cout << "Choix invalide!" << std::endl;
+        }
+    }
+}
