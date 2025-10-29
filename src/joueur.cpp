@@ -239,7 +239,7 @@ void Joueur::afficherChampions() const {
         }
     }
 }
-bool Joueur::tapChampion(int indice) {
+bool Joueur::tapChampion(int indice, Joueur& adversaire) {
     ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
     if (!champions) {
         std::cout << "Zone champions introuvable!" << std::endl;
@@ -253,23 +253,26 @@ bool Joueur::tapChampion(int indice) {
     }
 
     Champion* champion = dynamic_cast<Champion*>(cartes[indice - 1].first);
-    if (!champion) {
-        std::cout << "La carte sélectionnée n'est pas un champion!" << std::endl;
-        return false;
-    }
-    
+
     if (!champion->getActive()) {
         std::cout << "Le champion " << champion->getNom() << " est déjà tapé!" << std::endl;
         return false;
-    }else {
-        champion->setActive(false);
-        std::cout << "ACTIVER UN CHAMPION PAS IMPLEMENTE ! TODO" << std::endl;
-        //TODO : activer les effets du champion tapé ici
-        #ifdef DEBUG
-            std::cout << "Champion " << champion->getNom() << " tapé." << std::endl;
-        #endif
-        return true;
     }
+
+    std::cout << "\n→ Activation du champion: " << champion->getNom() << std::endl;
+
+    // Activer tous les effets du champion
+    std::cout << "→ Activation des effets du champion..." << std::endl;
+    
+    for (const auto& effet : champion->getEffets()) {
+        effet.activerEffet(*this, adversaire, champion);
+    }
+
+    // Le champion est maintenant expendu
+    champion->setActive(false);
+    std::cout << "→ Champion " << champion->getNom() << " est maintenant EXPENDU" << std::endl;
+
+    return true;
 }
 
 int Joueur::getNombreCartesEnMain() const {
@@ -560,13 +563,14 @@ void Joueur::degatsFinTour(int totalCombat){
         }
 
         int choix;
+        std::cout << "Entrez \"0\" pour infliger les dégâts au joueur." << std::endl;
         std::cout << "Infligez " << totalCombat << " dégât(s) au champion n°: ";
         std::cin >> choix;
         if (choix == 0){ 
             std::cout << "Tous les dégâts restants (" << totalCombat << ") sont infligés au joueur." << std::endl;
             takeDamage(totalCombat);
             break;
-        }else if (choix >= 1 && choix < static_cast<int>(championsEnVie.size())) {
+        }else if (choix >= 1 && choix <= static_cast<int>(championsEnVie.size())) {
             Champion* cible = championsEnVie[choix - 1];
             int pvChamp = cible->getPV();
             if (totalCombat >= pvChamp) {
@@ -591,7 +595,7 @@ void Joueur::resetJoueur(){
     resetOr();
     resetCombat();
     resetChampions();
-
+}
 void Joueur::setNextAcquiredTopDeck(bool value, int nbCarte) {
     if (nbCarte == 0) {     // Plus de cartes à top-decker
         nextAcquiredTopDeck = {false, 0};

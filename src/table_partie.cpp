@@ -587,12 +587,8 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
                     (valeur > 1 ? " cartes" : " carte");
             break;
             
-        case TypeEffet::EXPEND_CHAMPION:
-            result = std::string(DIM_TEXT) + "⟳ Taper:" + RESET_COLOR;
-            break;
-            
         case TypeEffet::PREPARE_CHAMPION:
-            result = "🔄 Préparer un champion";
+            result = "⟳ Préparer un champion";
             break;
             
         case TypeEffet::SACRIFICE_HAND_DISCARD:
@@ -642,7 +638,16 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
         case TypeEffet::SOIN_per_CHAMP:
             result = std::string(COLOR_HEALTH) + "❤  +" + std::to_string(valeur) + " Santé par champion" + RESET_COLOR;
             break;
-            
+        
+        case TypeEffet::DMG_per_GUARD:
+            result = std::string(COLOR_DMG) + "⚔  +" + std::to_string(valeur) + " Combat par autre garde" + RESET_COLOR;
+            break;
+        case TypeEffet::DMG_per_VERT_CARDS:
+            result = std::string(COLOR_DMG) + "⚔  +" + std::to_string(valeur) + " Combat par carte " + COLOR_VERT + "SAUVAGE" + RESET_COLOR + DIM_TEXT + RESET_COLOR;
+            break;
+        case TypeEffet::DMG_per_CHAMPION:
+            result = std::string(COLOR_DMG) + "⚔  +" + std::to_string(valeur) + " Combat par champion en jeu" + RESET_COLOR;
+            break;
         default:
             result = "❓ Effet inconnu";
             break;
@@ -674,16 +679,7 @@ std::string TablePartie::formaterCondition(ConditionEffet condition) const {
         case ConditionEffet::SACRIFICE_TO_MARCHE:
             return std::string(COLOR_SACRIFICE) + "✝  Sacrifier:" + RESET_COLOR;
         case ConditionEffet::COND_SACRIFICE_HAND_DISCARD:
-            return std::string(COLOR_SACRIFICE) + "✝  Sacrifier jusqu'à 1 carte(s) (main ou défausse) :" ;
-        case ConditionEffet::NB_CHAMPIONS:
-            return std::string(DIM_TEXT) + "(par champion en jeu)" + RESET_COLOR;
-            
-        case ConditionEffet::NB_GARDES:
-            return std::string(DIM_TEXT) + "(par garde en jeu)" + RESET_COLOR;
-            
-        case ConditionEffet::NB_VERT_CARDS_IN_PLAY:
-            return std::string(DIM_TEXT) + "(par carte " + COLOR_VERT + "SAUVAGE" + RESET_COLOR + DIM_TEXT + " en jeu)" + RESET_COLOR;
-            
+            return std::string(COLOR_SACRIFICE) + "✝  Sacrifier jusqu'à 1 carte(s) (main ou défausse) :" + RESET_COLOR;
         default:
             return "";
     }
@@ -708,9 +704,7 @@ std::string TablePartie::formaterListeEffets(const std::vector<Effet>& effets) c
     std::map<ConditionEffet, std::vector<Effet>> effetsParCondition;
     
     for (const auto& effet : effets) {
-        if (effet.getType() != TypeEffet::EXPEND_CHAMPION) {
-            effetsParCondition[effet.getCondition()].push_back(effet);
-        }
+        effetsParCondition[effet.getCondition()].push_back(effet);
     }
     
     if (effetsParCondition.count(ConditionEffet::AUCUNE) > 0) {

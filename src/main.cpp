@@ -69,11 +69,11 @@ int main() {
                 }
                 break;
             case 4: // Activer un Champion
-                // std::cout << "Entrez l'indice du champion à activer: ";
-                // std::cin >> choix;
-                // if (joueurActuel.activerChampion(choix)) {
-                //     std::cout << "Champion activé avec succès!" << std::endl;
-                // }
+                std::cout << "Entrez l'indice du champion à activer: ";
+                std::cin >> choix;
+                if (joueurActuel.tapChampion(choix, adversaire)) {
+                    std::cout << "Champion activé avec succès!" << std::endl;
+                }
                 break;
             case 5: // regarder sa défausse
                 // joueurActuel.regarderDefausse();

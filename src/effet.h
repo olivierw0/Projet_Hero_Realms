@@ -3,7 +3,6 @@
 
 #include <string>
 enum class TypeEffet {
-    EXPEND_CHAMPION,  // Taper les champions (à tester)
     DMG, //OK
     DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet (à tester)
     DRAW_DISCARD, // (à tester)
@@ -17,10 +16,13 @@ enum class TypeEffet {
     SACRIFICE_HAND_DISCARD,  // (à tester)
     SOIN, // OK
     SOIN_per_CHAMP, // (à tester)
-    STUN,
-    TOP_DECK_FROM_DISCARD,
-    TOP_DECK_NEXT_ACQUIRED,
-    TOP_DECK_NEXT_ACQUIRED_ACTION
+    STUN, 
+    TOP_DECK_FROM_DISCARD, 
+    TOP_DECK_NEXT_ACQUIRED, 
+    TOP_DECK_NEXT_ACQUIRED_ACTION, 
+    DMG_per_VERT_CARDS,            // Nombre de cartes vertes en jeu
+    DMG_per_CHAMPION,                    // Nombre de champions en jeu
+    DMG_per_GUARD                        // Nombre de gardes en jeu
 };
 
 enum class ConditionEffet {
@@ -31,10 +33,8 @@ enum class ConditionEffet {
     BLEU_ALLY,                       // Allié bleu requis
     SACRIFICE,                       // Condition de sacrifice
     SACRIFICE_TO_MARCHE,             // Condition de sacrifice pour la zone de marche
-    NB_CHAMPIONS,                    // Nombre de champions en jeu
-    NB_GARDES,                       // Nombre de gardes en jeu
     COND_SACRIFICE_HAND_DISCARD,     // Sacrifice depuis la main ou la défausse
-    NB_VERT_CARDS_IN_PLAY            // Nombre de cartes vertes en jeu
+
 };
 
 class Effet {
@@ -62,7 +62,7 @@ public:
     void activerEffet(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 
     // Méthode pour vérifier si les conditions de l'effet sont remplies
-    bool verifierConditions(const class Joueur& joueurActif, const class Joueur& adversaire) const;
+    bool verifierConditions(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 };
 
 #endif // EFFET_H

@@ -75,7 +75,7 @@ public:
     void jouerToutesLesCartes(); // Jouer toutes les cartes en main
     
     void afficherChampions() const; // Afficher la zone des champions du joueur (indices, nom, description)
-    bool tapChampion(int indice);
+    bool tapChampion(int indice, Joueur& adversaire); // Activer un champion par son indice
 
     bool spendOr(int amount); // False si pas assez d'or.
     void takeDamage(int amount);
