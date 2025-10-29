@@ -350,11 +350,11 @@ void Joueur::resetChampions(){
     
     for (const auto& paire_carte : cartes) {
         Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
-        if (champion && champion->getPv() > 0) {
+        if (champion && champion->getPV() > 0) {
             std::cout << "Réactivation du champion " << champion->getNom() << std::endl;
             champion->setActive(true);
         }
-        if (champion && champion->getPv() <= 0) {
+        if (champion && champion->getPV() <= 0) {
             std::cout << "Champion " << champion->getNom() << " est mort, va à la défausse" << std::endl;
             deplacerCarte(champion->getId(), *defausse, defausse->taille());
         }
@@ -483,5 +483,32 @@ void degatsFinTour(int totalCombat){
         }else{
             std::cout << "Choix invalide!" << std::endl;
         }
+    }
+}
+
+void Joueur::setNextAcquiredTopDeck(bool value, int nbCarte) {
+    if (nbCarte == 0) {     // Plus de cartes à top-decker
+        nextAcquiredTopDeck = {false, 0};
+    }
+    else {
+        nextAcquiredTopDeck = {value,nbCarte}; 
+    }
+}
+
+void Joueur::setNextAcquiredTopDeckAction(bool value, int nbCarte) {
+    if (nbCarte == 0) {     // Plus de cartes ACTION à top-decker
+        nextAcquiredTopDeckAction = {false, 0};
+    }
+    else {
+        nextAcquiredTopDeckAction = {value,nbCarte}; 
+    }
+}
+
+void Joueur::setNextAcquiredHand(bool value, int nbCarte) {
+    if (nbCarte == 0) {     // Plus de cartes à placer en main
+        nextAcquiredHand = {false, 0};
+    }
+    else {
+        nextAcquiredHand = {value,nbCarte}; 
     }
 }

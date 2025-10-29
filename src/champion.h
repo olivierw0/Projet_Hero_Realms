@@ -10,7 +10,7 @@ private:
     bool garde;
 public:
     // Constructeurs
-    Champion() : Carte(), pv(1), active(true), garde(false), stunned_rounds_count(0) {}
+    Champion() : Carte(), pv(1), active(true), garde(false) {}
     
     Champion(int id, const std::string& nom, int cout, FactionCarte faction, 
              const std::string& description, const std::vector<Effet>& effets = {}, bool garde = false, int pv = 1)
@@ -21,14 +21,12 @@ public:
     int getPV() const override { return pv; }
     bool getActive() const { return active; }
     bool hasGarde() const { return garde; }
-    int getStunnedRoundsCount() const { return stunned_rounds_count; }
     
     // Setters
     void setActive(bool etat) { active = etat; }
     void setPV(int nouveaux_pv) { pv = nouveaux_pv; }
     void setGarde(bool nouvelle_garde) { garde = nouvelle_garde; }
 
-    void stun();
     bool expend();
 };
 

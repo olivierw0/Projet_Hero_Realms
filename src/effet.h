@@ -8,7 +8,7 @@ enum class TypeEffet {
     DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet (à tester)
     DRAW_DISCARD, // (à tester)
     FORCE_DISCARD_OPPONENT, // (à tester)
-    HAND_NEXT_ACQUIRED, 
+    HAND_NEXT_ACQUIRED, // (à tester)
     OR, // OK
     OR_ou_nDMG, // Choisir entre 1 or et n Points de combat (à tester)
     OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité) (à tester)
@@ -17,10 +17,10 @@ enum class TypeEffet {
     SACRIFICE_HAND_DISCARD,  // (à tester)
     SOIN, // OK
     SOIN_per_CHAMP, // (à tester)
-    STUN,
-    TOP_DECK_FROM_DISCARD,
-    TOP_DECK_NEXT_ACQUIRED,
-    TOP_DECK_NEXT_ACQUIRED_ACTION
+    STUN, // (à tester)
+    TOP_DECK_FROM_DISCARD,  // (à tester)
+    TOP_DECK_NEXT_ACQUIRED, // (à tester)
+    TOP_DECK_NEXT_ACQUIRED_ACTION // (à tester)
 };
 
 enum class ConditionEffet {

@@ -15,6 +15,9 @@ private:
     int combat;
     std::vector<ZoneDeCarte> zones;
     TablePartie* table; // Référence à la table de jeu
+    std::pair<bool,int> nextAcquiredTopDeck = {false, 0}; // Indique si les prochaines cartes acquises doivent être top-deckées et combien (exemple pour 3 cartes acquises ce tour à placer au top du deck : {true, 3})
+    std::pair<bool,int> nextAcquiredTopDeckAction = {false, 0}; // Même chose mais pour les actions (exemple pour 2 actions achetées ce tour à placer au top du deck : {true, 2})
+    std::pair<bool,int> nextAcquiredHand = {false, 0}; // Indique si les prochaines cartes acquises doivent être placées en main (exemple pour 1 carte acquise ce tour à placer en main : {true, 1})
 
 public:
     // Constructeur
@@ -30,7 +33,14 @@ public:
     int getCombat() const { return combat; }
     const std::vector<ZoneDeCarte>& getZones() const { return zones; }
     TablePartie* getTable() const { return table; }
+    std::pair<bool,int> getNextAcquiredTopDeck() const { return nextAcquiredTopDeck; }
+    std::pair<bool,int> getNextAcquiredTopDeckAction() const { return nextAcquiredTopDeckAction; }
+    std::pair<bool,int> getNextAcquiredHand() const { return nextAcquiredHand; }
     void setTable(TablePartie* t) { table = t; }
+    void setNextAcquiredTopDeck(bool value, int nbCarte);
+    void setNextAcquiredTopDeckAction(bool value, int nbCarte);
+    void setNextAcquiredHand(bool value, int nbCarte);
+    
 
     void takeDamage(int amount);
     void heal(int amount);
@@ -42,6 +52,9 @@ public:
     void resetCombat();
     void resetOr();
     void resetChampions(); // Untap tous les champions non eliminés
+    void resetNextAcquiredTopDeck() { nextAcquiredTopDeck = {false, 0}; } 
+    void resetNextAcquiredTopDeckAction() { nextAcquiredTopDeckAction = {false, 0}; }
+    void resetNextAcquiredHand() { nextAcquiredHand = {false, 0}; }
 
     // Ajouter une zone au joueur
     void ajouterZone(const ZoneDeCarte& zone) {

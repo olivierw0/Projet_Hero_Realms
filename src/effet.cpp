@@ -33,7 +33,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         case TypeEffet::EXPEND_CHAMPION:
             if (source && source->getType() == TypeCarte::CHAMPION) {
                 Champion* champion = const_cast<Champion*>(static_cast<const Champion*>(source));
-                champion->desactiver();
+                champion->setActive(false);
                 std::cout << "Champion " << champion->getNom() << " est maintenant expendu." << std::endl;
             }
             break;
@@ -248,39 +248,44 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         }
 
 
-        // case TypeEffet::PREPARE_CHAMPION:
-        //     std::cout << "Choisissez un champion à préparer :" << std::endl;
-        //     {
-        //         ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
-        //         if (!zoneChampions || zoneChampions->estVide()) {
-        //             std::cout << "Aucun champion à préparer." << std::endl;
-        //             break;
-        //         }
+        case TypeEffet::PREPARE_CHAMPION:{
+            // Préparer un champion (le rendre actif)
+            std::cout << "Choisissez un de vos champions à préparer :" << std::endl;
 
-        //         // Afficher les champions disponibles
-        //         const auto& cartes = zoneChampions->getCartes();
-        //         for (size_t i = 0; i < cartes.size(); ++i) {
-        //             const Carte& carte = cartes[i].first;
-        //             std::cout << (i + 1) << "- " << carte.getNom() << (static_cast<const Champion&>(carte).isActive() ? " (Actif)" : " (Epuisé)") << std::endl;
-        //         }
+            ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
+            if (!zoneChampions || zoneChampions->estVide()) {
+                std::cout << "Aucun champion à préparer." << std::endl;
+                break;
+            }
 
-        //         int choix_champion;
-        //         std::cout << "Entrez l'indice du champion à préparer : ";
-        //         std::cin >> choix_champion;
+            // Afficher les champions disponibles
+            const auto& cartes = zoneChampions->getCartes();
+            for (size_t i = 0; i < cartes.size(); ++i) {
+                std::cout << (i + 1) << "- " << cartes[i].first->getNom();
+                Champion* champ = dynamic_cast<Champion*>(cartes[i].first);
+                if (champ) {
+                    std::cout << " [" << (champ->getActive() ? "Actif" : "Epuisé") << "]";
+                }
+                std::cout << std::endl;
+            }
 
-        //         // Valider l'indice
-        //         while (choix_champion < 1 || choix_champion > static_cast<int>(cartes.size())) {
-        //             std::cout << "Indice invalide! Choisissez entre 1 et " << cartes.size() << " : ";
-        //             std::cin >> choix_champion;
-        //         }
+            int choix;
+            std::cout << "Entrez l'indice du champion à préparer : ";
+            std::cin >> choix;
 
-        //         // Préparer le champion choisi
-        //         Champion* champion = getChampionFromCarte(cartes[choix_champion - 1].first);
-        //         champion->activer();
-        //         std::cout << "Champion " << champion->getNom() << " est maintenant préparé." << std::endl;
-        //     }
-        //     break;
+            // Valider l'indice
+            while (choix < 1 || choix > static_cast<int>(cartes.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << cartes.size() << " : ";
+                std::cin >> choix;
+            }
 
+            Champion* championChoisi = dynamic_cast<Champion*>(cartes[choix - 1].first);
+            if (championChoisi) {
+                championChoisi->setActive(true);
+                std::cout << "Champion " << championChoisi->getNom() << " est maintenant préparé (actif)." << std::endl;
+            }
+            break;
+        }
         
         case TypeEffet::SACRIFICE_HAND_DISCARD: {
             // Sacrifier jusqu'à [valeur] carte(s) de la main et/ou de la défausse pour activer l'effet associé
@@ -367,30 +372,25 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         }
 
         case TypeEffet::STUN: {
-            // Étourdir un champion adverse
-            std::cout << "Choisissez un champion adverse à étourdir :" << std::endl;
+            // Assommer un champion adverse
+
+            std::cout << "Choisissez un champion adverse à assommer :" << std::endl;
 
             ZoneDeCarte* zoneChampionsAdversaire = adversaire.getZoneByType(TypeZone::CHAMPIONS);
             if (!zoneChampionsAdversaire || zoneChampionsAdversaire->estVide()) {
-                std::cout << "Aucun champion adverse à étourdir." << std::endl;
+                std::cout << "Aucun champion adverse à assommer." << std::endl;
                 break;
             }
 
-            // Afficher les champions adverses disponibles (lecture seule)
+            // Afficher les champions adverses disponibles
             const auto& cartes = zoneChampionsAdversaire->getCartes();
             for (size_t i = 0; i < cartes.size(); ++i) {
-                const Carte* carte = cartes[i].first;
-                const Champion* champion = dynamic_cast<const Champion*>(carte);
-                if (champion) {
-                    std::cout << (i + 1) << "- " << champion->getNom()
-                            << (champion->isStunned() ? " (Étourdi)" : " (Non étourdi)")
-                            << std::endl;
-                }
+                std::cout << (i + 1) << "- " << cartes[i].first->getNom() << std::endl;
             }
 
-            // Demander au joueur de choisir un champion
+            // Demander au joueur de choisir un champion parmi ceux proposés
             int choix_champion;
-            std::cout << "Entrez l'indice du champion à étourdir : ";
+            std::cout << "Entrez l'indice du champion à assommer : ";
             std::cin >> choix_champion;
 
             // Valider l'indice
@@ -399,19 +399,70 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 std::cin >> choix_champion;
             }
 
-            // Étourdir le champion choisi (modification de l'état)
+            // Assommer le champion choisi
             Carte* carteChoisie = cartes[choix_champion - 1].first;
-            Champion* champion = dynamic_cast<Champion*>(carteChoisie);
-            if (champion) {
-                champion->stun();
-                std::cout << "Champion " << champion->getNom() << " est maintenant étourdi. Joueur " <<
-                adversaire.getId() << " ne pourra pas utiliser ce champion au prochain tour" << std::endl;
-            }
+            ZoneDeCarte* defausseAdversaire = adversaire.getZoneByType(TypeZone::DEFAUSSE);
+
+            zoneChampionsAdversaire->deplacerCarte(carteChoisie->getId(), *defausseAdversaire, 1);
+            std::cout << "Champion " << carteChoisie->getNom() << " est assommé et déplacé dans la défausse." << std::endl;
 
             break;
         }
 
-        
+        case TypeEffet::TOP_DECK_FROM_DISCARD: {
+            // Remettre une carte de la défausse en haut du deck
+
+            ZoneDeCarte* defausse = joueurActif.getZoneByType(TypeZone::DEFAUSSE);
+            ZoneDeCarte* deck = joueurActif.getZoneByType(TypeZone::DECK);
+
+            if (!defausse || defausse->estVide()) {
+                std::cout << "La défausse est vide. Aucun carte à remettre en haut du deck." << std::endl;
+                break;
+            }
+
+            // Afficher les cartes dans la défausse
+            const auto& cartesDefausse = defausse->getCartes();
+            for (size_t i = 0; i < cartesDefausse.size(); ++i) {
+                std::cout << (i + 1) << "- " << cartesDefausse[i].first->getNom() << std::endl;
+            }
+
+            int choix_carte;
+            std::cout << "Entrez l'indice de la carte à remettre en haut du deck : ";
+            std::cin >> choix_carte;
+
+            // Valider l'indice
+            while (choix_carte < 1 || choix_carte > static_cast<int>(cartesDefausse.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << cartesDefausse.size() << " : ";
+                std::cin >> choix_carte;
+            }
+
+            // Déplacer la carte choisie de la défausse vers le dessus du deck
+            Carte* carteChoisie = cartesDefausse[choix_carte - 1].first;
+            defausse->deplacerCarte(carteChoisie->getId(), *deck, 0); // 0 pour le dessus du deck
+            std::cout << "Carte " << carteChoisie->getNom() << " remise en haut du deck." << std::endl;
+
+            break;
+        }
+
+        case TypeEffet::TOP_DECK_NEXT_ACQUIRED: {
+            // La prochaine carte acquise pdt ce tour va en haut du deck
+            joueurActif.setNextAcquiredTopDeck(true, joueurActif.getNextAcquiredTopDeck().second + 1);
+            std::cout << "La prochaine carte acquise pendant ce tour ira en haut du deck." << std::endl;
+            break;
+        }
+
+        case TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION: {
+            // La prochaine action acquise pdt ce tour va en haut du deck
+            joueurActif.setNextAcquiredTopDeckAction(true, joueurActif.getNextAcquiredTopDeckAction().second + 1);
+            std::cout << "La prochaine carte de type ACTION acquise pendant ce tour ira en haut du deck." << std::endl;
+            break;
+        }
+
+        case TypeEffet::HAND_NEXT_ACQUIRED:
+            // La prochaine carte acquise pdt ce tour va dans la main
+            joueurActif.setNextAcquiredHand(true, joueurActif.getNextAcquiredHand().second + 1);
+            std::cout << "La prochaine carte acquise pendant ce tour ira dans la main." << std::endl;
+            break;
 
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
@@ -451,21 +502,4 @@ bool Effet::verifierConditions(const Joueur& joueurActif, const Joueur& adversai
         default:
             return false;
     }
-}
-
-/**
- * @brief Convertit une Carte en Champion si possible
- * 
- * Fonction utilitaire qui permet de convertir une référence de Carte en pointeur
- * vers Champion.
- * 
- * @param carte La carte à convertir
- * @return Champion* Pointeur vers le Champion si la conversion est possible,
- *                   nullptr si la carte n'est pas un Champion
- * 
- * @note Cette fonction doit être utilisée uniquement quand on est sûr que
- *       la carte est un Champion, sinon vérifier le retour
- */
-Champion* getChampionFromCarte(const Carte& carte) {
-    return const_cast<Champion*>(dynamic_cast<const Champion*>(&carte));
 }

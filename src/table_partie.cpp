@@ -539,21 +539,56 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
         
         Carte* gemme = cartes[0].first;
         int id_gemme = gemme->getId();
-        
-        // Déplacer la gemme vers la défausse du joueur
-        ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
-        if (!defausse) {
-            std::cout << "Erreur: défausse introuvable!" << std::endl;
-            acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
-            return false;
+
+        if (acheteur.getNextAcquiredHand().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller dans la main
+            ZoneDeCarte* main = acheteur.getZoneByType(TypeZone::MAIN);
+            if (!main) {
+                std::cout << "Erreur: main introuvable!" << std::endl;
+                acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
+                return false;
+            }
+            zones_communes[idx_marche].deplacerCarte(gemme->getId(), *main, main->taille()); // Position fin = fin de la main
+            acheteur.setNextAcquiredHand(true, acheteur.getNextAcquiredHand().second - 1); // Décrémenter le compteur
+            
+            std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
+                    << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
+            std::cout << "Carte placée sur le dessus du deck." << std::endl;
+            std::cout << "Gemmes restantes: " << zones_communes[idx_gemmes_feu].taille() << std::endl;
         }
+
+        else if (acheteur.getNextAcquiredTopDeck().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller sur le deck
+            ZoneDeCarte* deck = acheteur.getZoneByType(TypeZone::DECK);
+            if (!deck) {
+                std::cout << "Erreur: deck introuvable!" << std::endl;
+                acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
+                return false;
+            }
+            // Déplacer la gemme achetée
+            zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *deck, deck->taille());
+            acheteur.setNextAcquiredHand(true, acheteur.getNextAcquiredHand().second - 1);
+            
+            std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
+                    << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
+            std::cout << "Carte placée sur le dessus du deck." << std::endl;
+            std::cout << "Gemmes restantes: " << zones_communes[idx_gemmes_feu].taille() << std::endl;
+        }
+
+        else {
+            // Déplacer la gemme vers la défausse du joueur
+            ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
+            if (!defausse) {
+                std::cout << "Erreur: défausse introuvable!" << std::endl;
+                acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
+                return false;
+            }
         
-        // Déplacer la gemme achetée
-        zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *defausse, defausse->taille());
-        
-        std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
-                  << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
-        std::cout << "Gemmes restantes: " << zones_communes[idx_gemmes_feu].taille() << std::endl;
+            // Déplacer la gemme achetée
+            zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *defausse, defausse->taille());
+            
+            std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
+                    << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
+            std::cout << "Gemmes restantes: " << zones_communes[idx_gemmes_feu].taille() << std::endl;
+        }
         
         return true;
     }
@@ -583,18 +618,66 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
         return false;
     }
     
-    // Déplacer la carte vers la défausse du joueur
-    ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
-    if (!defausse) {
-        std::cout << "Erreur: défausse introuvable!" << std::endl;
-        return false;
+    // Déplacer la carte vers la défausse/deck du joueur
+
+    if (acheteur.getNextAcquiredHand().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller dans la main
+        ZoneDeCarte* main = acheteur.getZoneByType(TypeZone::MAIN);
+        if (!main) {
+            std::cout << "Erreur: main introuvable!" << std::endl;
+            return false;
+        }
+        zones_communes[idx_marche].deplacerCarte(carte->getId(), *main, main->taille()); // Position fin = fin de la main
+        acheteur.setNextAcquiredHand(true, acheteur.getNextAcquiredHand().second - 1); // Décrémenter le compteur
+        
+        std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
+            << " pour " << carte->getCout() << " OR" << std::endl;
+        std::cout << "Carte placée dans la main." << std::endl;
+
     }
-    
-    // Déplacer la carte achetée
-    zones_communes[idx_marche].deplacerCarte(carte->getId(), *defausse, defausse->taille());
-    
-    std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
-              << " pour " << carte->getCout() << " OR" << std::endl;
+
+    else if (acheteur.getNextAcquiredTopDeckAction().first ) {   // Si la/les prochaine(s) carte(s) ACTION achetée doit/doivent aller sur le deck
+        if (carte->getType() == TypeCarte::ACTION) {
+
+            ZoneDeCarte* deck = acheteur.getZoneByType(TypeZone::DECK);
+            if (!deck) {
+                std::cout << "Erreur: deck introuvable!" << std::endl;
+                return false;
+            }
+            zones_communes[idx_marche].deplacerCarte(carte->getId(), *deck, 0); // Position 0 = dessus du deck
+            acheteur.setNextAcquiredTopDeckAction(true, acheteur.getNextAcquiredTopDeckAction().second - 1); // Décrémenter le compteur
+            
+            std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
+                << " pour " << carte->getCout() << " OR" << std::endl;
+            std::cout << "Carte placée sur le dessus du deck." << std::endl;
+
+        }
+    }
+
+    else if (acheteur.getNextAcquiredTopDeck().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller sur le deck
+        ZoneDeCarte* deck = acheteur.getZoneByType(TypeZone::DECK);
+        if (!deck) {
+            std::cout << "Erreur: deck introuvable!" << std::endl;
+            return false;
+        }
+        zones_communes[idx_marche].deplacerCarte(carte->getId(), *deck, 0); // Position 0 = dessus du deck
+        acheteur.setNextAcquiredTopDeck(true, acheteur.getNextAcquiredTopDeck().second - 1); // Décrémenter le compteur
+        
+        std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
+            << " pour " << carte->getCout() << " OR" << std::endl;
+        std::cout << "Carte placée sur le dessus du deck." << std::endl;
+    }
+
+    else {
+        ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
+        if (!defausse) {
+            std::cout << "Erreur: défausse introuvable!" << std::endl;
+            return false;
+        }
+        zones_communes[idx_marche].deplacerCarte(carte->getId(), *defausse, defausse->taille());
+
+        std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
+            << " pour " << carte->getCout() << " OR" << std::endl;
+    }
     
     // Réapprovisionner le marché
     remplirMarche();
@@ -674,7 +757,7 @@ void TablePartie::endTurn() {
     std::cout << "\nInfliger les dégâts aux champions adverses avec Garde..." << std::endl;
     adversaire.degatsFinTour(joueur_actuel.getCombat());
     
-    // 3. Défausser toute la main du joueur actuel
+    // 2. Défausser toute la main du joueur actuel
     ZoneDeCarte* main = joueur_actuel.getZoneByType(TypeZone::MAIN);
     ZoneDeCarte* defausse = joueur_actuel.getZoneByType(TypeZone::DEFAUSSE);
     
@@ -692,6 +775,9 @@ void TablePartie::endTurn() {
     joueur_actuel.piocher(5);
     joueur_actuel.resetCombat();
     joueur_actuel.resetOr();
+    joueur_actuel.resetNextAcquiredTopDeck();
+    joueur_actuel.resetNextAcquiredTopDeckAction();
+    joueur_actuel.resetNextAcquiredHand();
     joueur_actuel_index = (joueur_actuel_index + 1) % joueurs.size();
 
     afficherEtatPartie(); 
