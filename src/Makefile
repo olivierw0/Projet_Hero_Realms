@@ -13,7 +13,7 @@ SOURCES = main.cpp table_partie.cpp zone_de_carte.cpp joueur.cpp carte.cpp champ
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Fichiers headers
-HEADERS = carte.h champion.h effet.h joueur.h zone_de_carte.h table_partie.h carte_db.h
+HEADERS = carte.h champion.h effet.h joueur.h zone_de_carte.h table_partie.h carte_db.h utils.h
 
 # Règle par défaut
 all: $(TARGET)

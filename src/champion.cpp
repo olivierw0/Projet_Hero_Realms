@@ -15,10 +15,16 @@ Champion::Champion() : Carte(), pv(1), active(true), garde(false){}
 Champion::Champion(int id, const std::string& nom, int cout, FactionCarte faction, 
             const std::string& description, const std::vector<Effet>& effets = {}, bool garde = false, int pv = 1)
     : Carte(id, nom, cout, TypeCarte::CHAMPION, faction, description, effets),
-        pv(pv), active(true), garde(garde) {}
+        pv(pv), active(true), garde(garde) {
+    #ifdef DEBUG
+        std::cout<<"Construction du champion: "<<getNom()<<std::endl;
+    #endif
+}
 
 Champion::~Champion(){
-    std::cout<<"Destruction du champion: "<<getNom()<<std::endl;
+    #ifdef DEBUG
+        std::cout<<"Destruction du champion: "<<getNom()<<std::endl;
+    #endif
 }
 
 

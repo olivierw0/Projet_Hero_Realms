@@ -375,7 +375,7 @@ Champion varrick_the_necromancer(50, "Varrick, the Necromancer", 5, FactionCarte
 Champion krythos_master_vampire(51, "Krythos, Master Vampire", 7, FactionCarte::ROUGE,
     "{Expend}: {Gain 3 combat}\nYou may sacrifice a card in your hand or discard pile.\nIf you do, gain an additional {3 combat}.",
     { Effet(1, TypeEffet::EXPEND_CHAMPION, 0), Effet(2, TypeEffet::DMG, 3), Effet(3, TypeEffet::DMG, 3, ConditionEffet::COND_SACRIFICE_HAND_DISCARD) },
-    true, 6
+    false, 6
 );
 
 Champion lys_the_unseen(52, "Lys, the Unseen", 6, FactionCarte::ROUGE,

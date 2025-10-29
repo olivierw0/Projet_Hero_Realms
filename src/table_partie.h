@@ -34,6 +34,7 @@
 
 class Joueur;
 
+
 class TablePartie {
 private:
     int id;
@@ -47,8 +48,6 @@ private:
     int idx_deck_marche;
     int idx_gemmes_feu;
     int idx_cartes_ecartees;
-
-    static void clearTerminal();
 
     void initMarche();
     void initZones();
@@ -95,7 +94,11 @@ public:
     void initPartie();
     void afficherEtatPartie() const;
     bool acheterCarteMarche(int indice, Joueur& acheteur);
-    void endTurn();    
+    void endTurn();
+    
+    void afficherDeckMarche() const;
+    bool piocheCarteSpecifique(int idCarte, Joueur& joueur);
+    
 };
 
 #endif // TABLE_PARTIE_H

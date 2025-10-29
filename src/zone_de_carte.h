@@ -30,57 +30,43 @@ private:
     Joueur* proprietaire; // nullptr si zone commune
     TablePartie* table; // nullptr si zone joueur
     std::vector<std::pair<Carte*, int>> cartes; // pointeur vers carte + ordre
+    
+    bool retirerCarte(int carteId);
 
 public:
     // Constructeur
     ZoneDeCarte(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
-    
-    // Constructeur de copie
+    // Constructeur de copie & de déplacement
     ZoneDeCarte(const ZoneDeCarte& other);
-    
-    // Constructeur de déplacement
     ZoneDeCarte(ZoneDeCarte&& other) noexcept;
-    
-    // Opérateur d'assignation de copie
+    // Opérateur d'assignation de copie & de déplacement
     ZoneDeCarte& operator=(const ZoneDeCarte& other);
-    
-    // Opérateur d'assignation de déplacement
     ZoneDeCarte& operator=(ZoneDeCarte&& other) noexcept;
-    
     // Destructeur
     ~ZoneDeCarte();
 
-    // Méthodes pour accéder aux attributs
+    // Getters & Setters
     int getId() const;
     TypeZone getType() const;
     Joueur* getProprietaire() const;
     TablePartie* getTable() const;
     const std::vector<std::pair<Carte*, int>>& getCartes() const;
 
-    // Ajouter une carte à la zone avec un ordre spécifique
-    void ajouterCarte(Carte* carte, int ordre);
-
-    // Retirer une carte de la zone par son ID
-    bool retirerCarte(int carteId);
-
-    // Déplacer une carte vers une autre zone
-    bool deplacerCarte(int carteId, ZoneDeCarte& destination, int nouvelOrdre);
-
-    // Déplacer toutes les cartes vers une autre zone
-    void deplacerToutesLesCartes(ZoneDeCarte& destination);
-
+    // Obtenir le nombre de cartes
+    size_t taille() const;
     // Vérifier si la zone est vide
     bool estVide() const;
 
-    // Obtenir le nombre de cartes
-    size_t taille() const;
+    // Déplacer une carte vers une autre zone
+    bool deplacerCarte(int carteId, ZoneDeCarte& destination, int nouvelOrdre);
+    // Déplacer toutes les cartes vers une autre zone
+    void deplacerToutesLesCartes(ZoneDeCarte& destination);
 
-    // Trouver une carte par ID (sans la retirer)
-    Carte* trouverCarte(int carteId) const;
-    
+    // Ajouter une carte à la zone avec un ordre spécifique
+    void ajouterCarte(Carte* carte, int ordre);
+
     // Mélanger les cartes de la zone et réassigner les indices
     void melangerCartes();
-    
     // Trier les cartes par ordre (utile après mélange)
     void trierParOrdre();
 

@@ -2,18 +2,38 @@
 #include "joueur.h"
 #include <iostream>
 
-// Méthode pour jouer la carte et activer ses effets
-void Carte::jouerCarte(Joueur& joueurActif, Joueur& adversaire) const {
-    std::cout << "Joueur " << joueurActif.getId() << " joue la carte '" << nom << "'" << std::endl;
-    
-    // Activer tous les effets de la carte
-    for (const auto& effet : effets) {
-        if (type == TypeCarte::CHAMPION) {
-            break;
-        }
-        effet.activerEffet(joueurActif, adversaire);
-    }
-    
-    std::cout << "La carte '" << nom << "' a été jouée et va dans la défausse." << std::endl;
-    // Note: La carte sera effectivement déplacée vers la défausse par le système de jeu
+
+// Constructeur par défaut
+Carte::Carte() : id(0), nom(""), cout(0), type(TypeCarte::ACTION), faction(FactionCarte::NEUTRE), description("") {
+    #ifdef DEBUG
+        std::cout << "Construction de la carte par défaut" << std::endl;
+    #endif
 }
+
+// Destructeur virtuel pour rendre la classe polymorphe
+Carte::~Carte(){
+    #ifdef DEBUG
+        std::cout << "Destruction de la carte: " << nom << std::endl;
+    #endif
+}
+
+// Constructeur avec paramètres
+Carte::Carte(int id, const std::string& nom, int cout, TypeCarte type,
+        FactionCarte faction, const std::string& description,
+        const std::vector<Effet>& effets = {})
+    : id(id), nom(nom), cout(cout), type(type), faction(faction),
+        description(description), effets(effets) {
+    #ifdef DEBUG
+        std::cout << "Construction de la carte: " << nom << std::endl;
+    #endif
+}
+
+int Carte::getId() const { return id; }
+std::string Carte::getNom() const { return nom; }
+int Carte::getCout() const { return cout; }
+TypeCarte Carte::getType() const { return type; }
+FactionCarte Carte::getFaction() const { return faction; }
+std::string Carte::getDescription() const { return description; }
+const std::vector<Effet>& Carte::getEffets() const { return effets; }
+
+int Carte::getPV() const { return 0; }

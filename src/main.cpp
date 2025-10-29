@@ -5,6 +5,7 @@
 #include "joueur.h"
 #include "zone_de_carte.h"
 #include "table_partie.h"
+#include "utils.h"
 
 int main() {
     // Créer une partie avec 16 gemmes de feu
@@ -81,13 +82,58 @@ int main() {
                 // adversaire.regarderDefausse();
                 break;
             case 777: // passer en god mode
-                // joueurActuel.activerGodMode(); //TODO: implémenter
+                if (joueurActuel.isGodMode()) {
+                    joueurActuel.desactiverGodMode();
+                } else {
+                    joueurActuel.activerGodMode();
+                    
+                    // Menu God Mode
+                    bool continuerGodMode = true;
+                    while (continuerGodMode) {
+                        #ifndef DEBUG
+                            clearTerminal();
+                        #endif
+                        std::cout << "\n=======<< MENU GOD MODE >>=======" << std::endl;
+                        std::cout << "[1] Afficher le deck du marché" << std::endl;
+                        std::cout << "[2] Mettre tous les joueurs à 1 PV" << std::endl;
+                        std::cout << "[3] Pioche une carte spécifique (par ID)" << std::endl;
+                        std::cout << "[0] Retour au jeu" << std::endl;
+                        std::cout << "Choix: ";
+                        
+                        int godChoix;
+                        std::cin >> godChoix;
+                        
+                        switch (godChoix) {
+                            case 0:
+                                continuerGodMode = false;
+                                break;
+                            case 1:
+                                partie.afficherDeckMarche();
+                                break;
+                            case 2: 
+                                joueurActuel.setPv(1);
+                                adversaire.setPv(1);
+                                std::cout << "❤️ Tous les joueurs mis à 1 PV!" << std::endl;
+                                break;
+                            case 3:
+                                partie.afficherDeckMarche();
+                                std::cout << "Entrez l'ID de la carte à acheter: ";
+                                int idCarte;
+                                std::cin >> idCarte;
+                                partie.piocheCarteSpecifique(idCarte, joueurActuel);
+                                break;
+                            default:
+                                std::cout << "Choix invalide!" << std::endl;
+                                break;
+                        }
+                    }
+                }
                 break;
             default:
                 std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
                 break;
-        }        
-        
+            }
+    
         // Vérifier la condition de fin de partie (joueur mort)
         if (adversaire.getPv() <= 0) {
             std::cout << "\n🎉 Joueur " << joueurActuel.getId() << " gagne! 🎉" << std::endl;

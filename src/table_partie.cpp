@@ -4,6 +4,7 @@
 #include "champion.h"
 #include "effet.h"
 #include "carte_db.h"
+#include "utils.h"
 #include <iostream>
 #include <iomanip>
 #include <typeinfo>
@@ -115,37 +116,6 @@ void TablePartie::afficherEtatPartie() const {
     std::cout << "\n" << BOLD_TEXT << "═══ MAIN ═══" << RESET_COLOR << std::endl;
     afficherZoneJoueur(joueur_actuel, TypeZone::MAIN, false);
 }
-void TablePartie::afficherMarche() const {
-    std::cout << "\n" << BOLD_TEXT << "╔════════════════════ MARCHÉ ═══════════════════════╗" << RESET_COLOR << std::endl;
-    
-    if (idx_marche >= 0 && idx_marche < static_cast<int>(zones_communes.size())) {
-        const auto& cartesMarche = zones_communes[idx_marche].getCartes();
-        
-        for (size_t i = 0; i < cartesMarche.size() && i < 5; ++i) {
-            if (cartesMarche[i].first != nullptr) {
-                afficherCarteFormatee(cartesMarche[i].first, i + 1, true);
-                
-                // Ligne de séparation
-                if (i < 5) {
-                    std::cout << DIM_TEXT << "  ────────────────────────────────────────────────" << RESET_COLOR << std::endl << std::endl;
-                }
-            }
-        }
-    }
-    
-    // Afficher les gemmes de feu
-    Carte* gemme = getCarteById(2001);
-    if (gemme) {
-        afficherCarteFormatee(gemme, 6, true);
-    }
-    
-    if (idx_gemmes_feu >= 0 && idx_gemmes_feu < static_cast<int>(zones_communes.size())) {
-        int nb_gemmes = zones_communes[idx_gemmes_feu].taille();
-        std::cout << "  " << DIM_TEXT << "[" << nb_gemmes << " restantes]" << RESET_COLOR << std::endl;
-    }
-    
-    std::cout << BOLD_TEXT << "╚═══════════════════════════════════════════════════╝" << RESET_COLOR << "\n" << std::endl;
-}
 bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
     // Cas spécial : indice 6 = Fire Gem
     if (indice == 6) {
@@ -248,7 +218,6 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
 void TablePartie::endTurn() {
     Joueur& joueur_actuel = getJoueurActuel();
     Joueur& adversaire = getAdversaire();
-    adversaire.resetChampions();
 
     // 1. Infliger les dégâts aux champions adverses avec Garde
     std::cout << "\nInfliger les dégâts" << std::endl;
@@ -270,8 +239,7 @@ void TablePartie::endTurn() {
         }
     }
     joueur_actuel.piocher(5);
-    joueur_actuel.resetCombat();
-    joueur_actuel.resetOr();
+    joueur_actuel.resetJoueur();
     joueur_actuel_index = (joueur_actuel_index + 1) % joueurs.size();
 }
 
@@ -372,6 +340,37 @@ void TablePartie::afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone, b
         }
     }
 }
+void TablePartie::afficherMarche() const {
+    std::cout << "\n" << BOLD_TEXT << "╔════════════════════ MARCHÉ ═══════════════════════╗" << RESET_COLOR << std::endl;
+    
+    if (idx_marche >= 0 && idx_marche < static_cast<int>(zones_communes.size())) {
+        const auto& cartesMarche = zones_communes[idx_marche].getCartes();
+        
+        for (size_t i = 0; i < cartesMarche.size() && i < 5; ++i) {
+            if (cartesMarche[i].first != nullptr) {
+                afficherCarteFormatee(cartesMarche[i].first, i + 1, true);
+                
+                // Ligne de séparation
+                if (i < 5) {
+                    std::cout << DIM_TEXT << "  ────────────────────────────────────────────────" << RESET_COLOR << std::endl << std::endl;
+                }
+            }
+        }
+    }
+    
+    // Afficher les gemmes de feu
+    Carte* gemme = getCarteById(2001);
+    if (gemme) {
+        afficherCarteFormatee(gemme, 6, true);
+    }
+    
+    if (idx_gemmes_feu >= 0 && idx_gemmes_feu < static_cast<int>(zones_communes.size())) {
+        int nb_gemmes = zones_communes[idx_gemmes_feu].taille();
+        std::cout << "  " << DIM_TEXT << "[" << nb_gemmes << " restantes]" << RESET_COLOR << std::endl;
+    }
+    
+    std::cout << BOLD_TEXT << "╚═══════════════════════════════════════════════════╝" << RESET_COLOR << "\n" << std::endl;
+}
 void TablePartie::remplirMarche() {
     if (idx_marche < 0 || idx_deck_marche < 0) return;
     
@@ -468,14 +467,6 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
 // =====================================================
 // MÉTHODES DE FORMATAGE 
 // =====================================================
-
-void TablePartie::clearTerminal() {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
-}
 
 // Formater un type d'effet avec sa valeur
 std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
@@ -595,9 +586,7 @@ std::string TablePartie::formaterCondition(ConditionEffet condition) const {
         case ConditionEffet::SACRIFICE_TO_MARCHE:
             return std::string(COLOR_SACRIFICE) + "✝  Sacrifier:" + RESET_COLOR;
         case ConditionEffet::COND_SACRIFICE_HAND_DISCARD:
-            return std::string(COLOR_SACRIFICE) + "✝  Sacrifier jusqu'à 1 carte(s) (main ou défausse)" + RESET_COLOR + "pour faire :"
-            + std::string(COLOR_DMG) + "⚔  +2-3 Combat" + RESET_COLOR;
-            //TODO : + std::string(COLOR_DMG) + "⚔  +" + std::to_string(valeur) + " Combat" + RESET_COLOR;
+            return std::string(COLOR_SACRIFICE) + "✝  Sacrifier jusqu'à 1 carte(s) (main ou défausse) :" ;
         case ConditionEffet::NB_CHAMPIONS:
             return std::string(DIM_TEXT) + "(par champion en jeu)" + RESET_COLOR;
             
@@ -693,4 +682,78 @@ std::string TablePartie::typeCarteToString(TypeCarte type) const {
         case TypeCarte::CHAMPION: return "CHAMPION";
         default: return "INCONNU";
     }
+}
+
+
+
+void TablePartie::afficherDeckMarche() const {
+    
+    #ifndef DEBUG
+        clearTerminal();
+    #endif
+
+    if (idx_deck_marche < 0 || idx_deck_marche >= zones_communes.size()) {
+        std::cout << "Erreur: deck marché introuvable!" << std::endl;
+        return;
+    }
+    
+    const auto& cartes = zones_communes[idx_deck_marche].getCartes();
+    
+    std::cout << "\n" << BOLD_TEXT << "═══════════════ DECK DU MARCHÉ ═══════════════" << RESET_COLOR << std::endl;
+    std::cout << "Total de cartes: " << cartes.size() << std::endl;
+    std::cout << DIM_TEXT << "──────────────────────────────────────────────" << RESET_COLOR << std::endl;
+    
+    int numero = 1;
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first) {
+            Carte* carte = paire_carte.first;
+            const char* couleur = getCouleurFaction(carte->getFaction());
+            
+            std::cout << "[" << numero << "] ID:" << carte->getId() << " - "
+                      << couleur << BOLD_TEXT << carte->getNom() << RESET_COLOR
+                      << " - " << factionToString(carte->getFaction()) << std::endl;
+            numero++;
+        }
+    }
+    
+    std::cout << DIM_TEXT << "══════════════════════════════════════════════" << RESET_COLOR << "\n" << std::endl;
+}
+
+bool TablePartie::piocheCarteSpecifique(int idCarte, Joueur& joueur) {
+    if (!joueur.isGodMode()) {
+        std::cout << "Erreur: Cette commande est réservée au GOD MODE!" << std::endl;
+        return false;
+    }
+    
+    if (idx_deck_marche < 0 || idx_deck_marche >= zones_communes.size()) {
+        std::cout << "Erreur: deck marché introuvable!" << std::endl;
+        return false;
+    }
+    
+    ZoneDeCarte* deck = &zones_communes[idx_deck_marche];
+    ZoneDeCarte* defausse = joueur.getZoneByType(TypeZone::DEFAUSSE);
+    ZoneDeCarte* main = joueur.getZoneByType(TypeZone::MAIN);
+
+    if (!defausse || !main) {
+        std::cout << "Erreur: défausse ou main introuvable!" << std::endl;
+        return false;
+    }
+    
+    // Chercher la carte par ID
+    const auto& cartes = deck->getCartes();
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first && paire_carte.first->getId() == idCarte) {
+            Carte* carte = paire_carte.first;
+
+            // Déplacer vers la main du joueur
+            deck->deplacerCarte(idCarte, *main, main->taille());
+
+            std::cout << "[GOD MODE] Carte " << carte->getNom()
+                      << " (ID:" << idCarte << ") ajoutée à votre main!" << std::endl;
+            return true;
+        }
+    }
+    
+    std::cout << "Carte avec l'ID " << idCarte << " introuvable dans le deck!" << std::endl;
+    return false;
 }
