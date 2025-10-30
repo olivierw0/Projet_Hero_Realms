@@ -10,7 +10,8 @@
 #include "carte_db.h"
 
 
-Joueur::Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr), godMode(false) {
+Joueur::Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr), godMode(false),
+            nextAcquiredHand(false), nextAcquiredTopDeck(false), nextAcquiredTopDeckAction(false) {
     #ifdef DEBUG
         std::cout << "Construction du Joueur : " << id << std::endl;
     #endif
@@ -145,6 +146,7 @@ void Joueur::activerGodMode() {
     std::cout << "Vous avez maintenant:" << std::endl;
     std::cout << "  • Or illimité" << std::endl;
     std::cout << "  • Accès au deck du marché" << std::endl;
+    std::cout << "  • Le moyen de mettre les 2 joueurs à 1 PV" << std::endl;
     std::cout << "  • PV illimités (immortalité)" << std::endl;
 }
 void Joueur::desactiverGodMode() {
@@ -281,6 +283,26 @@ int Joueur::getNombreCartesEnMain() const {
     else { return static_cast<int>(main->getCartes().size()); }
 }
 
+void Joueur::regarderDefausse() const {
+    const ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
+    if (!defausse) {
+        std::cout << "Zone défausse introuvable!" << std::endl;
+        return;
+    }
+    
+    const auto& cartes = defausse->getCartes();
+    if (cartes.empty()) {
+        std::cout << DIM_TEXT << "  (défausse vide)" << RESET_COLOR << std::endl;
+        return;
+    }
+    std::cout << BOLD_TEXT << "Cartes dans la défausse :" << RESET_COLOR << std::endl;
+    for (const auto& paire_carte : cartes) {
+        if (paire_carte.first != nullptr) {
+            this->getTable()->afficherCarteFormatee(paire_carte.first, 0, false);
+        }
+    }
+}
+
 // Jouer une carte par son indice
 bool Joueur::jouerCarte(int indice) {
     ZoneDeCarte* main = getZoneByType(TypeZone::MAIN);
@@ -359,7 +381,7 @@ bool Joueur::jouerCarte(int indice) {
                 if (effet.getCondition() != ConditionEffet::SACRIFICE &&
                     effet.getCondition() != ConditionEffet::SACRIFICE_TO_MARCHE) {
                     // Vérifier autres conditions (allié, etc.)
-                    if (table && effet.verifierConditions(*this, table->getAdversaire())) {
+                    if (table && effet.verifierConditions(*this, table->getAdversaire(), carte)) {
                         effet.activerEffet(*this, table->getAdversaire(), carte);
                     }
                 }
@@ -452,7 +474,6 @@ void Joueur::piocher(int nbCartes) {
             if (!cartes.empty() && cartes[0].first != nullptr) {
                 int carteId = cartes[0].first->getId(); // Prendre la première carte
                 deck->deplacerCarte(carteId, *main, static_cast<int>(main->taille()));
-                std::cout << "Joueur " << id << " pioche une carte." << std::endl;
             }
         } else {
             std::cout << "Impossible de piocher: deck et défausse vides!" << std::endl;
@@ -463,6 +484,7 @@ void Joueur::piocher(int nbCartes) {
 
 void Joueur::degatsFinTour(int totalCombat){
     ZoneDeCarte* champions = getZoneByType(TypeZone::CHAMPIONS);
+    ZoneDeCarte* defausse = getZoneByType(TypeZone::DEFAUSSE);
 
     if (!champions) {
         std::cout << "Zone champions introuvable!" << std::endl;
@@ -491,7 +513,6 @@ void Joueur::degatsFinTour(int totalCombat){
     if (!gardes.empty()) {
         std::cout << "\n Il y a " << gardes.size() << " champion(s) avec GARDE!" << std::endl;
         std::cout << "Les dégâts doivent être infligés aux gardes en priorité." << std::endl;
-        
         while (totalCombat > 0 && !gardes.empty()) {
             // Afficher les gardes disponibles
             std::cout << "\nGardes disponibles:" << std::endl;
@@ -516,6 +537,7 @@ void Joueur::degatsFinTour(int totalCombat){
             if (totalCombat >= pvAvant) {
                 garde->setPV(0);
                 std::cout << "→ " << pvAvant << " dégât(s) infligé(s) à " << garde->getNom();
+                champions->deplacerCarte(garde->getId(), *defausse, defausse->taille());
             }else {
                 std::cout << "→ Pas assez de dégâts pour mettre K.O. " << garde->getNom();
             }
@@ -534,7 +556,6 @@ void Joueur::degatsFinTour(int totalCombat){
         // Si tous les gardes sont morts et qu'il reste des dégâts
         if (totalCombat > 0 && gardes.empty()) {
             std::cout << "\nTous les gardes sont détruits!" << std::endl;
-            std::cout << "Il reste " << totalCombat << " dégât(s) à placer." << std::endl;
             // Continuer vers le cas sans garde
         } else {
             return; // Tous les dégâts ont été placés
@@ -542,6 +563,8 @@ void Joueur::degatsFinTour(int totalCombat){
     }
     while (totalCombat > 0){
         std::vector<Champion*> championsEnVie;
+        // mise à jour des champions en vie
+        auto& cartes = champions->getCartes(); 
         for (const auto& paire_carte : cartes) {
             Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
             if (champion && champion->getPV() > 0) {
@@ -561,7 +584,7 @@ void Joueur::degatsFinTour(int totalCombat){
         }
 
         int choix;
-        std::cout << "Entrez \"0\" pour infliger les dégâts au joueur." << std::endl;
+        std::cout << "Entrez \'0\' pour infliger les dégâts au joueur." << std::endl;
         std::cout << "Infligez " << totalCombat << " dégât(s) au champion n°: ";
         std::cin >> choix;
         if (choix == 0){ 
@@ -574,14 +597,19 @@ void Joueur::degatsFinTour(int totalCombat){
             if (totalCombat >= pvChamp) {
                 std::cout << "→ " << pvChamp << " dégât(s) infligé(s) à " << cible->getNom();
                 cible->setPV(0);
+            }else {
+                std::cout << "→ Pas assez de dégâts pour mettre K.O. " << cible->getNom();
             }
             // Les champions n'ont pas de méthode takeDamage, donc on utilise setPV directement
-            // De toutes manières ils se soignent à chaque début de tour
+            // De toutes manières ils se soignent à chaque début de tour donc pas important de ne pas
+            // avoir de quoi enregistrer les dégâts infligés
+            
             totalCombat -= pvChamp;
-            std::cout << "→ Pas assez de dégâts pour mettre K.O. " << cible->getNom();
+            
             if (cible->getPV() <= 0) {
                 std::cout << " (DÉTRUIT!)" << std::endl;
                 championsEnVie.erase(championsEnVie.begin() + (choix - 1));
+                champions->deplacerCarte(cible->getId(), *defausse, defausse->taille());
             }
         }else{
             std::cout << "Choix invalide!" << std::endl;
@@ -593,30 +621,19 @@ void Joueur::resetJoueur(){
     resetOr();
     resetCombat();
     resetChampions();
-}
-void Joueur::setNextAcquiredTopDeck(bool value, int nbCarte) {
-    if (nbCarte == 0) {     // Plus de cartes à top-decker
-        nextAcquiredTopDeck = {false, 0};
-    }
-    else {
-        nextAcquiredTopDeck = {value,nbCarte}; 
-    }
+    resetNextAcquiredHand();
+    resetNextAcquiredTopDeck();
+    resetNextAcquiredTopDeckAction();
 }
 
-void Joueur::setNextAcquiredTopDeckAction(bool value, int nbCarte) {
-    if (nbCarte == 0) {     // Plus de cartes ACTION à top-decker
-        nextAcquiredTopDeckAction = {false, 0};
-    }
-    else {
-        nextAcquiredTopDeckAction = {value,nbCarte}; 
-    }
+void Joueur::setNextAcquiredTopDeck(bool value) {
+    nextAcquiredTopDeck = value;
 }
 
-void Joueur::setNextAcquiredHand(bool value, int nbCarte) {
-    if (nbCarte == 0) {     // Plus de cartes à placer en main
-        nextAcquiredHand = {false, 0};
-    }
-    else {
-        nextAcquiredHand = {value,nbCarte}; 
-    }
+void Joueur::setNextAcquiredTopDeckAction(bool value) {
+    nextAcquiredTopDeckAction = value;
+}
+
+void Joueur::setNextAcquiredHand(bool value) {
+    nextAcquiredHand = value;
 }

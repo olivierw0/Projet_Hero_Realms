@@ -10,8 +10,8 @@
 
 // Actions jaunes
 Carte close_ranks(1, "Close Ranks", 3, TypeCarte::ACTION, FactionCarte::JAUNE,
-    "Gain 5 Combat",
-    { Effet(1, TypeEffet::DMG, 5) }
+    "{Gain 5 combat} +{2 combat} for each champion you have in play. <hr> {Imperial Ally}: {Gain 6 health}",
+    { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::DMG_per_CHAMPION, 2), Effet(3, TypeEffet::SOIN, 6, ConditionEffet::JAUNE_ALLY) }
 );
 
 Carte command(2, "Command", 5, TypeCarte::ACTION, FactionCarte::JAUNE,

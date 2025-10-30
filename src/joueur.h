@@ -20,15 +20,18 @@ private:
     int combat;
     std::vector<ZoneDeCarte> zones;
     TablePartie* table; // Référence à la table de jeu
-    std::pair<bool,int> nextAcquiredTopDeck = {false, 0}; // Indique si les prochaines cartes acquises doivent être top-deckées et combien (exemple pour 3 cartes acquises ce tour à placer au top du deck : {true, 3})
-    std::pair<bool,int> nextAcquiredTopDeckAction = {false, 0}; // Même chose mais pour les actions (exemple pour 2 actions achetées ce tour à placer au top du deck : {true, 2})
-    std::pair<bool,int> nextAcquiredHand = {false, 0}; // Indique si les prochaines cartes acquises doivent être placées en main (exemple pour 1 carte acquise ce tour à placer en main : {true, 1})
+    bool nextAcquiredTopDeck; // Indique si les prochaines cartes acquises doivent être top-deckées et combien (exemple pour 3 cartes acquises ce tour à placer au top du deck : {true, 3})
+    bool nextAcquiredTopDeckAction; // Même chose mais pour les actions (exemple pour 2 actions achetées ce tour à placer au top du deck : {true, 2})
+    bool nextAcquiredHand; // Indique si les prochaines cartes acquises doivent être placées en main (exemple pour 1 carte acquise ce tour à placer en main : {true, 1})
 
     bool godMode;
 
     void resetCombat();
     void resetOr();
     void resetChampions();
+    void resetNextAcquiredTopDeck() { nextAcquiredTopDeck = false; } 
+    void resetNextAcquiredTopDeckAction() { nextAcquiredTopDeckAction = false; }
+    void resetNextAcquiredHand() { nextAcquiredHand = false; }
 
     void ajouterZone(const ZoneDeCarte& zone);
     void creerZone(int id, TypeZone type, Joueur* proprietaire = nullptr, TablePartie* table = nullptr);
@@ -47,16 +50,13 @@ public:
     TablePartie* getTable() const;
     int getNombreCartesEnMain() const;
 
-    std::pair<bool,int> getNextAcquiredTopDeck() const { return nextAcquiredTopDeck; }
-    std::pair<bool,int> getNextAcquiredTopDeckAction() const { return nextAcquiredTopDeckAction; }
-    std::pair<bool,int> getNextAcquiredHand() const { return nextAcquiredHand; }
-    void setNextAcquiredTopDeck(bool value, int nbCarte);
-    void setNextAcquiredTopDeckAction(bool value, int nbCarte);
-    void setNextAcquiredHand(bool value, int nbCarte);
+    bool getNextAcquiredTopDeck() const { return nextAcquiredTopDeck; }
+    bool getNextAcquiredTopDeckAction() const { return nextAcquiredTopDeckAction; }
+    bool getNextAcquiredHand() const { return nextAcquiredHand; }
     
-    void resetNextAcquiredTopDeck() { nextAcquiredTopDeck = {false, 0}; } 
-    void resetNextAcquiredTopDeckAction() { nextAcquiredTopDeckAction = {false, 0}; }
-    void resetNextAcquiredHand() { nextAcquiredHand = {false, 0}; }
+    void setNextAcquiredTopDeck(bool value);
+    void setNextAcquiredTopDeckAction(bool value);
+    void setNextAcquiredHand(bool value);
 
     ZoneDeCarte* getZoneByType(TypeZone type);
     const ZoneDeCarte* getZoneByType(TypeZone type) const;
@@ -69,7 +69,8 @@ public:
 
     void initZonesJoueur(); // Initialisation au début de la partie
     void initDeck(); // Initialisation au début de la partie
-    
+
+    void regarderDefausse() const; // Regarder les cartes dans la défausse
     void afficherMain() const; // Afficher la main du joueur (indices, nom, description)
     bool jouerCarte(int indice); // Jouer une carte par son indice 
     void jouerToutesLesCartes(); // Jouer toutes les cartes en main

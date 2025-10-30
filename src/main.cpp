@@ -32,9 +32,18 @@ int main() {
         std::cout << "[4] Activer un Champion" << std::endl;
         std::cout << "[5] Regarder sa défausse" << std::endl;
         std::cout << "[6] Regarder la défausse ennemie" << std::endl;
-        std::cout << "[777] Passer en mode Dieu" << std::endl; // à cacher ou protéger dans la version finale
         std::cout << "[0] Finir le tour" << std::endl;
         std::cout << "[-1] Quitter le jeu" << std::endl;
+        if (!joueurActuel.isGodMode()) {
+            std::cout << "[777] Passer en mode Dieu" << std::endl; // à cacher ou protéger dans la version finale
+        } else if (joueurActuel.isGodMode()) {
+            std::cout << "\n=======<< MENU GOD MODE >>=======" << std::endl;
+            std::cout << "[10] Afficher le deck du marché" << std::endl;
+            std::cout << "[20] Mettre tous les joueurs à 1 PV" << std::endl;
+            std::cout << "[30] Pioche une carte spécifique (par ID)" << std::endl;
+            std::cout << "[777] Quitter le mode Dieu" << std::endl;
+            std::cout << "=======<<               >>=======\n" << std::endl;
+        }
         std::cout << "Votre choix: ";
         
         int choix;
@@ -76,58 +85,56 @@ int main() {
                 }
                 break;
             case 5: // regarder sa défausse
-                // joueurActuel.regarderDefausse();
+                joueurActuel.regarderDefausse();
                 break;
             case 6: // regarder la défausse ennemie
-                // adversaire.regarderDefausse();
+                adversaire.regarderDefausse();
+                break;
+            case 10:
+                if (joueurActuel.isGodMode()) {
+                    partie.afficherDeckMarche();
+                }else {
+                    std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                }
+                break;
+            case 20: 
+                if (joueurActuel.isGodMode()) {
+                    joueurActuel.setPv(1);
+                    adversaire.setPv(1);
+                    std::cout << "❤️ Tous les joueurs mis à 1 PV!" << std::endl;
+                }else {
+                    std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                }
+                break;
+            case 30:
+                if (joueurActuel.isGodMode()) {
+                    partie.afficherDeckMarche();
+                    int idCarte = -1;
+                    while (idCarte != 0){
+                        std::cout << "Entrez l'ID de la carte à acheter: (0 pour quitter)";
+                        std::cin >> idCarte;
+                        partie.piocheCarteSpecifique(idCarte, joueurActuel);
+                    }
+                }else {
+                    std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                }
                 break;
             case 777: // passer en god mode
-                if (joueurActuel.isGodMode()) {
-                    joueurActuel.desactiverGodMode();
-                } else {
-                    joueurActuel.activerGodMode();
-                    
-                    // Menu God Mode
-                    bool continuerGodMode = true;
-                    while (continuerGodMode) {
-                        #ifndef DEBUG
-                            clearTerminal();
-                        #endif
-                        std::cout << "\n=======<< MENU GOD MODE >>=======" << std::endl;
-                        std::cout << "[1] Afficher le deck du marché" << std::endl;
-                        std::cout << "[2] Mettre tous les joueurs à 1 PV" << std::endl;
-                        std::cout << "[3] Pioche une carte spécifique (par ID)" << std::endl;
-                        std::cout << "[0] Retour au jeu" << std::endl;
-                        std::cout << "Choix: ";
-                        
-                        int godChoix;
-                        std::cin >> godChoix;
-                        
-                        switch (godChoix) {
-                            case 0:
-                                continuerGodMode = false;
-                                break;
-                            case 1:
-                                partie.afficherDeckMarche();
-                                break;
-                            case 2: 
-                                joueurActuel.setPv(1);
-                                adversaire.setPv(1);
-                                std::cout << "❤️ Tous les joueurs mis à 1 PV!" << std::endl;
-                                break;
-                            case 3:
-                                partie.afficherDeckMarche();
-                                std::cout << "Entrez l'ID de la carte à acheter: ";
-                                int idCarte;
-                                std::cin >> idCarte;
-                                partie.piocheCarteSpecifique(idCarte, joueurActuel);
-                                break;
-                            default:
-                                std::cout << "Choix invalide!" << std::endl;
-                                break;
-                        }
+                if (!joueurActuel.isGodMode()) {
+                    std::cout << "Veuillez entrer le mot de passe : ";
+                    std::string password;
+                    std::cin >> password;
+                    if (password == "godmode123") {
+                        std::cout << "Accès au mode Dieu accordé!" << std::endl;
+                        joueurActuel.activerGodMode();
+                    } else {
+                        std::cout << "Mot de passe incorrect!" << std::endl;
+                        break;
                     }
+                }else{
+                    joueurActuel.desactiverGodMode();
                 }
+
                 break;
             default:
                 std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
@@ -139,6 +146,9 @@ int main() {
             std::cout << "\n🎉 Joueur " << joueurActuel.getId() << " gagne! 🎉" << std::endl;
             finDePartie = true;
         }
+        std::cout << "\nEntrée pour continuer..." << std::endl;
+        std::cin.ignore();
+        std::cin.get();
         
     } while (!finDePartie);
 

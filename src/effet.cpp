@@ -143,11 +143,11 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             std::cout << "Joueur " << adversaire.getId() << " doit défausser " << valeur << " carte(s)." << std::endl;
 
-            for (int i = 0; i < valeur; ++i) {
+            for (int i = 0; i < valeur; i++) {
                 // Afficher la main de l'adversaire
                 adversaire.afficherMain();
                 int indice_carte;
-                std::cout << "Joueur " << adversaire.getId() << ", entrez l'indice de la carte à défausser (" << (i + 1) << "/" << valeur << ") : ";
+                std::cout << "Joueur " << adversaire.getId() << ", entrez l'indice de la carte à défausser (" << (i + 1) << "-" << static_cast<int>(mainAdversaire->taille()) << ") : ";
                 std::cin >> indice_carte;
 
                 // Valider l'indice
@@ -162,7 +162,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 // Déplacer la carte de la main vers la défausse
                 mainAdversaire->deplacerCarte(carteId, *defausseAdversaire, 1);
-                std::cout << "Carte défaussée." << std::endl;
+                std::cout << "Carte " << cartes_main[indice_carte - 1].first->getNom() << " défaussée." << std::endl;
             }
             break;
         }
@@ -229,7 +229,6 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 if (nbChampions > 0) {
                     joueurActif.heal(valeur*nbChampions);
-                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur*nbChampions << " PV ("<< valeur << " par champion en jeu)" << std::endl;
                 } else {
                     std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
                 }
@@ -265,7 +264,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 std::cout << "Champions épuisés :" << std::endl;
                 int i = 1;
                 for (const auto& champion : championsEpuises) {
-                    std::cout << (i + 1) << " - " << champion->getNom() << std::endl;
+                    std::cout << (i) << " - " << champion->getNom() << std::endl;
                     i++;
                 }
             }
@@ -442,6 +441,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // Déplacer la carte choisie de la défausse vers le dessus du deck
             Carte* carteChoisie = cartesDefausse[choix_carte - 1].first;
             defausse->deplacerCarte(carteChoisie->getId(), *deck, 0); // 0 pour le dessus du deck
+            defausse->trierParOrdre();
             std::cout << "Carte " << carteChoisie->getNom() << " remise en haut du deck." << std::endl;
 
             break;
@@ -449,21 +449,21 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
         case TypeEffet::TOP_DECK_NEXT_ACQUIRED: {
             // La prochaine carte acquise pdt ce tour va en haut du deck
-            joueurActif.setNextAcquiredTopDeck(true, joueurActif.getNextAcquiredTopDeck().second + 1);
+            joueurActif.setNextAcquiredTopDeck(true);
             std::cout << "La prochaine carte acquise pendant ce tour ira en haut du deck." << std::endl;
             break;
         }
 
         case TypeEffet::TOP_DECK_NEXT_ACQUIRED_ACTION: {
             // La prochaine action acquise pdt ce tour va en haut du deck
-            joueurActif.setNextAcquiredTopDeckAction(true, joueurActif.getNextAcquiredTopDeckAction().second + 1);
+            joueurActif.setNextAcquiredTopDeckAction(true);
             std::cout << "La prochaine carte de type ACTION acquise pendant ce tour ira en haut du deck." << std::endl;
             break;
         }
 
         case TypeEffet::HAND_NEXT_ACQUIRED: {
             // La prochaine carte acquise pdt ce tour va dans la main
-            joueurActif.setNextAcquiredHand(true, joueurActif.getNextAcquiredHand().second + 1);
+            joueurActif.setNextAcquiredHand(true);
             std::cout << "La prochaine carte acquise pendant ce tour ira dans la main." << std::endl;
             break;
         }
@@ -474,11 +474,11 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) : 0;
 
             if (nbChampions > 0) {
-                int totalDmg = valeur * nbChampions;
+                int totalDmg = valeur * (nbChampions-1);
                 joueurActif.addCombat(totalDmg);
                 std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par champion en jeu)" << std::endl;
             } else {
-                std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun point de dégât ajouté." << std::endl;
+                std::cout << "Aucun autre champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun point de dégât ajouté." << std::endl;
             }
             break;
         }
@@ -534,7 +534,6 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             }
             break;
         }
-
 
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
@@ -613,7 +612,6 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
                 std::cout << "Fin du sacrifice de cartes." << std::endl;
                 break;
             }
-            std::cout << "CONDITION"<<std::endl;
             std::cout << "Choisissez une carte à sacrifier de votre main ou défausse :" << std::endl;
             
             // Afficher les cartes de la main et de la défausse
@@ -644,7 +642,7 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
             }
             
             // Afficher les options
-            for (size_t j = 0; j < cartesDisponibles.size(); ++j) {
+            for (size_t j = 0; j < cartesDisponibles.size(); j++) {
                 std::cout << (j + 1) << "- " << cartesDisponibles[j].first->getNom()
                             << " (de la " << (cartesDisponibles[j].second == TypeZone::MAIN ? "main" : "défausse") << ")" << std::endl;
             }
@@ -689,12 +687,18 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
 
             for (const auto& paire : champions->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::ROUGE) {
                     return true; // Condition remplie
                 }
             }
             for (const auto& paire : main->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::ROUGE) {
                     return true; // Condition remplie
                 }
@@ -716,12 +720,18 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
 
             for (const auto& paire : champions->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::JAUNE) {
                     return true; // Condition remplie
                 }
             }
             for (const auto& paire : main->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::JAUNE) {
                     return true; // Condition remplie
                 }
@@ -742,12 +752,18 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
 
             for (const auto& paire : champions->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::VERT) {
                     return true; // Condition remplie
                 }
             }
             for (const auto& paire : main->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::VERT) {
                     return true; // Condition remplie
                 }
@@ -768,12 +784,18 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
 
             for (const auto& paire : champions->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::BLEU) {
                     return true; // Condition remplie
                 }
             }
             for (const auto& paire : main->getCartes()) {
                 const Carte* carte = paire.first;
+                if (source && source->getId() == carte->getId()) {
+                    continue; // Ignorer la carte source
+                }
                 if (carte->getFaction() == FactionCarte::BLEU) {
                     return true; // Condition remplie
                 }

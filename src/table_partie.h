@@ -55,9 +55,8 @@ private:
     void ajouterJoueur(const Joueur& joueur);
     void creerZoneCommune(int id, TypeZone type); 
 
-    void afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone, bool est_champion) const;
+    void afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone) const;
     void afficherMarche() const;
-    void afficherCarteFormatee(const Carte* carte, int indice = -1, bool afficherCout = true) const;
     void afficherChampionFormate(const Champion* champion, int indice = -1) const;
     
     void remplirMarche();
@@ -98,7 +97,8 @@ public:
     
     void afficherDeckMarche() const;
     bool piocheCarteSpecifique(int idCarte, Joueur& joueur);
-    
+    void afficherCarteFormatee(const Carte* carte, int indice = -1, bool afficherCout = true) const;
+
 };
 
 #endif // TABLE_PARTIE_H

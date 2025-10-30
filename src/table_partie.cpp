@@ -91,11 +91,11 @@ void TablePartie::afficherEtatPartie() const {
 
     // === CHAMPIONS DU JOUEUR ===
     std::cout << "\n" << BOLD_TEXT << "═══ CHAMPIONS ═══" << RESET_COLOR << std::endl;
-    afficherZoneJoueur(joueur_actuel, TypeZone::CHAMPIONS, true);
+    afficherZoneJoueur(joueur_actuel, TypeZone::CHAMPIONS);
 
     // === CHAMPIONS ENNEMIS ===
     std::cout << "\n" << BOLD_TEXT << "═══ CHAMPIONS ENNEMIS ═══" << RESET_COLOR << std::endl;
-    afficherZoneJoueur(ennemi, TypeZone::CHAMPIONS, true);
+    afficherZoneJoueur(ennemi, TypeZone::CHAMPIONS);
     
     // === CARTES MARCHÉ ===
     afficherMarche();
@@ -114,12 +114,12 @@ void TablePartie::afficherEtatPartie() const {
 
         // === MAIN DU JOUEUR (AJOUTÉ ICI) ===
     std::cout << "\n" << BOLD_TEXT << "═══ MAIN ═══" << RESET_COLOR << std::endl;
-    afficherZoneJoueur(joueur_actuel, TypeZone::MAIN, false);
+    afficherZoneJoueur(joueur_actuel, TypeZone::MAIN);
 }
 bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
     // Cas spécial : indice 6 = Fire Gem
     if (indice == 6) {
-        if (idx_gemmes_feu < 0 || idx_gemmes_feu >= zones_communes.size()) {
+        if (idx_gemmes_feu < 0 || idx_gemmes_feu >= static_cast<int>(zones_communes.size())) {
             std::cout << "Erreur: zone gemmes non initialisée!" << std::endl;
             return false;
         }
@@ -154,48 +154,44 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
         Carte* gemme = cartes[0].first;
         int id_gemme = gemme->getId();
 
-        if (acheteur.getNextAcquiredHand().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller dans la main
+        if (acheteur.getNextAcquiredHand()) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller dans la main
             ZoneDeCarte* main = acheteur.getZoneByType(TypeZone::MAIN);
             if (!main) {
                 std::cout << "Erreur: main introuvable!" << std::endl;
-                acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
                 return false;
             }
             zones_communes[idx_marche].deplacerCarte(gemme->getId(), *main, main->taille()); // Position fin = fin de la main
-            acheteur.setNextAcquiredHand(true, acheteur.getNextAcquiredHand().second - 1); // Décrémenter le compteur
+            acheteur.setNextAcquiredHand(false); // Passer à faux
             
             std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
                     << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
-            std::cout << "Carte placée sur le dessus du deck." << std::endl;
+            std::cout << "Carte placée en main." << std::endl;
             std::cout << "Gemmes restantes: " << zones_communes[idx_gemmes_feu].taille() << std::endl;
         }
-
-        else if (acheteur.getNextAcquiredTopDeck().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller sur le deck
+        // la gemme de feu n'est pas une action donc pas besoin de le tester 
+        else if (acheteur.getNextAcquiredTopDeck() ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller sur le deck
             ZoneDeCarte* deck = acheteur.getZoneByType(TypeZone::DECK);
             if (!deck) {
                 std::cout << "Erreur: deck introuvable!" << std::endl;
-                acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
                 return false;
             }
             // Déplacer la gemme achetée
-            zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *deck, deck->taille());
-            acheteur.setNextAcquiredHand(true, acheteur.getNextAcquiredHand().second - 1);
-            
+            zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *deck, 0); // Position 0 = dessus du deck
+            deck->trierParOrdre();
+            acheteur.setNextAcquiredTopDeck(false); // Décrémenter le compteur
+        
             std::cout << "Joueur " << acheteur.getId() << " a acheté: " << gemme->getNom() 
                     << " pour " << COUT_FIRE_GEM << " OR" << std::endl;
             std::cout << "Carte placée sur le dessus du deck." << std::endl;
             std::cout << "Gemmes restantes: " << zones_communes[idx_gemmes_feu].taille() << std::endl;
         }
-
         else {
             // Déplacer la gemme vers la défausse du joueur
             ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
             if (!defausse) {
                 std::cout << "Erreur: défausse introuvable!" << std::endl;
-                acheteur.addOr(COUT_FIRE_GEM); // Rembourser l'or dépensé
                 return false;
             }
-        
             // Déplacer la gemme achetée
             zones_communes[idx_gemmes_feu].deplacerCarte(id_gemme, *defausse, defausse->taille());
             
@@ -208,7 +204,7 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
     }
     
     // Cas normal : indices 1-5 pour les cartes du marché
-    if (idx_marche < 0 || idx_marche >= zones_communes.size()) {
+    if (idx_marche < 0 || idx_marche >= static_cast<int>(zones_communes.size())) {
         std::cout << "Erreur: zone marché non initialisée!" << std::endl;
         return false;
     }
@@ -234,53 +230,50 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
     
     // Déplacer la carte vers la défausse/deck du joueur
 
-    if (acheteur.getNextAcquiredHand().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller dans la main
+    if (acheteur.getNextAcquiredHand()) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller dans la main
         ZoneDeCarte* main = acheteur.getZoneByType(TypeZone::MAIN);
         if (!main) {
             std::cout << "Erreur: main introuvable!" << std::endl;
             return false;
         }
         zones_communes[idx_marche].deplacerCarte(carte->getId(), *main, main->taille()); // Position fin = fin de la main
-        acheteur.setNextAcquiredHand(true, acheteur.getNextAcquiredHand().second - 1); // Décrémenter le compteur
+        acheteur.setNextAcquiredHand(false); // set à false
         
         std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
             << " pour " << carte->getCout() << " OR" << std::endl;
         std::cout << "Carte placée dans la main." << std::endl;
-
     }
-
-    else if (acheteur.getNextAcquiredTopDeckAction().first ) {   // Si la/les prochaine(s) carte(s) ACTION achetée doit/doivent aller sur le deck
+    
+    else if (acheteur.getNextAcquiredTopDeckAction() ) {   // Si la/les prochaine(s) carte(s) ACTION achetée doit/doivent aller sur le deck
         if (carte->getType() == TypeCarte::ACTION) {
-
             ZoneDeCarte* deck = acheteur.getZoneByType(TypeZone::DECK);
             if (!deck) {
                 std::cout << "Erreur: deck introuvable!" << std::endl;
                 return false;
             }
             zones_communes[idx_marche].deplacerCarte(carte->getId(), *deck, 0); // Position 0 = dessus du deck
-            acheteur.setNextAcquiredTopDeckAction(true, acheteur.getNextAcquiredTopDeckAction().second - 1); // Décrémenter le compteur
-            
+            deck->trierParOrdre();
+            acheteur.setNextAcquiredTopDeckAction(false); // met à false
+        
             std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
                 << " pour " << carte->getCout() << " OR" << std::endl;
             std::cout << "Carte placée sur le dessus du deck." << std::endl;
-
         }
     }
-
-    else if (acheteur.getNextAcquiredTopDeck().first ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller sur le deck
+    else if (acheteur.getNextAcquiredTopDeck() ) {   // Si la/les prochaine(s) carte(s) achetée doit/doivent aller sur le deck
         ZoneDeCarte* deck = acheteur.getZoneByType(TypeZone::DECK);
         if (!deck) {
             std::cout << "Erreur: deck introuvable!" << std::endl;
             return false;
         }
         zones_communes[idx_marche].deplacerCarte(carte->getId(), *deck, 0); // Position 0 = dessus du deck
-        acheteur.setNextAcquiredTopDeck(true, acheteur.getNextAcquiredTopDeck().second - 1); // Décrémenter le compteur
+        deck->trierParOrdre();
+        acheteur.setNextAcquiredTopDeck(false); // met à false
         
         std::cout << "Joueur " << acheteur.getId() << " a acheté: " << carte->getNom() 
             << " pour " << carte->getCout() << " OR" << std::endl;
         std::cout << "Carte placée sur le dessus du deck." << std::endl;
     }
-
     else {
         ZoneDeCarte* defausse = acheteur.getZoneByType(TypeZone::DEFAUSSE);
         if (!defausse) {
@@ -311,8 +304,10 @@ void TablePartie::endTurn() {
     ZoneDeCarte* defausse = joueur_actuel.getZoneByType(TypeZone::DEFAUSSE);
     
     if (main && defausse) {
-        std::cout << "\nDéfausse de " << main->taille() << " carte(s) restante(s)..." << std::endl;
-        
+        #ifdef DEBUG
+            std::cout << "Défausse de " << main->taille() << " carte(s) restante(s)..." << std::endl;
+        #endif
+
         // Déplacer toutes les cartes de la main vers la défausse
         while (!main->estVide()) {
             const auto& cartes = main->getCartes();
@@ -323,12 +318,10 @@ void TablePartie::endTurn() {
     }
     joueur_actuel.piocher(5);
     joueur_actuel.resetJoueur();
-    
-    joueur_actuel.resetNextAcquiredTopDeck();
-    joueur_actuel.resetNextAcquiredTopDeckAction();
-    joueur_actuel.resetNextAcquiredHand();
 
     joueur_actuel_index = (joueur_actuel_index + 1) % joueurs.size();
+
+    std::cout << "\n--- Nouveau tour pour le Joueur " << getJoueurActuel().getId() << " ---" << std::endl;
 }
 
 // Getters & Setters
@@ -339,10 +332,10 @@ const std::vector<ZoneDeCarte>& TablePartie::getZonesCommunes() const { return z
 Joueur& TablePartie::getJoueurActuel() { return joueurs[joueur_actuel_index]; }
 Joueur& TablePartie::getAdversaire() { return joueurs[1 - joueur_actuel_index]; }
 int TablePartie::getJoueurActuelIndex() const { return joueur_actuel_index; }
-ZoneDeCarte* TablePartie::getMarche() { return (idx_marche >= 0 && idx_marche < zones_communes.size()) ? &zones_communes[idx_marche] : nullptr; }
-ZoneDeCarte* TablePartie::getDeckMarche() { return (idx_deck_marche >= 0 && idx_deck_marche < zones_communes.size()) ? &zones_communes[idx_deck_marche] : nullptr; }
-ZoneDeCarte* TablePartie::getGemmesFeu() { return (idx_gemmes_feu >= 0 && idx_gemmes_feu < zones_communes.size()) ? &zones_communes[idx_gemmes_feu] : nullptr; }
-ZoneDeCarte* TablePartie::getCartesEcartees() { return (idx_cartes_ecartees >= 0 && idx_cartes_ecartees < zones_communes.size()) ? &zones_communes[idx_cartes_ecartees] : nullptr; }
+ZoneDeCarte* TablePartie::getMarche() { return (idx_marche >= 0 && idx_marche < static_cast<int>(zones_communes.size())) ? &zones_communes[idx_marche] : nullptr; }
+ZoneDeCarte* TablePartie::getDeckMarche() { return (idx_deck_marche >= 0 && idx_deck_marche < static_cast<int>(zones_communes.size())) ? &zones_communes[idx_deck_marche] : nullptr; }
+ZoneDeCarte* TablePartie::getGemmesFeu() { return (idx_gemmes_feu >= 0 && idx_gemmes_feu < static_cast<int>(zones_communes.size())) ? &zones_communes[idx_gemmes_feu] : nullptr; }
+ZoneDeCarte* TablePartie::getCartesEcartees() { return (idx_cartes_ecartees >= 0 && idx_cartes_ecartees < static_cast<int>(zones_communes.size())) ? &zones_communes[idx_cartes_ecartees] : nullptr; }
 
 // Méthodes Privées
 void TablePartie::initZones() {    
@@ -369,7 +362,7 @@ void TablePartie::initMarche() {
     }
     
     // Remplir le deck du marché
-    if (idx_deck_marche >= 0 && idx_deck_marche < zones_communes.size()) {
+    if (idx_deck_marche >= 0 && idx_deck_marche < static_cast<int>(zones_communes.size())) {
         std::vector<Carte*> deckInitial = creerDeckMarche();
         std::cout << "Ajout de " << deckInitial.size() << " cartes au deck du marché..." << std::endl;
         for (const auto& carte : deckInitial) {
@@ -386,7 +379,7 @@ void TablePartie::initMarche() {
     std::cout << "Marché visible rempli: " << zones_communes[idx_marche].taille() << " cartes" << std::endl;
     
     // Ajouter les gemmes de feu (objets toujours disponibles)
-    if (idx_gemmes_feu >= 0 && idx_gemmes_feu < zones_communes.size()) {
+    if (idx_gemmes_feu >= 0 && idx_gemmes_feu < static_cast<int>(zones_communes.size())) {
         for (int i = 0; i < 16; i++) {
             zones_communes[idx_gemmes_feu].ajouterCarte(getCarteById(i+2001), i);
         }
@@ -402,7 +395,7 @@ void TablePartie::creerZoneCommune(int id, TypeZone type) {
     zones_communes.emplace_back(id, type, nullptr, this);
 }
 
-void TablePartie::afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone, bool est_champion) const {
+void TablePartie::afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone) const {
     int indice = 1; // Pour numéroter les cartes de la main
     int indice_champion = 1; // Pour numéroter les champions
     for (const auto& zone : joueur.getZones()) {
@@ -478,7 +471,7 @@ void TablePartie::afficherCarteFormatee(const Carte* carte, int indice, bool aff
     const char* couleur = getCouleurFaction(carte->getFaction());
     
     // Ligne d'index (optionnel)
-    if (indice >= 0) {
+    if (indice > 0) {
         std::cout << BOLD_TEXT << "[" << indice << "] " << RESET_COLOR;
     }
     
@@ -531,7 +524,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     std::cout << couleur << BOLD_TEXT << champion->getNom() << RESET_COLOR;
     
     // PV en GRAND et AVANT
-    std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPV() << " ❤ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;
+    std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPV() << " ❤️ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;
     
     // Garde (si applicable)
     if (champion->hasGarde()) {
@@ -550,6 +543,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     } else {
         std::cout << "  " << DIM_TEXT << "(Champion inactif - ne peut pas être activé ce tour)" << RESET_COLOR << std::endl;
     }
+    std::cout << std::endl;
 }
 
 // =====================================================
@@ -570,7 +564,7 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
             break;
             
         case TypeEffet::SOIN:
-            result = std::string(COLOR_HEALTH) + "❤  +" + std::to_string(valeur) + " Santé" + RESET_COLOR;
+            result = std::string(COLOR_HEALTH) + "❤️ +" + std::to_string(valeur) + " Santé" + RESET_COLOR;
             break;
             
         case TypeEffet::PIOCHE:
@@ -620,7 +614,7 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
         case TypeEffet::DMG_ou_SOIN:
             result = std::string(COLOR_DMG) + "⚔  +3 Combat" + RESET_COLOR + 
                     " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_HEALTH) + "❤  +4 Santé" + RESET_COLOR;
+                    std::string(COLOR_HEALTH) + "❤️ +4 Santé" + RESET_COLOR;
             break;
             
         case TypeEffet::OR_ou_nDMG:
@@ -632,11 +626,11 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
         case TypeEffet::OR_ou_SOIN_per_CHAMP:
             result = std::string(COLOR_OR) + "💰 +" + std::to_string(valeur) + " OR" + RESET_COLOR + 
                     " " + ITALIC_TEXT + "ou" + RESET_COLOR + " " +
-                    std::string(COLOR_HEALTH) + "❤  +" + std::to_string(valeur) + " Santé/Champion" + RESET_COLOR;
+                    std::string(COLOR_HEALTH) + "❤️ +" + std::to_string(valeur) + " Santé/Champion" + RESET_COLOR;
             break;
             
         case TypeEffet::SOIN_per_CHAMP:
-            result = std::string(COLOR_HEALTH) + "❤  +" + std::to_string(valeur) + " Santé par champion" + RESET_COLOR;
+            result = std::string(COLOR_HEALTH) + "❤️ +" + std::to_string(valeur) + " Santé par champion" + RESET_COLOR;
             break;
         
         case TypeEffet::DMG_per_GUARD:
@@ -774,7 +768,7 @@ void TablePartie::afficherDeckMarche() const {
         clearTerminal();
     #endif
 
-    if (idx_deck_marche < 0 || idx_deck_marche >= zones_communes.size()) {
+    if (idx_deck_marche < 0 || idx_deck_marche >= static_cast<int>(zones_communes.size())) {
         std::cout << "Erreur: deck marché introuvable!" << std::endl;
         return;
     }
@@ -802,11 +796,6 @@ void TablePartie::afficherDeckMarche() const {
 }
 
 bool TablePartie::piocheCarteSpecifique(int idCarte, Joueur& joueur) {
-    if (!joueur.isGodMode()) {
-        std::cout << "Erreur: Cette commande est réservée au GOD MODE!" << std::endl;
-        return false;
-    }
-    
     if (idx_deck_marche < 0 || idx_deck_marche >= zones_communes.size()) {
         std::cout << "Erreur: deck marché introuvable!" << std::endl;
         return false;
