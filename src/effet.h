@@ -62,7 +62,7 @@ public:
     void activerEffet(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
 
     // Méthode pour vérifier si les conditions de l'effet sont remplies
-    bool verifierConditions(class Joueur& joueurActif, class Joueur& adversaire, const class Carte* source = nullptr) const;
+    bool verifierConditions(class Joueur& joueurActif, const class Carte* source = nullptr) const;
 };
 
 #endif // EFFET_H

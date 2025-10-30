@@ -13,7 +13,7 @@ Effet::Effet(int id, TypeEffet type, int valeur, ConditionEffet condition)
 // Méthode principale pour activer l'effet quand une carte est jouée
 void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* source) const {
     // Vérifier si les conditions sont remplies
-    if (!verifierConditions(joueurActif, adversaire, source)) {
+    if (!verifierConditions(joueurActif, source)) {
         std::cout << "Conditions non remplies pour l'effet " << id << std::endl;
         return;
     }
@@ -542,7 +542,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 }
 
 // Méthode pour vérifier si les conditions de l'effet sont remplies
-bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Carte* source) const {
+bool Effet::verifierConditions(Joueur& joueurActif, const Carte* source) const {
     switch (condition) {
         case ConditionEffet::AUCUNE:
             return true; // Aucune condition, toujours activable
@@ -610,7 +610,7 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
             
             if (reponse != 'o' && reponse != 'O') {
                 std::cout << "Fin du sacrifice de cartes." << std::endl;
-                break;
+                return conditionRemplie;
             }
             std::cout << "Choisissez une carte à sacrifier de votre main ou défausse :" << std::endl;
             
@@ -802,8 +802,8 @@ bool Effet::verifierConditions(Joueur& joueurActif, Joueur& adversaire, const Ca
             }
             return false; // Aucun allié bleu trouvé
         }
-            
         default:
             return false;
     }
+    return false;
 }

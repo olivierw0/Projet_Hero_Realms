@@ -796,7 +796,7 @@ void TablePartie::afficherDeckMarche() const {
 }
 
 bool TablePartie::piocheCarteSpecifique(int idCarte, Joueur& joueur) {
-    if (idx_deck_marche < 0 || idx_deck_marche >= zones_communes.size()) {
+    if (idx_deck_marche < 0 || idx_deck_marche >= static_cast<int>(zones_communes.size())) {
         std::cout << "Erreur: deck marché introuvable!" << std::endl;
         return false;
     }

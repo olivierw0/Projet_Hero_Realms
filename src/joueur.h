@@ -23,7 +23,6 @@ private:
     bool nextAcquiredTopDeck; // Indique si les prochaines cartes acquises doivent être top-deckées et combien (exemple pour 3 cartes acquises ce tour à placer au top du deck : {true, 3})
     bool nextAcquiredTopDeckAction; // Même chose mais pour les actions (exemple pour 2 actions achetées ce tour à placer au top du deck : {true, 2})
     bool nextAcquiredHand; // Indique si les prochaines cartes acquises doivent être placées en main (exemple pour 1 carte acquise ce tour à placer en main : {true, 1})
-
     bool godMode;
 
     void resetCombat();

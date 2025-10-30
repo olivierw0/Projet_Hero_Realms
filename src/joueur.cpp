@@ -10,7 +10,7 @@
 #include "carte_db.h"
 
 
-Joueur::Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr), godMode(false),
+Joueur::Joueur(int id, int pv) : godMode(false), id(id), pv(pv), or_value(0), combat(0), table(nullptr),
             nextAcquiredHand(false), nextAcquiredTopDeck(false), nextAcquiredTopDeckAction(false) {
     #ifdef DEBUG
         std::cout << "Construction du Joueur : " << id << std::endl;
@@ -381,7 +381,7 @@ bool Joueur::jouerCarte(int indice) {
                 if (effet.getCondition() != ConditionEffet::SACRIFICE &&
                     effet.getCondition() != ConditionEffet::SACRIFICE_TO_MARCHE) {
                     // Vérifier autres conditions (allié, etc.)
-                    if (table && effet.verifierConditions(*this, table->getAdversaire(), carte)) {
+                    if (table && effet.verifierConditions(*this, carte)) {
                         effet.activerEffet(*this, table->getAdversaire(), carte);
                     }
                 }
