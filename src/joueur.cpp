@@ -10,8 +10,8 @@
 #include "carte_db.h"
 
 
-Joueur::Joueur(int id, int pv) : godMode(false), id(id), pv(pv), or_value(0), combat(0), table(nullptr),
-            nextAcquiredHand(false), nextAcquiredTopDeck(false), nextAcquiredTopDeckAction(false) {
+Joueur::Joueur(int id, int pv) : id(id), pv(pv), or_value(0), combat(0), table(nullptr),
+           nextAcquiredTopDeck(false), nextAcquiredTopDeckAction(false), nextAcquiredHand(false), godMode(false) {
     #ifdef DEBUG
         std::cout << "Construction du Joueur : " << id << std::endl;
     #endif
