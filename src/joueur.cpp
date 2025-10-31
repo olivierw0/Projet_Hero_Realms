@@ -369,7 +369,7 @@ bool Joueur::jouerCarte(int indice) {
         }
 
         // Activer les effets appropriés
-        std::cout << "→  Activation des effets..." << std::endl;
+        std::cout << "\n→  Activation des effets..." << std::endl;
         
         for (const auto& effet : carte->getEffets()) {
             // Si on a choisi de sacrifier, n'activer QUE les effets de sacrifice

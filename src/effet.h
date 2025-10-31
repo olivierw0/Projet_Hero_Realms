@@ -4,20 +4,20 @@
 #include <string>
 enum class TypeEffet {
     DMG, //OK
-    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet (à tester)
-    DRAW_DISCARD, // (à tester)
-    FORCE_DISCARD_OPPONENT, // (à tester)
-    HAND_NEXT_ACQUIRED, 
+    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet - OK
+    DRAW_DISCARD, // OK
+    FORCE_DISCARD_OPPONENT, // OK
+    HAND_NEXT_ACQUIRED, // OK
     OR, // OK
-    OR_ou_nDMG, // Choisir entre 1 or et n Points de combat (à tester)
-    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité) (à tester)
+    OR_ou_nDMG, // Choisir entre 1 or et n Points de combat - OK
+    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité) - OK
     PIOCHE, // OK
-    PREPARE_CHAMPION, // (à tester)
-    SACRIFICE_HAND_DISCARD,  // (à tester)
+    PREPARE_CHAMPION, // OK
+    SACRIFICE_HAND_DISCARD,  // OK
     SOIN, // OK
-    SOIN_per_CHAMP, // (à tester)
-    STUN, 
-    TOP_DECK_FROM_DISCARD, 
+    SOIN_per_CHAMP, // OK
+    STUN, // OK
+    TOP_DECK_FROM_DISCARD, // OK
     TOP_DECK_NEXT_ACQUIRED, 
     TOP_DECK_NEXT_ACQUIRED_ACTION, 
     DMG_per_VERT_CARDS,            // Nombre de cartes vertes en jeu

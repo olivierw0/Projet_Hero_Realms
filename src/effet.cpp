@@ -46,7 +46,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             
         case TypeEffet::PIOCHE:
             joueurActif.piocher(valeur);
-            std::cout << "Joueur " << joueurActif.getId() << " pioche " << valeur << " carte(s)" << std::endl;
+            std::cout << "\nJoueur " << joueurActif.getId() << " pioche " << valeur << " carte(s)" << std::endl;
             break;
 
         case TypeEffet::DMG_ou_SOIN:{
@@ -56,8 +56,10 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             int choix;
             std::cout << "Choisissez une option (1 ou 2): " << std::endl
             << "  1 - Gagner 3 points de combat" << std::endl
-            << "  2 - Récupérer 4 PV" << std::endl;
+            << "  2 - Récupérer 4 PV" << std::endl
+            << "Votre choix : ";
             std::cin >> choix;
+            std::cout << std::endl;
 
             // Valider l'entrée
             while (choix != 1 && choix != 2) {
@@ -79,12 +81,24 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
         case TypeEffet::DRAW_DISCARD:
         {
+            std::cout << "\nEffet de la carte " << source->getNom() << " activé..." << std::endl;
+            // 1. Défausser la carte possédant l'effet
 
-            // 1. Déterminer le nombre de cartes à piocher et défausser
+            ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            main->deplacerCarte(source->getId(), *joueurActif.getZoneByType(TypeZone::DEFAUSSE), 1);
+
+            // 2. Vérifier que le joueur actif a des cartes en main
+
+            if (!main || main->estVide()) {
+                std::cout << "Vous n'avez aucune carte en main, vous ne pouvez pas activer cet effet" << std::endl;
+                break;
+            }
+
+            // 3. Déterminer le nombre de cartes à piocher et défausser
 
             // Demander au joueur actif combien de cartes il souhaite piocher et défausser
             int choix_valeur; 
-            std::cout << "Choisissez le nombre de cartes à piocher et défausser (0 à " << valeur << ") : ";
+            std::cout << "\nChoisissez un nombre de cartes à piocher et défausser (0 - " << valeur << ") : ";
             std::cin >> choix_valeur;
 
             // Valider l'entrée
@@ -99,16 +113,18 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 break;
             }
 
-            // 2. Piocher les cartes
+            // 4. Piocher les cartes
             
             joueurActif.piocher(choix_valeur);
             std::cout << "Joueur " << joueurActif.getId() << " pioche " << choix_valeur << " carte(s)" << std::endl;
             
-            // 3. Défausser les cartes choisies par le joueur
+            // 5. Défausser les cartes choisies par le joueur
 
             // Afficher la main actuelle
+            std::cout << "\nVotre nouvelle main : " << std::endl;
             joueurActif.afficherMain();
-            ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
+            std::cout << std::endl;
+
             ZoneDeCarte* defausse = joueurActif.getZoneByType(TypeZone::DEFAUSSE);
             for (int i = 0; i < choix_valeur; ++i) {
                 int indice_carte;
@@ -209,7 +225,9 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // Valider l'entrée
             while (choix != 1 && choix != 2) {
                 std::cout << "Choix invalide. Veuillez choisir 1 ou 2: ";
+                std::cout << "Votre choix : ";
                 std::cin >> choix;
+                std::cout << std::endl;
             }
 
             // 2. Appliquer l'effet choisi
@@ -229,6 +247,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 if (nbChampions > 0) {
                     joueurActif.heal(valeur*nbChampions);
+                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << (valeur*nbChampions) << " PV (" << nbChampions << " champion(s) en jeu)" << std::endl;
                 } else {
                     std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
                 }
@@ -239,7 +258,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
         case TypeEffet::PREPARE_CHAMPION:{
             // Préparer un champion (le rendre actif)
-            std::cout << "Choisissez un de vos champions à préparer :" << std::endl;
+            std::cout << "\nChoisissez un de vos champions à préparer :" << std::endl;
 
             ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
             if (!zoneChampions || zoneChampions->estVide()) {
@@ -268,10 +287,15 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                     i++;
                 }
             }
+            else {
+                std::cout << "\nAucun champion épuisé à préparer." << std::endl;
+                break;
+            }
 
             int choix;
             std::cout << "Entrez l'indice du champion à préparer : ";
             std::cin >> choix;
+            std::cout << std::endl;
 
             // Valider l'indice
             while (choix < 1 || choix > static_cast<int>(championsEpuises.size())) {
@@ -355,6 +379,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 } else if (zoneOrigine == TypeZone::DEFAUSSE && defausse) {
                     defausse->deplacerCarte(carteASacrifier->getId(), *zoneDestination, 1);
                 }
+                std::cout << "\nCarte " << carteASacrifier->getNom() << " sacrifiée." << std::endl;
             }
             break;
         }
@@ -423,6 +448,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             }
 
             // Afficher les cartes dans la défausse
+            std::cout << "Choisissez une carte de votre défausse à remettre en haut du deck :" << std::endl;
             const auto& cartesDefausse = defausse->getCartes();
             for (size_t i = 0; i < cartesDefausse.size(); ++i) {
                 std::cout << (i + 1) << "- " << cartesDefausse[i].first->getNom() << std::endl;

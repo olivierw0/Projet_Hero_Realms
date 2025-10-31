@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <limits>
 #include "carte.h"
 #include "effet.h"
 #include "joueur.h"
@@ -44,10 +45,15 @@ int main() {
             std::cout << "[777] Quitter le mode Dieu" << std::endl;
             std::cout << "=======<<               >>=======\n" << std::endl;
         }
-        std::cout << "Votre choix: ";
+        std::cout << "Votre choix: " << std::endl;
         
         int choix;
-        std::cin >> choix;
+        if (!(std::cin >> choix)) {
+            std::cin.clear(); // réinitialise le flux
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // vide l’entrée invalide
+            std::cout << "Entrée invalide ! Veuillez entrer un nombre." << std::endl;
+            continue; // relance la boucle proprement
+        }
         
         switch (choix) {
             case -1: // quitter le jeu
@@ -111,7 +117,7 @@ int main() {
                     partie.afficherDeckMarche();
                     int idCarte = -1;
                     while (idCarte != 0){
-                        std::cout << "Entrez l'ID de la carte à acheter: (0 pour quitter)";
+                        std::cout << "Entrez l'ID de la carte à acheter (0 pour quitter) : ";
                         std::cin >> idCarte;
                         partie.piocheCarteSpecifique(idCarte, joueurActuel);
                     }
