@@ -202,12 +202,12 @@ Carte hit_job(
 );
 
 Carte intimidation1(
-    2601, "Intimidation", 6, TypeCarte::ACTION, FactionCarte::BLEU,
+    2601, "Intimidation", 2, TypeCarte::ACTION, FactionCarte::BLEU,
     "{Gain 5 combat}\n<hr>\n{Bleu Ally}: {Gain 2 gold}",
     { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::OR, 2, ConditionEffet::BLEU_ALLY) }
 );
 Carte intimidation2(
-    2602, "Intimidation", 6, TypeCarte::ACTION, FactionCarte::BLEU,
+    2602, "Intimidation", 2, TypeCarte::ACTION, FactionCarte::BLEU,
     "{Gain 5 combat}\n<hr>\n{Bleu Ally}: {Gain 2 gold}",
     { Effet(1, TypeEffet::DMG, 5), Effet(2, TypeEffet::OR, 2, ConditionEffet::BLEU_ALLY) }
 );

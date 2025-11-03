@@ -6,6 +6,7 @@
 class Champion : public Carte {
 private:
     int pv;
+    int pvMax;
     bool active;
     bool garde;
 
@@ -18,6 +19,7 @@ public:
 
     // Getters & Setters
     int getPV() const override;
+    int getPVMax() const;
     bool getActive() const;
     bool hasGarde() const;
 

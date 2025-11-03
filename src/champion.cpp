@@ -5,6 +5,7 @@
 int Champion::getPV() const { return pv; }
 bool Champion::getActive() const { return active; }
 bool Champion::hasGarde() const { return garde; }
+int Champion::getPVMax() const { return pvMax; }
 
 void Champion::setActive(bool etat) { active = etat; }
 void Champion::setPV(int nouveaux_pv) { pv = nouveaux_pv; }
@@ -15,7 +16,7 @@ Champion::Champion() : Carte(), pv(1), active(true), garde(false){}
 Champion::Champion(int id, const std::string& nom, int cout, FactionCarte faction, 
             const std::string& description, const std::vector<Effet>& effets = {}, bool garde = false, int pv = 1)
     : Carte(id, nom, cout, TypeCarte::CHAMPION, faction, description, effets),
-        pv(pv), active(true), garde(garde) {
+        pv(pv), pvMax(pv), active(true), garde(garde) {
     #ifdef DEBUG
         std::cout<<"Construction du champion: "<<getNom()<<std::endl;
     #endif

@@ -344,6 +344,7 @@ bool Joueur::jouerCarte(int indice) {
             std::cout << "Champion " << champion->getNom() << " posé en jeu." << std::endl;
         #endif
         champion->setActive(true);
+        champion->setPV(champion->getPVMax());
     } 
     // Si c'est une ACTION ou un OBJET
     else {
@@ -523,10 +524,17 @@ void Joueur::degatsFinTour(int totalCombat){
                 }
             }
             
+            std::string string;
             int choix;
             std::cout << "Infligez " << totalCombat << " dégât(s) au garde n°: ";
-            std::cin >> choix;
+            std::cin >> string;
             
+            try{
+                choix = std::stoi(string);
+            } catch (const std::exception& e) {
+                std::cerr << "Choix invalide!" << std::endl;
+                continue;
+            }
             if (choix < 1 || choix > static_cast<int>(gardes.size())) {
                 std::cout << "Choix invalide!" << std::endl;
                 continue;
@@ -583,10 +591,19 @@ void Joueur::degatsFinTour(int totalCombat){
                       << " (" << championsEnVie[i]->getPV() << " PV)" << std::endl;
         }
 
+        std::string string;
         int choix;
         std::cout << "Entrez \'0\' pour infliger les dégâts au joueur." << std::endl;
         std::cout << "Infligez " << totalCombat << " dégât(s) au champion n°: ";
-        std::cin >> choix;
+        std::cin >> string;
+
+        try {
+            choix = std::stoi(string);
+        } catch (const std::exception& e) {
+            std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
+            continue;
+        }
+
         if (choix == 0){ 
             std::cout << "Tous les dégâts restants (" << totalCombat << ") sont infligés au joueur." << std::endl;
             takeDamage(totalCombat);
@@ -600,9 +617,6 @@ void Joueur::degatsFinTour(int totalCombat){
             }else {
                 std::cout << "→ Pas assez de dégâts pour mettre K.O. " << cible->getNom();
             }
-            // Les champions n'ont pas de méthode takeDamage, donc on utilise setPV directement
-            // De toutes manières ils se soignent à chaque début de tour donc pas important de ne pas
-            // avoir de quoi enregistrer les dégâts infligés
             
             totalCombat -= pvChamp;
             

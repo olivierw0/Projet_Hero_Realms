@@ -55,7 +55,12 @@ void TablePartie::initPartie() {
         std::cout << "\nJoueur " << joueur.getId() << ":" << std::endl;
         joueur.initDeck(); // Ajouter les cartes de base au deck
         joueur.melangerDeck(); // Mélanger le deck
-        joueur.piocher((3+i)<=5?3+i:5); // Piocher 3+i cartes
+        
+        if (joueurs.size() > 2) {
+            joueur.piocher((3+i)<=5?3+i:5);
+        }else{
+            joueur.piocher(5);
+        }
         i++;
         std::cout << "Deck: " << joueur.getZoneByType(TypeZone::DECK)->taille() << " cartes" << std::endl;
         std::cout << "Main: " << joueur.getNombreCartesEnMain() << " cartes" << std::endl;
@@ -524,7 +529,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     std::cout << couleur << BOLD_TEXT << champion->getNom() << RESET_COLOR;
     
     // PV en GRAND et AVANT
-    std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPV() << " ❤️ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;
+    std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPVMaxit() << " ❤️ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;
     
     // Garde (si applicable)
     if (champion->hasGarde()) {

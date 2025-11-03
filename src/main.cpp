@@ -46,8 +46,18 @@ int main() {
         }
         std::cout << "Votre choix: ";
         
-        int choix;
-        std::cin >> choix;
+        std::string string;
+        std::cin >> string;
+        int choix = -2;
+        try
+        {
+            choix = std::stoi(string);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            choix = -2;
+        }
         
         switch (choix) {
             case -1: // quitter le jeu
@@ -60,7 +70,14 @@ int main() {
                 break;
             case 1: // choisir de jouer une carte
                 std::cout << "Entrez l'indice de la carte à jouer: ";
-                std::cin >> choix;
+                std::cin >> string;
+                try {
+                    choix = std::stoi(string);
+                    std::cout << choix << std::endl;
+                } catch (const std::exception& e) {
+                    std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
+                    choix = -2;
+                }
                 if (joueurActuel.jouerCarte(choix)) {
                     std::cout << "Carte jouée avec succès!" << std::endl;
                 }
@@ -71,7 +88,13 @@ int main() {
                 break;
             case 3: // acheter une carte du marché
                 std::cout << "Entrez l'indice de la carte à acheter: ";
-                std::cin >> choix;
+                std::cin >> string;
+                try {
+                    choix = std::stoi(string);
+                } catch (const std::exception& e) {
+                    std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
+                    choix = -2;
+                }
                 // Logique d'achat de carte
                 if (partie.acheterCarteMarche(choix, joueurActuel)) {
                     std::cout << "Carte achetée avec succès!" << std::endl;
@@ -79,7 +102,13 @@ int main() {
                 break;
             case 4: // Activer un Champion
                 std::cout << "Entrez l'indice du champion à activer: ";
-                std::cin >> choix;
+                std::cin >> string;
+                try {
+                    choix = std::stoi(string);
+                } catch (const std::exception& e) {
+                    std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
+                    choix = -2;
+                }
                 if (joueurActuel.tapChampion(choix, adversaire)) {
                     std::cout << "Champion activé avec succès!" << std::endl;
                 }
@@ -94,7 +123,7 @@ int main() {
                 if (joueurActuel.isGodMode()) {
                     partie.afficherDeckMarche();
                 }else {
-                    std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                    std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
                 }
                 break;
             case 20: 
@@ -103,7 +132,7 @@ int main() {
                     adversaire.setPv(1);
                     std::cout << "❤️ Tous les joueurs mis à 1 PV!" << std::endl;
                 }else {
-                    std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                    std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
                 }
                 break;
             case 30:
@@ -112,11 +141,17 @@ int main() {
                     int idCarte = -1;
                     while (idCarte != 0){
                         std::cout << "Entrez l'ID de la carte à acheter: (0 pour quitter)";
-                        std::cin >> idCarte;
+                        std::cin >> string;
+                        try {
+                            idCarte = std::stoi(string);
+                        } catch (const std::exception& e) {
+                            std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
+                            idCarte = -1;
+                        }
                         partie.piocheCarteSpecifique(idCarte, joueurActuel);
                     }
                 }else {
-                    std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                    std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
                 }
                 break;
             case 777: // passer en god mode
@@ -137,7 +172,7 @@ int main() {
 
                 break;
             default:
-                std::cout << "Choix invalide! Essayez à nouveau." << std::endl;
+                std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
                 break;
             }
     
