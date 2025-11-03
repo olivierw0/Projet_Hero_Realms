@@ -85,7 +85,7 @@ int main() {
                 break;
             case 2: // jouer toutes les cartes de la main
                 joueurActuel.jouerToutesLesCartes();
-                std::cout << "Toutes les cartes de la main ont été jouées!" << std::endl;
+                std::cout << "\nToutes les cartes de la main ont été jouées!" << std::endl;
                 break;
             case 3: // acheter une carte du marché
                 std::cout << "Entrez l'indice de la carte à acheter: ";
