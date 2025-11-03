@@ -257,14 +257,14 @@ bool Joueur::tapChampion(int indice, Joueur& adversaire) {
     Champion* champion = dynamic_cast<Champion*>(cartes[indice - 1].first);
 
     if (!champion->getActive()) {
-        std::cout << "Le champion " << champion->getNom() << " est déjà tapé!" << std::endl;
+        std::cout << "Le champion " << champion->getNom() << " est épuisé et ne peut pas être joué !" << std::endl;
         return false;
     }
 
-    std::cout << "\n→ Activation du champion: " << champion->getNom() << std::endl;
+    std::cout << "\n✧ Activation du champion: " << champion->getNom() << std::endl;
 
     // Activer tous les effets du champion
-    std::cout << "→ Activation des effets du champion..." << std::endl;
+    std::cout << "✧ Activation des effets du champion..." << std::endl;
     
     for (const auto& effet : champion->getEffets()) {
         effet.activerEffet(*this, adversaire, champion);
@@ -340,6 +340,7 @@ bool Joueur::jouerCarte(int indice) {
         }
         
         main->deplacerCarte(carte->getId(), *champions, champions->taille());
+        std::cout << "✧ Champion " << champion->getNom() << " posé en jeu. Vous pouvez maintenant activer ses effets !" << std::endl;
         #ifdef DEBUG
             std::cout << "Champion " << champion->getNom() << " posé en jeu." << std::endl;
         #endif
@@ -370,7 +371,7 @@ bool Joueur::jouerCarte(int indice) {
         }
 
         // Activer les effets appropriés
-        std::cout << "\n→  Activation des effets..." << std::endl;
+        std::cout << "\n✧  Activation des effets de " << carte->getNom() << std::endl;
         
         for (const auto& effet : carte->getEffets()) {
             // Si on a choisi de sacrifier, n'activer QUE les effets de sacrifice
