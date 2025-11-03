@@ -529,7 +529,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     std::cout << couleur << BOLD_TEXT << champion->getNom() << RESET_COLOR;
     
     // PV en GRAND et AVANT
-    std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPVMaxit() << " ❤️ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;
+    std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPVMax() << " ❤️ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;
     
     // Garde (si applicable)
     if (champion->hasGarde()) {
