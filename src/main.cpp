@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <limits>
 #include "carte.h"
 #include "effet.h"
 #include "joueur.h"
@@ -44,7 +45,7 @@ int main() {
             std::cout << "[777] Quitter le mode Dieu" << std::endl;
             std::cout << "=======<<               >>=======\n" << std::endl;
         }
-        std::cout << "Votre choix: ";
+        std::cout << "Votre choix: " << std::endl;
         
         std::string string;
         std::cin >> string;
