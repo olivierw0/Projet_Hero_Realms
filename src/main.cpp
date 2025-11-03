@@ -141,7 +141,7 @@ int main() {
                     partie.afficherDeckMarche();
                     int idCarte = -1;
                     while (idCarte != 0){
-                        std::cout << "Entrez l'ID de la carte à acheter: (0 pour quitter)";
+                        std::cout << "Entrez l'ID de la carte à acheter (0 pour quitter) : ";
                         std::cin >> string;
                         try {
                             idCarte = std::stoi(string);

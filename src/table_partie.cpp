@@ -409,6 +409,7 @@ void TablePartie::afficherZoneJoueur(const Joueur& joueur, TypeZone type_zone) c
                 if (paire_carte.first != nullptr) {
                     // Si c'est la main, afficher avec un indice mais SANS le coût
                     if (type_zone == TypeZone::MAIN) {
+                        std::cout << std::endl;
                         afficherCarteFormatee(paire_carte.first, indice, false); // false = pas de coût
                         indice++;
                     } else if (type_zone == TypeZone::CHAMPIONS) {
@@ -792,7 +793,11 @@ void TablePartie::afficherDeckMarche() const {
             
             std::cout << "[" << numero << "] ID:" << carte->getId() << " - "
                       << couleur << BOLD_TEXT << carte->getNom() << RESET_COLOR
-                      << " - " << factionToString(carte->getFaction()) << std::endl;
+                      << " - " << factionToString(carte->getFaction());
+            if(carte->getType() == TypeCarte::CHAMPION){
+                std::cout << " - (CHAMPION)";
+            }
+            std::cout << std::endl;
             numero++;
         }
     }

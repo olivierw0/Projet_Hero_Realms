@@ -1,6 +1,7 @@
 #include "effet.h"
 #include "joueur.h"
 #include "table_partie.h"
+#include "console_colors.h"
 #include <iostream>
 
 // Constructeur avec paramètres
@@ -31,22 +32,22 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
     switch (type) {
         case TypeEffet::OR:
             joueurActif.addOr(valeur);
-            std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " or" << std::endl;
+            std::cout << "Joueur " << joueurActif.getId() << " gagne " << ConsoleColors::colorizeOr(std::to_string(valeur) + " or") << std::endl;
             break;
             
         case TypeEffet::DMG:
             joueurActif.addCombat(valeur);
-            std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " points de combat" << std::endl;
+            std::cout << "Joueur " << joueurActif.getId() << " gagne " << ConsoleColors::colorizeDamage(std::to_string(valeur) + " points de combat") << std::endl;
             break;
             
         case TypeEffet::SOIN:
             joueurActif.heal(valeur);
-            std::cout << "Joueur " << joueurActif.getId() << " récupère " << valeur << " PV" << std::endl;
+            std::cout << "Joueur " << joueurActif.getId() << " récupère " << ConsoleColors::colorizeHeal(std::to_string(valeur) + " PV") << std::endl;
             break;
             
         case TypeEffet::PIOCHE:
             joueurActif.piocher(valeur);
-            std::cout << "\nJoueur " << joueurActif.getId() << " pioche " << valeur << " carte(s)" << std::endl;
+            std::cout << "Joueur " << joueurActif.getId() << " pioche " << ConsoleColors::colorizeDraw(std::to_string(valeur) + " carte(s)") << std::endl;
             break;
 
         case TypeEffet::DMG_ou_SOIN:{
@@ -55,8 +56,8 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             int choix;
             std::cout << "Choisissez une option (1 ou 2): " << std::endl
-            << "  1 - Gagner 3 points de combat" << std::endl
-            << "  2 - Récupérer 4 PV" << std::endl
+            << "  1 - Gagner " << ConsoleColors::colorizeDamage("3 points de combat") << std::endl
+            << "  2 - Récupérer " << ConsoleColors::colorizeHeal("4 PV") << std::endl
             << "Votre choix : ";
             std::cin >> choix;
             std::cout << std::endl;
@@ -71,10 +72,10 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             if (choix == 1) {
                 joueurActif.addCombat(3);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne " << 3 << " points de combat" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " gagne " << ConsoleColors::colorizeDamage("3 points de combat") << std::endl;
             } else if (choix == 2) {
                 joueurActif.heal(4);
-                std::cout << "Joueur " << joueurActif.getId() << " récupère " << 4 << " PV" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " récupère " << ConsoleColors::colorizeHeal("4 PV") << std::endl;
             }
             break;
         }
@@ -90,7 +91,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // 2. Vérifier que le joueur actif a des cartes en main
 
             if (!main || main->estVide()) {
-                std::cout << "Vous n'avez aucune carte en main, vous ne pouvez pas activer cet effet" << std::endl;
+                std::cout << "🙁 Vous n'avez aucune carte en main, vous ne pouvez pas activer cet effet" << std::endl;
                 break;
             }
 
@@ -116,7 +117,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // 4. Piocher les cartes
             
             joueurActif.piocher(choix_valeur);
-            std::cout << "Joueur " << joueurActif.getId() << " pioche " << choix_valeur << " carte(s)" << std::endl;
+            std::cout << "Joueur " << joueurActif.getId() << " pioche " << ConsoleColors::colorizeDraw(std::to_string(choix_valeur) + " carte(s)") << std::endl;
             
             // 5. Défausser les cartes choisies par le joueur
 
@@ -157,7 +158,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 break;
             }
 
-            std::cout << "Joueur " << adversaire.getId() << " doit défausser " << valeur << " carte(s)." << std::endl;
+            std::cout << "Joueur " << adversaire.getId() << " doit défausser " << ConsoleColors::colorizeAction(std::to_string(valeur) + " carte(s)") << "." << std::endl;
 
             for (int i = 0; i < valeur; i++) {
                 // Afficher la main de l'adversaire
@@ -189,8 +190,9 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             int choix;
             std::cout << "Choisissez une option (1 ou 2): " << std::endl
-            << "  1 - Gagner 1 or" << std::endl
-            << "  2 - Gagner " << valeur << " points de combat" << std::endl;
+            << "  1 - Gagner " << ConsoleColors::colorizeOr("1 or") << std::endl
+            << "  2 - Gagner " << ConsoleColors::colorizeDamage(std::to_string(valeur) + " points de combat") << std::endl;
+            std::cout << "Votre choix : ";
             std::cin >> choix;
 
             // Valider l'entrée
@@ -203,10 +205,10 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             if (choix == 1) {
                 joueurActif.addOr(1);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne 1 or" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " gagne " << ConsoleColors::colorizeOr("1 or") << std::endl;
             } else if (choix == 2) {
                 joueurActif.addCombat(valeur);
-                std::cout << "Joueur " << joueurActif.getId() << " gagne " << valeur << " points de combat" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " gagne " << ConsoleColors::colorizeDamage(std::to_string(valeur) + " points de combat") << std::endl;
             }
             
             break;
@@ -247,9 +249,9 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
                 if (nbChampions > 0) {
                     joueurActif.heal(valeur*nbChampions);
-                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << (valeur*nbChampions) << " PV (" << nbChampions << " champion(s) en jeu)" << std::endl;
+                    std::cout << "Joueur " << joueurActif.getId() << " récupère " << ConsoleColors::colorizeHeal(std::to_string(valeur*nbChampions) + " PV (" + std::to_string(nbChampions) + " champion(s) en jeu)") << std::endl;
                 } else {
-                    std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
+                    std::cout << "🙁 Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV bonus récupéré." << std::endl;
                 }
             }
             
@@ -262,7 +264,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
             if (!zoneChampions || zoneChampions->estVide()) {
-                std::cout << "Aucun champion à préparer." << std::endl;
+                std::cout << "🙁 Aucun champion à préparer." << std::endl;
                 break;
             }
 
@@ -272,7 +274,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             for (const auto& paire : cartes) {
                 Champion* champion = dynamic_cast<Champion*>(paire.first);
                 if (champion && champion->getActive()) {
-                    std::cout << "Champion " << champion->getNom() << " est déjà actif." << std::endl;
+                    std::cout << "Champion " << ConsoleColors::colorizeAction(champion->getNom()) << " est déjà actif." << std::endl;
                 }else if (champion) {
                     championsEpuises.push_back(champion);
                 }
@@ -283,12 +285,12 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 std::cout << "Champions épuisés :" << std::endl;
                 int i = 1;
                 for (const auto& champion : championsEpuises) {
-                    std::cout << (i) << " - " << champion->getNom() << std::endl;
+                    std::cout << (i) << " - " << ConsoleColors::colorizeAction(champion->getNom()) << std::endl;
                     i++;
                 }
             }
             else {
-                std::cout << "\nAucun champion épuisé à préparer." << std::endl;
+                std::cout << "\n🙁 Aucun champion épuisé à préparer." << std::endl;
                 break;
             }
 
@@ -306,7 +308,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             Champion* championChoisi = dynamic_cast<Champion*>(championsEpuises[choix - 1]);
             if (championChoisi) {
                 championChoisi->setActive(true);
-                std::cout << "Champion " << championChoisi->getNom() << " est maintenant préparé (actif)." << std::endl;
+                std::cout << "Champion " << ConsoleColors::colorizeAction(championChoisi->getNom()) << " est maintenant préparé (actif)." << std::endl;
             }
             break;
         }
@@ -314,6 +316,8 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         case TypeEffet::SACRIFICE_HAND_DISCARD: {
             // Sacrifier jusqu'à [valeur] carte(s) de la main et/ou de la défausse pour activer l'effet associé
             char reponse;
+            std::cout << "\nEffet de la carte " << source->getNom() << " activé..." << std::endl;
+            std::cout << "\nVous pouvez " << ConsoleColors::colorizeAction("sacrifier jusqu'à " + std::to_string(valeur) + " carte(s) de votre main ou défausse.") << std::endl;
             for (int i = 0; i < valeur; ++i) {
 
                 std::cout << "Voulez vous sacrifier une carte de votre main ou défausse ? (o/n) : ";
@@ -328,7 +332,6 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                     std::cout << "Fin du sacrifice de cartes." << std::endl;
                     break;
                 }
-                std::cout << "TYPE"<<std::endl;
 
                 std::cout << "Choisissez une carte à sacrifier de votre main ou défausse :" << std::endl;
                 
@@ -391,9 +394,9 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
 
             if (nbChampions > 0) {
                 joueurActif.heal(valeur * nbChampions);
-                std::cout << "Joueur " << joueurActif.getId() << " récupère " << (valeur * nbChampions) << " PV (" << valeur << " par champion en jeu)" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " récupère " << ConsoleColors::colorizeHeal(std::to_string(valeur * nbChampions) + " PV (" + std::to_string(valeur) + " par champion en jeu)") << std::endl;
             } else {
-                std::cout << "Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV récupéré." << std::endl;
+                std::cout << "🙁 Aucun champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun PV bonus récupéré." << std::endl;
             }
             break;
         }
@@ -401,18 +404,18 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         case TypeEffet::STUN: {
             // Assommer un champion adverse
 
-            std::cout << "Choisissez un champion adverse à assommer :" << std::endl;
-
             ZoneDeCarte* zoneChampionsAdversaire = adversaire.getZoneByType(TypeZone::CHAMPIONS);
             if (!zoneChampionsAdversaire || zoneChampionsAdversaire->estVide()) {
-                std::cout << "Aucun champion adverse à assommer." << std::endl;
+                std::cout << "🙁 Aucun champion adverse à assommer." << std::endl;
                 break;
             }
+
+            std::cout << "Choisissez un champion adverse à assommer :" << std::endl;
 
             // Afficher les champions adverses disponibles
             const auto& cartes = zoneChampionsAdversaire->getCartes();
             for (size_t i = 0; i < cartes.size(); ++i) {
-                std::cout << (i + 1) << "- " << cartes[i].first->getNom() << std::endl;
+                std::cout << (i + 1) << "- " << ConsoleColors::colorizeAction(cartes[i].first->getNom()) << std::endl;
             }
 
             // Demander au joueur de choisir un champion parmi ceux proposés
@@ -431,7 +434,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             ZoneDeCarte* defausseAdversaire = adversaire.getZoneByType(TypeZone::DEFAUSSE);
 
             zoneChampionsAdversaire->deplacerCarte(carteChoisie->getId(), *defausseAdversaire, 1);
-            std::cout << "Champion " << carteChoisie->getNom() << " est assommé et déplacé dans la défausse." << std::endl;
+            std::cout << "Champion " << ConsoleColors::colorizeAction(carteChoisie->getNom()) << " est assommé et déplacé dans la défausse." << std::endl;
 
             break;
         }
@@ -495,14 +498,14 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         }
 
         case TypeEffet::DMG_per_CHAMPION:{
-            // Infliger des dégâts à l'adversaire en fonction du nombre de champions en jeu
+            // Infliger des dégâts à l'adversaire en fonction du nombre de champions en jeu (en excluant le champion source)
             ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
-            int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) : 0;
+            int nbChampions = zoneChampions ? static_cast<int>(zoneChampions->taille()) - 1 : 0;  // -1 pour exclure le champion qui active l'effet
 
             if (nbChampions > 0) {
-                int totalDmg = valeur * (nbChampions-1);
+                int totalDmg = valeur * nbChampions;
                 joueurActif.addCombat(totalDmg);
-                std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par champion en jeu)" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " recoit " << ConsoleColors::colorizeDamage(std::to_string(totalDmg) + " points de dégâts (" + std::to_string(valeur) + " par champion en jeu)") << std::endl;
             } else {
                 std::cout << "Aucun autre champion en jeu pour le joueur " << joueurActif.getId() << ". Aucun point de dégât ajouté." << std::endl;
             }
@@ -510,9 +513,9 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
         }
 
         case TypeEffet::DMG_per_GUARD:{
-            // Infliger des dégâts à l'adversaire en fonction du nombre de gardes en jeu
+            // Gagner [valeur] points de combat en fonction du nombre de gardes en jeu
             ZoneDeCarte* zoneChampions = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
-            int nbGardes = -1; // -1 pour exclure le champion source car il a garde
+            int nbGardes = 0;
             for (const auto& paire : zoneChampions->getCartes()) {
                 Carte* carte = paire.first;
                 if (carte->getType() == TypeCarte::CHAMPION) {
@@ -526,9 +529,9 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             if (nbGardes > 0) {
                 int totalDmg = valeur * nbGardes;
                 joueurActif.addCombat(totalDmg);
-                std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par garde en jeu chez l'adversaire)" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " recoit " << ConsoleColors::colorizeDamage(std::to_string(totalDmg) + " points de dégâts (" + std::to_string(valeur) + " par garde en jeu)") << std::endl;
             } else {
-                std::cout << "Aucune garde en jeu pour l'adversaire. Aucun point de dégât ajouté." << std::endl;
+                std::cout << "Aucune garde en jeu. Aucun point de dégât bonus ajouté." << std::endl;
             }
             break;
         }
@@ -554,7 +557,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             if (nbCartesVertes > 0) {
                 int totalDmg = valeur * nbCartesVertes;
                 joueurActif.addCombat(totalDmg);
-                std::cout << "Joueur " << joueurActif.getId() << " recoit " << totalDmg << " points de dégâts (" << valeur << " par carte verte en jeu)" << std::endl;
+                std::cout << "Joueur " << joueurActif.getId() << " recoit " << ConsoleColors::colorizeDamage(std::to_string(totalDmg) + " points de dégâts (" + std::to_string(valeur) + " par carte verte en jeu)") << std::endl;
             } else {
                 std::cout << "Aucune carte verte en jeu pour le joueur " << joueurActif.getId() << ". Aucun point de dégât ajouté." << std::endl;
             }
