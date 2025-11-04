@@ -298,11 +298,6 @@ bool TablePartie::acheterCarteMarche(int indice, Joueur& acheteur) {
 }
 void TablePartie::endTurn() {
     Joueur& joueur_actuel = getJoueurActuel();
-    Joueur& adversaire = getAdversaire();
-
-    // 1. Infliger les dégâts aux champions adverses avec Garde
-    std::cout << "\nInfliger les dégâts" << std::endl;
-    adversaire.degatsFinTour(joueur_actuel.getCombat());
     
     // 2. Défausser toute la main du joueur actuel
     ZoneDeCarte* main = joueur_actuel.getZoneByType(TypeZone::MAIN);

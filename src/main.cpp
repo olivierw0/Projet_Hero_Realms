@@ -32,7 +32,8 @@ int main() {
         std::cout << "[3] Acheter une carte du marché" << std::endl;
         std::cout << "[4] Activer un Champion" << std::endl;
         std::cout << "[5] Regarder sa défausse" << std::endl;
-        std::cout << "[6] Regarder la défausse ennemie" << std::endl;
+        std::cout << "[6] Regarder la défausse de l'adversaire" << std::endl;
+        std::cout << "[7] Infliger des dégâts à l'adversaire" << std::endl;
         std::cout << "[0] Finir le tour" << std::endl;
         std::cout << "[-1] Quitter le jeu" << std::endl;
         if (!joueurActuel.isGodMode()) {
@@ -119,6 +120,10 @@ int main() {
                 break;
             case 6: // regarder la défausse ennemie
                 adversaire.regarderDefausse();
+                break;
+            case 7: // infliger des dégâts à l'adversaire
+                std::cout << "\nInfliger les dégâts" << std::endl;
+                adversaire.degatsFinTour(joueurActuel.getCombat());
                 break;
             case 10:
                 if (joueurActuel.isGodMode()) {

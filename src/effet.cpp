@@ -553,7 +553,7 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             // Infliger des dégâts à l'adversaire en fonction du nombre de cartes vertes en jeu
             ZoneDeCarte* champs = joueurActif.getZoneByType(TypeZone::CHAMPIONS);
             ZoneDeCarte* main = joueurActif.getZoneByType(TypeZone::MAIN);
-            int nbCartesVertes = 0;
+            int nbCartesVertes = -1;
             for (const auto& paire : champs->getCartes()) {
                 Carte* carte = paire.first;
                 if (carte->getFaction() == FactionCarte::VERT) {
