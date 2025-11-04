@@ -13,7 +13,8 @@ int main() {
     TablePartie partie(1, 16);
     
     bool finDePartie = false;
-    
+    int newCombat;
+
     // Initialiser complètement la partie
     partie.initPartie();
     
@@ -123,7 +124,8 @@ int main() {
                 break;
             case 7: // infliger des dégâts à l'adversaire
                 std::cout << "\nInfliger les dégâts" << std::endl;
-                adversaire.degatsFinTour(joueurActuel.getCombat());
+                newCombat = adversaire.degatsFinTour(joueurActuel.getCombat());
+                joueurActuel.setCombat(newCombat); // Met à jour le combat restant du joueur
                 break;
             case 10:
                 if (joueurActuel.isGodMode()) {
@@ -175,7 +177,6 @@ int main() {
                 }else{
                     joueurActuel.desactiverGodMode();
                 }
-
                 break;
             default:
                 std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
