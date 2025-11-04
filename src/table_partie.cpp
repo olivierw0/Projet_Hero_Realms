@@ -643,6 +643,9 @@ std::string TablePartie::formaterTypeEffet(TypeEffet type, int valeur) const {
         case TypeEffet::DMG_per_CHAMPION:
             result = std::string(COLOR_DMG) + "⚔  +" + std::to_string(valeur) + " Combat par champion en jeu" + RESET_COLOR;
             break;
+        case TypeEffet::TOPDECK_CHAMPION_FROM_DISCARD:
+            result = "♻️ Champion de la défausse → dessus du deck";
+            break;
         default:
             result = "❓ Effet inconnu";
             break;

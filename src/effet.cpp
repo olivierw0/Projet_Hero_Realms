@@ -577,6 +577,53 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
             break;
         }
 
+        case TypeEffet::TOPDECK_CHAMPION_FROM_DISCARD: {
+            // Remettre un champion de la défausse en haut du deck
+
+            ZoneDeCarte* defausse = joueurActif.getZoneByType(TypeZone::DEFAUSSE);
+            ZoneDeCarte* deck = joueurActif.getZoneByType(TypeZone::DECK);
+
+            if (!defausse || defausse->estVide()) {
+                std::cout << "🙁 La défausse est vide. Aucun champion à remettre en haut du deck." << std::endl;
+                break;
+            }
+
+            // Afficher les champions dans la défausse
+            std::vector<Carte*> championsDefausse;
+            const auto& cartesDefausse = defausse->getCartes();
+            for (const auto& paire : cartesDefausse) {
+                if (paire.first->getType() == TypeCarte::CHAMPION) {
+                    championsDefausse.push_back(paire.first);
+                }
+            }
+
+            if (championsDefausse.empty()) {
+                std::cout << "🙁 Aucun champion dans la défausse à remettre en haut du deck." << std::endl;
+                break;
+            }
+
+            std::cout << "Choisissez un champion de votre défausse à remettre en haut du deck :" << std::endl;
+            for (size_t i = 0; i < championsDefausse.size(); ++i) {
+                std::cout << (i + 1) << "- " << ConsoleColors::colorizeAction(championsDefausse[i]->getNom()) << std::endl;
+            }
+
+            int choix_carte;
+            std::cout << "Entrez l'indice du champion à remettre en haut du deck : ";
+            std::cin >> choix_carte;
+
+            // Valider l'indice
+            while (choix_carte < 1 || choix_carte > static_cast<int>(championsDefausse.size())) {
+                std::cout << "Indice invalide! Choisissez entre 1 et " << championsDefausse.size() << " : ";
+                std::cin >> choix_carte;
+            }
+
+            Carte* carteChoisie = championsDefausse[choix_carte - 1];
+            defausse->deplacerCarte(carteChoisie->getId(), *deck, 0);
+            defausse->trierParOrdre();
+            std::cout << "Champion " << ConsoleColors::colorizeAction(carteChoisie->getNom()) << " remis en haut du deck." << std::endl;
+            break;
+        }
+
         default:
             std::cout << "Effet non implémenté : " << static_cast<int>(type) << std::endl;
             break;

@@ -360,7 +360,7 @@ Champion rayla_endweaver(49, "Rayla Endweaver", 4, FactionCarte::ROUGE,
 
 Champion varrick_the_necromancer(50, "Varrick, the Necromancer", 5, FactionCarte::ROUGE,
     "{Expend}: Take a champion from your discard pile and put it on top of your deck.\n<hr>\n{Rouge Ally}: Draw a card.",
-    { Effet(1, TypeEffet::TOP_DECK_FROM_DISCARD, 0), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
+    { Effet(1, TypeEffet::TOPDECK_CHAMPION_FROM_DISCARD, 0), Effet(2, TypeEffet::PIOCHE, 1, ConditionEffet::ROUGE_ALLY) },
     false, 3
 );
 
