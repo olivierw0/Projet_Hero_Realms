@@ -497,6 +497,18 @@ int Joueur::degatsFinTour(int totalCombat){
     auto& cartes = champions->getCartes();
     if (cartes.empty()) {
         std::cout << "Aucun champion en jeu." << std::endl;
+        std::cout << "Tous les dégâts (" << totalCombat << ") vont être infligés au joueur." << std::endl;
+        std::cout << "Entrez '-1' pour arrêter d'infliger des dégâts." << std::endl;
+        std::string string;
+        int choix;
+        std::cin >> string;
+        try{
+            choix = std::stoi(string);
+        } catch (...) {
+            std::cerr << "Choix invalide!" << std::endl;
+            return totalCombat;
+        }
+        if (choix == -1) {return totalCombat;}
         std::cout << "Tous les dégâts (" << totalCombat << ") sont infligés au joueur." << std::endl;
         takeDamage(totalCombat);
         return 0;
