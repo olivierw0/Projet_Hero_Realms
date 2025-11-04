@@ -62,6 +62,7 @@ public:
     ZoneDeCarte* getZoneById(int zoneId);
 
     void setPv(int newPv);
+    void setCombat(int newCombat);
     void setTable(TablePartie* t);
     void activerGodMode();
     void desactiverGodMode();
@@ -86,7 +87,7 @@ public:
     // Gestion du deck
     void melangerDeck(); // Mélanger le deck du joueur
     void piocher(int nbCartes = 1); // Piocher des cartes du deck vers la main
-    void degatsFinTour(int totalCombat); // Infliger les dégâts aux champions avec Garde en priorité
+    int degatsFinTour(int totalCombat); // Infliger les dégâts aux champions avec Garde en priorité
     void resetJoueur();
 };
 
