@@ -457,18 +457,31 @@ void Effet::activerEffet(Joueur& joueurActif, Joueur& adversaire, const Carte* s
                 std::cout << (i + 1) << "- " << cartesDefausse[i].first->getNom() << std::endl;
             }
 
-            int choix_carte;
-            std::cout << "Entrez l'indice de la carte à remettre en haut du deck : ";
-            std::cin >> choix_carte;
-
-            // Valider l'indice
-            while (choix_carte < 1 || choix_carte > static_cast<int>(cartesDefausse.size())) {
-                std::cout << "Indice invalide! Choisissez entre 1 et " << cartesDefausse.size() << " : ";
-                std::cin >> choix_carte;
+            int choix_carte = -1;
+            std::string saisie;
+            while (true) {
+                std::cout << "Entrez l'indice de la carte à remettre en haut du deck : ";
+                std::cin >> saisie;
+                try {
+                    choix_carte = std::stoi(saisie);
+                    if (choix_carte >= 1 && choix_carte <= static_cast<int>(cartesDefausse.size())) {
+                        break; // Saisie correcte
+                    } else {
+                        std::cout << "Indice hors bornes ! Essayez à nouveau." << std::endl;
+                    }
+                } catch (std::invalid_argument&) {
+                    std::cout << "Indice invalide ! Veuillez entrer un nombre." << std::endl;
+                }
             }
 
-            // Déplacer la carte choisie de la défausse vers le dessus du deck
             Carte* carteChoisie = cartesDefausse[choix_carte - 1].first;
+            if (!carteChoisie) {
+                std::cout << "Carte invalide sélectionnée." << std::endl;
+                break;
+            }
+            #ifdef DEBUG
+            std::cout << "[DEBUG] Carte choisie : " << carteChoisie->getNom() << " (ID: " << carteChoisie->getId() << ")" << std::endl;
+            #endif
             defausse->deplacerCarte(carteChoisie->getId(), *deck, 0); // 0 pour le dessus du deck
             defausse->trierParOrdre();
             std::cout << "Carte " << carteChoisie->getNom() << " remise en haut du deck." << std::endl;

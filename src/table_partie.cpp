@@ -527,7 +527,7 @@ void TablePartie::afficherChampionFormate(const Champion* champion, int indice) 
     }
     
     // Nom du champion (coloré selon faction)
-    std::cout << couleur << BOLD_TEXT << champion->getNom() << RESET_COLOR;
+    std::cout << couleur << champion->getNom() << RESET_COLOR;
     
     // PV en GRAND et AVANT
     std::cout << " " << BOLD_TEXT << "[" << COLOR_HEALTH << champion->getPVMax() << " ❤️ " << RESET_COLOR << BOLD_TEXT << "]" << RESET_COLOR;

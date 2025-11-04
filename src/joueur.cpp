@@ -270,9 +270,9 @@ bool Joueur::tapChampion(int indice, Joueur& adversaire) {
         effet.activerEffet(*this, adversaire, champion);
     }
 
-    // Le champion est maintenant expendu
+    // Le champion est maintenant épuisé
     champion->setActive(false);
-    std::cout << "→ Champion " << champion->getNom() << " est maintenant EXPENDU" << std::endl;
+    std::cout << "→ Champion " << champion->getNom() << " est maintenant Épuisé" << std::endl;
 
     return true;
 }

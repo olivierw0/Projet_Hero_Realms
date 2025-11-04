@@ -92,11 +92,12 @@ void ZoneDeCarte::ajouterCarte(Carte* carte, int ordre) {
     if (ordre < 0 || ordre >= static_cast<int>(cartes.size())) {
         cartes.emplace_back(carte, cartes.size());
     } else {
-        // Décaler les cartes existantes
-        for (auto& p : cartes) {
-            if (p.second >= ordre) p.second++;
+        // Insère à la position demandée (ex : 0 pour le dessus du deck)
+        cartes.insert(cartes.begin() + ordre, std::make_pair(carte, ordre));
+        // Réajuste les indices d'ordre pour toutes les cartes
+        for (size_t i = 0; i < cartes.size(); ++i) {
+            cartes[i].second = static_cast<int>(i);
         }
-        cartes.emplace_back(carte, ordre);
     }
 }
 
@@ -125,6 +126,12 @@ bool ZoneDeCarte::deplacerCarte(int carteId, ZoneDeCarte& destination, int nouve
             // Retirer de cette zone
             if (retirerCarte(carteId)) {
                 // Ajouter à la destination
+                #ifdef DEBUG
+                    std::cout << "Déplacement de la carte " << carte->getNom()
+                              << " (ID: " << carteId << ") de la zone "
+                              << typeZoneToString(type) << " (ID: " << id << ") vers la zone "
+                              << typeZoneToString(destination.getType()) << " (ID: " << destination.getId() << ")" << std::endl;
+                #endif
                 destination.ajouterCarte(carte, ordre);
                 return true;
             }
