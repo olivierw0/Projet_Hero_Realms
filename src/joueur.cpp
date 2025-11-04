@@ -498,7 +498,7 @@ int Joueur::degatsFinTour(int totalCombat){
     if (cartes.empty()) {
         std::cout << "Aucun champion en jeu." << std::endl;
         std::cout << "Tous les dégâts (" << totalCombat << ") vont être infligés au joueur." << std::endl;
-        std::cout << "Entrez '-1' pour arrêter d'infliger des dégâts." << std::endl;
+        std::cout << "Entrez '0' pour infliger au joueur ou '-1' pour arrêter d'infliger des dégâts." << std::endl;
         std::string string;
         int choix;
         std::cin >> string;
@@ -509,11 +509,16 @@ int Joueur::degatsFinTour(int totalCombat){
             return totalCombat;
         }
         if (choix == -1) {return totalCombat;}
-        std::cout << "Tous les dégâts (" << totalCombat << ") sont infligés au joueur." << std::endl;
-        takeDamage(totalCombat);
-        return 0;
+        if (choix == 0){
+            std::cout << "Tous les dégâts (" << totalCombat << ") sont infligés au joueur." << std::endl;
+            takeDamage(totalCombat);
+            return 0;
+        }else {
+            std::cout << "Choix invalide!" << std::endl;
+            return totalCombat;
+        }
     }
-    
+
     std::vector<Champion*> gardes;
     for (const auto& paire_carte : cartes) {
         Champion* champion = dynamic_cast<Champion*>(paire_carte.first);
@@ -555,11 +560,11 @@ int Joueur::degatsFinTour(int totalCombat){
                 garde->setPV(0);
                 std::cout << "→ " << pvAvant << " dégât(s) infligé(s) à " << garde->getNom();
                 champions->deplacerCarte(garde->getId(), *defausse, defausse->taille());
+                totalCombat -= pvAvant;
             }else {
                 std::cout << "→ Pas assez de dégâts pour mettre K.O. " << garde->getNom();
             }
-            totalCombat -= pvAvant;
-            if (totalCombat < 0) totalCombat = 0;
+            if (totalCombat < 0) {totalCombat = 0;}
             if (garde->getPV() <= 0) {
                 std::cout << " (DÉTRUIT! )" << std::endl;
                 gardes.erase(gardes.begin() + (choix - 1));
@@ -585,9 +590,26 @@ int Joueur::degatsFinTour(int totalCombat){
             }
         }
         if (championsEnVie.empty()) {
-            std::cout << "Aucun champion en vie. Tous les dégâts restants (" << totalCombat << ") sont infligés au joueur." << std::endl;
-            takeDamage(totalCombat);
-            return 0;
+            std::cout << "Aucun champion en vie. Tous les dégâts restants (" << totalCombat << ") vont être infligés au joueur." << std::endl;
+            std::cout << "Entrez '0' pour infliger les dégâts au joueur ou '-1' pour arrêter." << std::endl;
+            std::string string;
+            int choix;
+            std::cin >> string;
+            try {
+                choix = std::stoi(string);
+            } catch (...) {
+                std::cerr << "Choix invalide! Essayez à nouveau." << std::endl;
+                continue;
+            }
+            if (choix == -1) {return totalCombat;}
+            if (choix == 0){ 
+                std::cout << "Tous les dégâts restants (" << totalCombat << ") sont infligés au joueur." << std::endl;
+                takeDamage(totalCombat);
+                return 0;
+            }else{
+                std::cout << "Choix invalide!" << std::endl;
+                continue;
+            }
         }
         std::cout << "\nChampions disponibles:" << std::endl;
         for (size_t i = 0; i < championsEnVie.size(); ++i) {
@@ -616,10 +638,10 @@ int Joueur::degatsFinTour(int totalCombat){
             if (totalCombat >= pvChamp) {
                 std::cout << "→ " << pvChamp << " dégât(s) infligé(s) à " << cible->getNom();
                 cible->setPV(0);
+                totalCombat -= pvChamp;
             }else {
                 std::cout << "→ Pas assez de dégâts pour mettre K.O. " << cible->getNom();
             }
-            totalCombat -= pvChamp;
             if (cible->getPV() <= 0) {
                 std::cout << " (DÉTRUIT!)" << std::endl;
                 championsEnVie.erase(championsEnVie.begin() + (choix - 1));

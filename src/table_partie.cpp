@@ -495,7 +495,7 @@ void TablePartie::afficherCarteFormatee(const Carte* carte, int indice, bool aff
         if (champion->hasGarde()) {
             std::cout << "🛡️ ";
         }
-        std::cout << champion->getPV() << " PV]" << RESET_COLOR;
+        std::cout << champion->getPVMax() << " PV]" << RESET_COLOR;
     }
     
     std::cout << std::endl;
