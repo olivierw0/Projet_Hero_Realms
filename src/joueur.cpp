@@ -496,7 +496,7 @@ void Joueur::degatsFinTour(int totalCombat){
     auto& cartes = champions->getCartes();
     if (cartes.empty()) {
         std::cout << "Aucun champion en jeu." << std::endl;
-        std::cout << "Tous les dégâts sont infligés au joueur." << std::endl;
+        std::cout << "Tous les dégâts (" << totalCombat << ") sont infligés au joueur." << std::endl;
         takeDamage(totalCombat);
         return;
     }
