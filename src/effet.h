@@ -3,26 +3,27 @@
 
 #include <string>
 enum class TypeEffet {
-    DMG, //OK
-    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet - OK
-    DRAW_DISCARD, // OK
-    FORCE_DISCARD_OPPONENT, // OK
-    HAND_NEXT_ACQUIRED, // OK
-    OR, // OK
-    OR_ou_nDMG, // Choisir entre 1 or et n Points de combat - OK
-    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité) - OK
-    PIOCHE, // OK
-    PREPARE_CHAMPION, // OK
-    SACRIFICE_HAND_DISCARD,  // OK
-    SOIN, // OK
-    SOIN_per_CHAMP, // OK
-    STUN, // OK
-    TOP_DECK_FROM_DISCARD, // OK
+    DMG,
+    DMG_ou_SOIN, // valeurs fixe (différentes entre DMG et SOIN) à définir dans l'effet
+    DRAW_DISCARD,
+    FORCE_DISCARD_OPPONENT,
+    HAND_NEXT_ACQUIRED,
+    OR,
+    OR_ou_nDMG, // Choisir entre 1 or et n Points de combat
+    OR_ou_SOIN_per_CHAMP, // valeur fixe à 1 (un seul champion a cette capacité)
+    PIOCHE,
+    PREPARE_CHAMPION,
+    SACRIFICE_HAND_DISCARD,
+    SOIN, 
+    SOIN_per_CHAMP,
+    STUN,
+    TOP_DECK_FROM_DISCARD,
     TOP_DECK_NEXT_ACQUIRED, 
     TOP_DECK_NEXT_ACQUIRED_ACTION, 
     DMG_per_VERT_CARDS,            // Nombre de cartes vertes en jeu
     DMG_per_CHAMPION,                    // Nombre de champions en jeu
-    DMG_per_GUARD                        // Nombre de gardes en jeu
+    DMG_per_GUARD,              // Nombre de gardes en jeu
+    TOPDECK_CHAMPION_FROM_DISCARD // Remettre un champion de la défausse en haut du deck
 };
 
 enum class ConditionEffet {
